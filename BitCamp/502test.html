@@ -12,7 +12,7 @@
       align-items: center;
       height: 100vh;
       overflow: hidden;
-      font-family: 'KyoboHandwriting2023wsa', sans-serif; /* 웹폰트 설정 */
+      font-family: 'KyoboHandwriting2023wsa', sans-serif;
     }
     canvas {
       display: block;
@@ -31,8 +31,8 @@
   <script>
     const config = {
       type: Phaser.AUTO,
-      width: 1280, // 게임 화면 너비
-      height: 720, // 게임 화면 높이
+      width: 1280,
+      height: 720,
       parent: 'game-container',
       scene: {
         preload: preload,
@@ -42,97 +42,89 @@
     };
 
     const game = new Phaser.Game(config);
+    let dialogueText, backgrounds, currentBackgroundIndex = 0;
 
     function preload() {
-      // 이미지와 폰트 등을 preload 하는 부분
-      this.load.image('background1', 'images/wake01.png'); // 첫 번째 배경 이미지 로드
-      this.load.image('background2', 'images/room502.png'); // 두 번째 배경 이미지 로드
-      this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png'); // 대화창 이미지 로드
+      this.load.image('background1', 'images/wake01.png');
+      this.load.image('background2', 'images/mySeat.png');
+      this.load.image('background3', 'images/room502.png');
+      this.load.image('background4', 'images/room502door.png');
+      this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
     }
 
     function create() {
-  // 첫 번째 배경 이미지 추가
-  const background = this.add.image(config.width / 2, config.height / 2, 'background1');
-  const scaleX = config.width / background.width;
-  const scaleY = config.height / background.height;
-  const scale = Math.max(scaleX, scaleY);
-  background.setScale(scale).setScrollFactor(0);
+      backgrounds = [
+        this.add.image(config.width / 2, config.height / 2, 'background1').setDisplaySize(config.width, config.height),
+        this.add.image(config.width / 2, config.height / 2, 'background2').setDisplaySize(config.width, config.height).setAlpha(0),
+        this.add.image(config.width / 2, config.height / 2, 'background3').setDisplaySize(config.width, config.height).setAlpha(0),
+        this.add.image(config.width / 2, config.height / 2, 'background4').setDisplaySize(config.width, config.height).setAlpha(0),
+      ];
 
-  // 대화창 이미지 추가
-  const dialogueBox = this.add.image(72, 500, 'dialogueBox').setOrigin(0);
+      const dialogueBox = this.add.image(72, 500, 'dialogueBox').setOrigin(0);
 
-  // 대화창 텍스트 추가
-  const dialogueText = this.add.text(config.width / 2, config.height - 100, '', { 
-    fontFamily: 'KyoboHandwriting2023wsa', 
-    fontSize: '35px',
-    fill: '#000000',
-    bold: true // 볼드체 설정
-  })
-  .setOrigin(0.5)
-  .setAlign('center');
+      const texts1 = ["여긴 어디지..."];
+      const texts2 = ["뭔가 익숙한... 내 자리?", "학원에서 공부하다가 깜박 잠들었구나"];
+      const texts3 = ["얼마나 잔거지?", "불까지 전부 꺼져있는 걸 보니 한참을 잔 모양이다.", "경비원 아저씨가 내가 있는지 모르고 꺼버리신 걸까?", "어쨌든 늦었으니 빨리 집으로 돌아가자.", "...어라?", "문이 열리지 않는다.", "잘보니 문에 못보던 자물쇠가 달려있는 게 눈에 띄인다.", "\"이게 대체 무슨...\""];
+      const texts4 = ["문을 열어보려 했지만 강철문처럼 꼼짝도 하지 않는다."];
+      const texts5 = ["일단 주위에 쓸만한 물건이 없는지 살펴보자."];
 
-  // 대화창에 표시할 텍스트 배열
-  const texts1 = [
-    "여긴 어디지...",
-    "뭔가 익숙한... 내 자리?!",
-    "대체 어떻게 된거지?"
-  ];
+      let currentIndex = 0;
+      let currentTexts = texts1;
 
-  const texts2 = [
-    "얼마나 잔거지?",
-    "불까지 전부 꺼져있는 걸 보니 한참을 잔 모양이다.",
-    "경비원 아저씨가 내가 있는지 모르고 꺼버리신 걸까?",
-    "어쨌든 늦었으니 빨리 집으로 돌아가자.",
-    "...어라?",
-    "문이 열리지 않는다.",
-    "잘보니 문에 못보던 자물쇠가 달려있는 게 눈에 띄인다.",
-    "\"이게 대체 무슨...\""
-  ];
+      dialogueText = this.add.text(config.width / 2, config.height - 100, '', {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '35px',
+        fill: '#000000'
+      }).setOrigin(0.5).setAlign('center');
 
-  let currentIndex = 0;
-  let currentTexts = texts1; // 초기에는 첫 번째 텍스트 배열 사용
+      // 현재 배경을 페이드아웃하는 함수
+      const fadeOutCurrentBackground = () => {
+        return this.tweens.add({
+          targets: backgrounds[currentBackgroundIndex],
+          alpha: 0,
+          duration: 1000,
+        });
+      };
 
-  // 텍스트를 순차적으로 표시하는 함수
-  function showNextText() {
-    if (currentIndex < currentTexts.length) {
-      dialogueText.setText(currentTexts[currentIndex]);
-      currentIndex++;
-    } else {
-      // 텍스트 모두 출력 후 추가적인 로직을 추가할 수 있습니다.
-      console.log("모든 텍스트 출력 완료");
+      // 다음 배경을 페이드인하는 함수
+      const fadeInNextBackground = (nextIndex) => {
+        currentBackgroundIndex = nextIndex;
+        backgrounds[currentBackgroundIndex].setAlpha(0); // 미리 배경을 투명하게 설정
+        return this.tweens.add({
+          targets: backgrounds[currentBackgroundIndex],
+          alpha: 1,
+          duration: 1000,
+          onComplete: () => {
+            currentTexts = nextIndex === 1 ? texts2 : nextIndex === 2 ? texts3 : nextIndex === 3 ? texts4 : texts5;
+            currentIndex = 0;
+            dialogueText.setText('');
+          }
+        });
+      };
+
+      // 텍스트와 배경을 관리하는 로직
+      this.input.on('pointerdown', () => {
+        if (currentIndex < currentTexts.length) {
+          dialogueText.setText(currentTexts[currentIndex]);
+          currentIndex++;
+        } else {
+          if (currentBackgroundIndex === 3 && currentTexts === texts4) { // texts4가 끝나면 background4에서 background3으로 돌아감
+            fadeOutCurrentBackground().on('complete', () => {
+              fadeInNextBackground(2); // background3을 페이드인
+            });
+          } else if (currentBackgroundIndex < backgrounds.length - 1) {
+            fadeOutCurrentBackground().on('complete', () => {
+              fadeInNextBackground(currentBackgroundIndex + 1);
+            });
+          } else if (currentBackgroundIndex === backgrounds.length - 1 && currentTexts === texts5) {
+            // 최종 텍스트 이후 로직 필요
+            console.log("End of game sequence, perhaps show ending or credits");
+          }
+        }
+      });
     }
-  }
-
-  // 첫 번째 텍스트 표시
-  showNextText();
-
-  // 클릭 이벤트로 다음 텍스트 표시 또는 배경 이미지 변경
-  this.input.on('pointerdown', function() {
-    if (currentIndex < currentTexts.length) {
-      showNextText();
-    } else {
-      // 모든 텍스트를 출력한 경우, 다음 배경화면으로 전환
-      if (background.texture.key === 'background1') {
-        background.setTexture('background2');
-        // 두 번째 배경화면의 스케일 조정
-        const scaleX2 = config.width / background.width;
-        const scaleY2 = config.height / background.height;
-        const scale2 = Math.max(scaleX2, scaleY2);
-        background.setScale(scale2).setScrollFactor(0);
-        
-        currentIndex = 0;
-        currentTexts = texts2;
-        dialogueText.setText('');
-        showNextText();
-      }
-      // 추가적인 배경화면이 있다면, 여기에 추가할 수 있습니다.
-    }
-  });
-}
-
 
     function update() {
-      // 게임의 로직을 업데이트합니다.
     }
   </script>
 </body>
