@@ -40,15 +40,26 @@
             transform: translate(-50%, -50%);
             text-align: center;
         }
+
+        .img {
+            position: absolute;
+            top: 100%;
+            left: 100%;
+            -webkit-transform: translate(-50%, -50%);
+            -ms-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+        }
+
     </style>
 </head>
 <body>
-    <img src="images/door.png" usemap="#image-map" alt="Your Image">
+    <img src="images/door.png" usemap="#image-map" alt="Image">
 
     <map name="image-map">
-        <area shape="rect" coords="621,510,756,235" href="https://www.naver.com" alt="502" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★★<br>502호의 문<br>익숙하고 평범한 문이다.">
-        <area shape="poly" coords="311,555,457,528,457,296,446,283,435,258,334,274,314,318" href="https://www.naver.com" alt="hostel" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★★★<br>The Hostel<br>의문의 시체?">
-        <area shape="poly" coords="929,311,923,529,1107,579,1120,561,1120,336,941,305" href="#" alt="roger" onclick="on_click()" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★<br>로저스톤<br>무언가 기다리고 있다.">
+        <area shape="rect" coords="621,510,756,235" href="#" alt="502" onclick="on_click(this)" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★★<br>502호의 문<br>익숙하고 평범한 문이다.">
+        <area shape="poly" coords="311,555,457,528,457,296,446,283,435,258,334,274,314,318" href="#" alt="hostel" onclick="on_click(this)" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★★★<br>The Hostel<br>의문의 시체?">
+        <area shape="poly" coords="929,311,923,529,1107,579,1120,561,1120,336,941,305" href="#" alt="roger" onclick="on_click(this)" onmouseover="on_mouse(this)" onmouseout="off_mouse()" data-text="★<br>로저스톤<br>르네상스 고대 유적지를 탐험하는<br>
+        흥미진진한 모험!">
     </map>
     <div class="overlay" style="display: none;"></div>
     <script>
@@ -72,8 +83,21 @@
             document.querySelector('.overlay').style.display = 'none';
         }
 
-        function on_click(){
-            document.querySelector('img').src = "images/door2.png";
+        function on_click(area){
+            if(area.getAttribute('alt')=='roger' && document.querySelector('img').src.includes('door2.png')){
+                window.location.href = 'rogerDoor.html';
+            }
+            else if(area.getAttribute('alt')=='502' && document.querySelector('img').src.includes('door.png')){
+                window.location.href = '502Door.html';
+            }
+            else if(area.getAttribute('alt')=='hostel' && document.querySelector('img').src.includes('door.png')){
+                window.location.href = 'hostelDoor.html';
+            }
+            else if(area.getAttribute('alt')=='roger'){
+                var img = document.querySelector('img');
+                img.src = "images/door2.png";
+            }
+            
         }
     </script>
 </body>
