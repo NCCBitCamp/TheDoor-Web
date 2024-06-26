@@ -95,7 +95,21 @@
           alpha: 1,
           duration: 1000,
           onComplete: () => {
-            currentTexts = nextIndex === 1 ? texts2 : nextIndex === 2 ? texts3 : nextIndex === 3 ? texts4 : texts5;
+            // 텍스트 할당 로직을 조건에 따라 수정
+            switch (currentBackgroundIndex) {
+              case 1:
+                currentTexts = texts2;
+                break;
+              case 2:
+                // texts5가 출력되어야 하는 조건을 추가하여 오류 수정
+                currentTexts = currentTexts === texts4 ? texts5 : texts3;
+                break;
+              case 3:
+                currentTexts = texts4;
+                break;
+              default:
+                currentTexts = [];
+            }
             currentIndex = 0;
             dialogueText.setText('');
           }
