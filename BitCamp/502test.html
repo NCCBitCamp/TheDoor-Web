@@ -13,6 +13,7 @@
       height: 100vh;
       overflow: hidden;
       font-family: 'KyoboHandwriting2023wsa', sans-serif;
+      cursor: default; /* 기본 커서 모양 설정 */
     }
     canvas {
       display: block;
@@ -25,7 +26,6 @@
     }
   </style>
 </head>
-
 <body>
   <div id="game-container"></div>
 
@@ -43,7 +43,7 @@
     };
 
     const game = new Phaser.Game(config);
-    let dialogueText, backgrounds, currentBackgroundIndex = 0;
+    let dialogueText, dialogueBox, backgrounds, currentBackgroundIndex = 0, isChoicesVisible = false, gamePhase = 'dialogue';
 
     function preload() {
       this.load.image('background1', 'images/wake01.png');
@@ -51,93 +51,237 @@
       this.load.image('background3', 'images/room502.png');
       this.load.image('background4', 'images/room502door.png');
       this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
+      this.load.image('cable', 'images/cable.png');
+      this.load.image('scissors', 'images/scissors.png');
+      this.load.image('memo', 'images/memo.png');
+      this.load.image('memo1', 'images/memo1.png');
+      this.load.image('memo2', 'images/memo2.png');
     }
 
     function create() {
-      backgrounds = [
-        this.add.image(config.width / 2, config.height / 2, 'background1').setDisplaySize(config.width, config.height),
-        this.add.image(config.width / 2, config.height / 2, 'background2').setDisplaySize(config.width, config.height).setAlpha(0),
-        this.add.image(config.width / 2, config.height / 2, 'background3').setDisplaySize(config.width, config.height).setAlpha(0),
-        this.add.image(config.width / 2, config.height / 2, 'background4').setDisplaySize(config.width, config.height).setAlpha(0),
-      ];
+    backgrounds = [
+    this.add.image(config.width / 2, config.height / 2, 'background1').setDisplaySize(config.width, config.height),
+    this.add.image(config.width / 2, config.height / 2, 'background2').setDisplaySize(config.width, config.height).setAlpha(0),
+    this.add.image(config.width / 2, config.height / 2, 'background3').setDisplaySize(config.width, config.height).setAlpha(0),
+    this.add.image(config.width / 2, config.height / 2, 'background4').setDisplaySize(config.width, config.height).setAlpha(0),
+  ];
 
-      const dialogueBox = this.add.image(72, 500, 'dialogueBox').setOrigin(0);
+  dialogueBox = this.add.image(config.width / 2, 480, 'dialogueBox').setOrigin(0.5, 0);
 
-      const texts1 = ["여긴 어디지..."];
-      const texts2 = ["뭔가 익숙한... 내 자리?", "학원에서 공부하다가 깜박 잠들었구나"];
-      const texts3 = ["얼마나 잔거지?", "불까지 전부 꺼져있는 걸 보니 한참을 잔 모양이다.", "경비원 아저씨가 내가 있는지 모르고 꺼버리신 걸까?", "어쨌든 늦었으니 빨리 집으로 돌아가자.", "...어라?", "문이 열리지 않는다.", "잘보니 문에 못보던 자물쇠가 달려있는 게 눈에 띄인다.", "\"이게 대체 무슨...\""];
-      const texts4 = ["문을 열어보려 했지만 강철문처럼 꼼짝도 하지 않는다."];
-      const texts5 = ["일단 주위에 쓸만한 물건이 없는지 살펴보자."];
+  const texts1 = ["여긴 어디지..."];
+  const texts2 = ["뭔가 익숙한... 내 자리?", "학원에서 공부하다가 깜박 잠들었구나"];
+  const texts3 = ["얼마나 잔거지?", "불까지 전부 꺼져있는 걸 보니 한참을 잔 모양이다.", "경비원 아저씨가 내가 있는지 모르고 꺼버리신 걸까?", "어쨌든 늦었으니 빨리 집으로 돌아가자.", "...어라?", "문이 열리지 않는다.", "잘보니 문에 못보던 자물쇠가 달려있는 게 눈에 띄인다.", "\"이게 대체 무슨...\""];
+  const texts4 = ["문을 열어보려 했지만 강철문처럼 꼼짝도 하지 않는다."];
+  const texts5 = ["일단 주위에 쓸만한 물건이 없는지 살펴보자."];
 
-      let currentIndex = 0;
-      let currentTexts = texts1;
+  let currentIndex = 0;
+  let currentTexts = texts1;
 
-      dialogueText = this.add.text(config.width / 2, config.height - 100, '', {
-        fontFamily: 'KyoboHandwriting2023wsa',
-        fontSize: '35px',
-        fill: '#000000'
-      }).setOrigin(0.5).setAlign('center');
+  dialogueText = this.add.text(config.width / 2, config.height - 100, '', {
+    fontFamily: 'KyoboHandwriting2023wsa',
+    fontSize: '35px',
+    fill: '#000000'
+  }).setOrigin(0.5).setAlign('center');
 
-      // 현재 배경을 페이드아웃하는 함수
-      const fadeOutCurrentBackground = () => {
-        return this.tweens.add({
-          targets: backgrounds[currentBackgroundIndex],
-          alpha: 0,
-          duration: 1000,
-        });
-      };
+  // 검은색 사각형을 생성하여 화면 덮기
+  const blackout = this.add.rectangle(0, 0, config.width, config.height, 0x000000).setOrigin(0).setAlpha(1);
 
-      // 다음 배경을 페이드인하는 함수
-      const fadeInNextBackground = (nextIndex) => {
-        currentBackgroundIndex = nextIndex;
-        backgrounds[currentBackgroundIndex].setAlpha(0); // 미리 배경을 투명하게 설정
-        return this.tweens.add({
-          targets: backgrounds[currentBackgroundIndex],
-          alpha: 1,
-          duration: 1000,
-          onComplete: () => {
-            // 텍스트 할당 로직을 조건에 따라 수정
-            switch (currentBackgroundIndex) {
-              case 1:
-                currentTexts = texts2;
-                break;
-              case 2:
-                // texts5가 출력되어야 하는 조건을 추가하여 오류 수정
-                currentTexts = currentTexts === texts4 ? texts5 : texts3;
-                break;
-              case 3:
-                currentTexts = texts4;
-                break;
-              default:
-                currentTexts = [];
-            }
-            currentIndex = 0;
-            dialogueText.setText('');
+  // 눈을 감았다 뜨는 효과 함수
+  const blinkEffect = () => {
+    return this.tweens.timeline({
+      targets: blackout,
+      tweens: [
+        { alpha: 1, duration: 500, ease: 'Linear' }, // 화면을 검게
+        { alpha: 0, duration: 500, ease: 'Linear', hold: 500 }, // 다시 밝게
+        { alpha: 1, duration: 500, ease: 'Linear', hold: 500 },
+        { alpha: 0, duration: 500, ease: 'Linear', onComplete: startDialogue } // 밝게한 후 대사 시작
+      ]
+    });
+  };
+
+  // 대사를 시작하는 함수
+  const startDialogue = () => {
+    dialogueText.setText(currentTexts[currentIndex]);
+    currentIndex++;
+  };
+
+  // 이미지 표시 함수
+  const showItemImage = (imageKey) => {
+    const itemImage = this.add.image(config.width / 2, config.height / 2, imageKey).setScale(0.5).setAlpha(0);
+    this.tweens.add({
+      targets: itemImage,
+      alpha: 1,
+      duration: 500,
+      yoyo: true,
+      hold: 2000,
+      onComplete: () => {
+        itemImage.destroy();
+      }
+    });
+  };
+
+  // 현재 배경을 페이드아웃하는 함수
+  const fadeOutCurrentBackground = () => {
+    return this.tweens.add({
+      targets: backgrounds[currentBackgroundIndex],
+      alpha: 0,
+      duration: 1000,
+    });
+  };
+
+  // 다음 배경을 페이드인하는 함수
+  const fadeInNextBackground = (nextIndex) => {
+    currentBackgroundIndex = nextIndex;
+    backgrounds[currentBackgroundIndex].setAlpha(0); // 미리 배경을 투명하게 설정
+    return this.tweens.add({
+      targets: backgrounds[currentBackgroundIndex],
+      alpha: 1,
+      duration: 1000,
+      onComplete: () => {
+        // 텍스트 할당 로직을 조건에 따라 수정
+        if (gamePhase === 'dialogue') {
+          switch (currentBackgroundIndex) {
+            case 1:
+              currentTexts = texts2;
+              break;
+            case 2:
+              currentTexts = currentTexts === texts4 ? texts5 : texts3;
+              break;
+            case 3:
+              currentTexts = texts4;
+              break;
+            default:
+              currentTexts = [];
           }
-        });
-      };
-
-      // 텍스트와 배경을 관리하는 로직
-      this.input.on('pointerdown', () => {
-        if (currentIndex < currentTexts.length) {
+          currentIndex = 0;
           dialogueText.setText(currentTexts[currentIndex]);
-          currentIndex++;
-        } else {
-          if (currentBackgroundIndex === 3 && currentTexts === texts4) { // texts4가 끝나면 background4에서 background3으로 돌아감
-            fadeOutCurrentBackground().on('complete', () => {
-              fadeInNextBackground(2); // background3을 페이드인
-            });
-          } else if (currentBackgroundIndex < backgrounds.length - 1) {
-            fadeOutCurrentBackground().on('complete', () => {
-              fadeInNextBackground(currentBackgroundIndex + 1);
-            });
-          } else if (currentBackgroundIndex === backgrounds.length - 1 && currentTexts === texts5) {
-            // 최종 텍스트 이후 로직 필요
-            console.log("End of game sequence, perhaps show ending or credits");
+          if (currentBackgroundIndex === 2 && currentTexts === texts5) {
+              // texts5가 끝나면 선택지를 표시하는 조건 추가
+              this.time.delayedCall(1000, () => {
+                  dialogueBox.setVisible(false); // 텍스트 박스 숨기기
+                  dialogueText.setText(''); // 텍스트도 숨기기
+                  showChoices();
+              });
           }
         }
+      }
+    });
+  };
+
+  // 선택지를 표시하는 함수
+  const showChoices = () => {
+      isChoicesVisible = true;
+      gamePhase = 'choices';
+      const choices = [
+          { text: "책상을 둘러본다.", nextTexts: ["앞 쪽 책상에서 필기도구함을 발견했다.", "[가위]를 획득했다.", "[수상한 메모1]을 획득했다."]},
+          { text: "앞쪽을 둘러본다.", nextTexts: ["메인 TV, 화이트보드, 강사님 자리", "[HDMI 케이블]을 획득했다.", "[수상한 메모2]를 획득했다."]},
+          { text: "문을 다시 살펴본다.", nextTexts: ["문은 여전히 꿈쩍도 하지 않는다.", "자물쇠를 풀 수 있는 방법이 없는지 살펴보자."]}
+      ];
+      choices.forEach((choice, index) => {
+          const buttonY = 350 + index * 100; // 버튼 위치 조정
+          const button = this.add.text(750, buttonY, choice.text, {
+              fontFamily: 'KyoboHandwriting2023wsa',
+              fontSize: '48px', // 폰트 크기를 크게
+              color: '#000',
+              backgroundColor: '#fff',
+              padding: { x: 40, y: 20 }, // 패딩을 크게
+              fixedWidth: 400 // 버튼 너비를 크게
+          }).setInteractive();
+
+          button.on('pointerover', () => {
+              document.body.style.cursor = 'pointer'; // 마우스를 올렸을 때 커서 모양 변경
+          });
+
+          button.on('pointerout', () => {
+              document.body.style.cursor = 'default'; // 마우스가 버튼에서 벗어났을 때 커서 모양 원래대로
+          });
+
+          button.on('pointerdown', () => {
+              console.log(choice.text + ' 선택됨');
+              dialogueBox.setVisible(true); // 선택 후 텍스트 박스 다시 보이기
+              dialogueText.setText(choice.response); // 선택에 따른 텍스트 출력
+              isChoicesVisible = false; // 선택 후 다시 텍스트를 보여줄 수 있게 함
+              // 선택지 버튼들을 제거
+              choices.forEach((choice, idx) => {
+                  this.children.getByName(`choiceButton${idx}`).destroy();
+              });
+              document.body.style.cursor = 'default'; // 선택 후 커서 모양 원래대로
+
+              // nextTexts 처리 추가
+              if (choice.nextTexts) {
+                  currentTexts = choice.nextTexts;
+                  currentIndex = 0;
+                  gamePhase = 'nextTexts';
+                  dialogueText.setText(currentTexts[currentIndex]);
+                  currentIndex++;
+
+                  // 이미지 표시
+                  if (choice.imageKey) {
+                      showItemImage(choice.imageKey);
+                  }
+              }
+          }).setName(`choiceButton${index}`);
       });
-    }
+  };
+
+  let isDebounced = false;
+  const debounceTime = 1000; // 디바운스 시간(ms)
+
+  // 텍스트와 배경을 관리하는 로직
+  // 다음 텍스트가 끝난 후 선택지로 돌아가는 로직을 추가
+  this.input.on('pointerdown', () => {
+      if (isDebounced) return; // 디바운스 상태일 때 클릭 무시
+      isDebounced = true; // 디바운스 시작
+      this.time.delayedCall(debounceTime, () => {
+        isDebounced = false; // 디바운스 해제
+      });
+
+      if (isChoicesVisible) return; // 선택지가 보이는 동안에는 다른 입력 무시
+      if (gamePhase === 'dialogue') {
+          if (currentIndex < currentTexts.length) {
+              dialogueText.setText(currentTexts[currentIndex]);
+              currentIndex++;
+          } else {
+              if (currentBackgroundIndex === 3 && currentTexts === texts4) { // texts4가 끝나면 background4에서 background3으로 돌아감
+                  fadeOutCurrentBackground().on('complete', () => {
+                      fadeInNextBackground(2); // background3을 페이드인
+                  });
+              } else if (currentBackgroundIndex < backgrounds.length - 1) {
+                  fadeOutCurrentBackground().on('complete', () => {
+                      fadeInNextBackground(currentBackgroundIndex + 1);
+                  });
+              } else if (currentBackgroundIndex === 2 && currentTexts === texts5) {
+                  // texts5가 끝나면 선택지 표시, 반복 방지
+                  dialogueBox.setVisible(false); // 텍스트 박스 숨기기
+                  dialogueText.setText(''); // 텍스트도 숨기기
+                  showChoices();
+              }
+          }
+      } else if (gamePhase === 'nextTexts') {
+          if (currentIndex < currentTexts.length) {
+              dialogueText.setText(currentTexts[currentIndex]);
+              if (currentTexts[currentIndex] === "[가위]를 획득했다.") {
+                  showItemImage('scissors');
+              }
+              if (currentTexts[currentIndex] === "[수상한 메모1]을 획득했다." || currentTexts[currentIndex] === "[수상한 메모2]를 획득했다.") {
+                  showItemImage('memo');
+              }
+              if (currentTexts[currentIndex] === "[HDMI 케이블]을 획득했다.") {
+                  showItemImage('cable');
+              }
+              currentIndex++;
+          } else {
+              // nextTexts가 끝나면 선택지로 돌아감
+              console.log('nextTexts 끝남');
+              dialogueBox.setVisible(false); // 텍스트 박스 숨기기
+              dialogueText.setText(''); // 텍스트도 숨기기
+              showChoices();
+          }
+      }
+  });
+  // 게임 시작 시 눈 깜빡임 효과 후 대사 시작
+  blinkEffect();
+}
 
     function update() {
     }
