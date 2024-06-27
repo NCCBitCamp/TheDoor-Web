@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5층 배경</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'KyoboHandwriting2023wsa', sans-serif;
+            cursor: default;
+        }
+        #game-container {
+            position: relative;
+            width: 1280px;
+            height: 720px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        .nav-button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: white;
+            color: black;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            padding: 10px;
+        }
+        #prev-button {
+            left: 0;
+            font-family: 'KyoboHandwriting2023wsa';
+        }
+        #next-button {
+            right: 0;
+            font-family: 'KyoboHandwriting2023wsa';
+        }
+        @font-face {
+            font-family: 'KyoboHandwriting2023wsa';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
+            font-weight: normal;
+            font-style: normal;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <button id="prev-button" class="nav-button" onclick="viewSection(-1)"><</button>
+        <button id="next-button" class="nav-button" onclick="viewSection(1)">></button>
+    </div>
+
+    <script>
+        var config = {
+            type: Phaser.AUTO,
+            width: 1280,
+            height: 720,
+            parent: 'game-container',
+            scene: {
+                preload: preload,
+                create: create
+            }
+        };
+
+        var game = new Phaser.Game(config);
+        var camera;
+        var bgImage;
+        var currentSection = 0;
+        var totalSections = 3;
+        var sectionWidth;
+        var alertIcon;
+        var dialogBox;
+        var dialogText;
+        var teacherImage;
+        var dialogueLines = [
+            "???: 아니 이게 왜 안되지?",
+            "문을 여니 컴퓨터 키보드를 두드리는 소리와 함께 익숙한 목소리가 들려온다.",
+            "분명 이게 맞을텐데.. 어?",
+            "우리 반의 코딩교육을 담당하시는 고강사님, 학생들보다 열심히 공부하실만큼 성실하시지만 살짝 허당끼도 있으셔서 많은 학생들에게 인기있는 강사님이다.",
+            "xx님이 어떻게 여길..",
+            "(지금까지의 일을 설명한다.)",
+            "그렇게 된거군요. 저도 밤늦게까지 다음주 수업 자료를 준비하다가..",
+            "노트북 배터리가 다 되는 바람에 파일을 날려버려서 다시 작성하다보니 어느샌가 이 곳에 갇혀있었네요.",
+            "(이 곳에서 탈출할 방법에 대해 묻는다.)",
+            "아마 비상구도 엘리베이터도 사용하기 힘든 상황일 거에요. 저도 같이 돌아다니고 싶지만 자리를 떠나기 힘든 상황이라..",
+            "아 맞다. 대신 이 번호를 쓰면 여기서도 연락이 가능할테니 무슨 일 있으시면 연락해주실래요?",
+            "강사님은 통신도 안 잡히는 곳에서 이 곳에서 어떻게 연락이 되는 번호를 아시는 걸까? 묘하게 침착해보이시고.. 탈출하는 것보다 중요한 일이 대체 뭘까?",
+            "일단 혼자서라도 주위를 살펴보자. 뭔가 탈출의 단서가 될만한 게 있을지도 모른다."
+        ];
+        var currentLineIndex = 0;
+
+        function preload() {
+            this.load.image('background', 'images/5floorBD.png');
+            this.load.image('alert', 'images/alert.png');
+            this.load.image('teacher', 'images/teacher.png');
+            this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
+        }
+
+        function create() {
+            bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+            
+            var scaleX = config.width / bgImage.width;
+            var scaleY = config.height / bgImage.height;
+            var scale = Math.max(scaleX, scaleY);
+            
+            bgImage.setScale(scale).setOrigin(0, 0);
+            
+            camera = this.cameras.main;
+            camera.setViewport(0, 0, config.width, config.height);
+            
+            sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+
+            alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
+            alertIcon.setScale(0.5); 
+            alertIcon.on('pointerdown', showDialog);
+
+            teacherImage = this.add.image(920, 400, 'teacher');
+            teacherImage.setScale(0.25);
+            teacherImage.setVisible(false);
+
+            dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
+            dialogBox.setVisible(false);
+            dialogBox.on('pointerdown', showDialog);
+
+            dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '35px',
+                fill: '#000000',
+                wordWrap: { width: 1000, useAdvancedWrap: true }
+            }).setOrigin(0.5).setAlign('center');
+            dialogText.setVisible(false);
+        }
+
+        function viewSection(direction) {
+            currentSection += direction;
+            if (currentSection < 0) currentSection = 0;
+            if (currentSection >= totalSections) currentSection = totalSections - 1;
+
+            camera.scrollX = sectionWidth * currentSection;
+            camera.scrollY = 0;
+        }
+
+        function showDialog() {
+            if (currentLineIndex === 0) {
+                dialogBox.setVisible(true);
+                dialogText.setVisible(true);
+            }
+            if (currentLineIndex === 2) {
+                teacherImage.setVisible(true);
+            }
+            if (currentLineIndex < dialogueLines.length) {
+                dialogText.setText(dialogueLines[currentLineIndex]);
+                currentLineIndex++;
+            } else {
+                dialogBox.setVisible(false);
+                dialogText.setVisible(false);
+                teacherImage.setVisible(false);
+                currentLineIndex = 0;
+            }
+        }
+    </script>
+</body>
+</html>

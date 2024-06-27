@@ -164,8 +164,7 @@
     }
   };
 
-   
-
+  
     function preload() {
       this.load.image('background1', 'images/wake01.png');
       this.load.image('background2', 'images/mySeat.png');
@@ -177,7 +176,6 @@
       this.load.image('memo', 'images/memo.png');
       this.load.image('memo1', 'images/memo1.png');
       this.load.image('memo2', 'images/memo2.png');
-      this.load.image('bag', 'images/bag.svg');
     }
 
     function create() {
@@ -194,7 +192,6 @@
 
   // showItemDetails 함수를 바인딩
   this.showItemDetails = showItemDetails.bind(this);
-
 
   const texts1 = ["여긴 어디지..."];
   const texts2 = ["뭔가 익숙한... 내 자리?", "학원에서 공부하다가 깜박 잠들었구나"];
@@ -445,6 +442,44 @@
   this.input.on('pointerdown', () => {
     if (isBlinking) return; // 눈 깜빡임 상태일 때 클릭 무시
 
+      if (isChoicesVisible) return; // 선택지가 보이는 동안에는 다른 입력 무시
+      if (gamePhase === 'dialogue') {
+          if (currentIndex < currentTexts.length) {
+              dialogueText.setText(currentTexts[currentIndex]);
+              currentIndex++;
+          } else {
+              if (currentBackgroundIndex === 3 && currentTexts === texts4) { // texts4가 끝나면 background4에서 background3으로 돌아감
+                  fadeOutCurrentBackground().on('complete', () => {
+                      fadeInNextBackground(2); // background3을 페이드인
+                  });
+              } else if (currentBackgroundIndex < backgrounds.length - 1) {
+                  fadeOutCurrentBackground().on('complete', () => {
+                      fadeInNextBackground(currentBackgroundIndex + 1);
+                  });
+              } else if (currentBackgroundIndex === 2 && currentTexts === texts5) {
+                  // texts5가 끝나면 선택지 표시, 반복 방지
+                  showChoices();
+              }
+          }
+      } else if (gamePhase === 'nextTexts') {
+          if (currentIndex < currentTexts.length) {
+              dialogueText.setText(currentTexts[currentIndex]);
+              if (currentTexts[currentIndex] === "[가위]를 획득했다.") {
+                  showItemImage('scissors');
+              }
+              if (currentTexts[currentIndex] === "[수상한 메모1]을 획득했다." || currentTexts[currentIndex] === "[수상한 메모2]를 획득했다.") {
+                  showItemImage('memo');
+              }
+              if (currentTexts[currentIndex] === "[HDMI 케이블]을 획득했다.") {
+                  showItemImage('cable');
+              }
+              currentIndex++;
+          } else {
+              // nextTexts가 끝나면 선택지로 돌아감
+              console.log('nextTexts 끝남');
+              dialogueText.setText('또 어디를 조사해볼까?'); // 텍스트 초기화
+              showChoices();
+          }
     if (isDebounced) return; // 디바운스 상태일 때 클릭 무시
     isDebounced = true; // 디바운스 시작
     this.time.delayedCall(debounceTime, () => {
