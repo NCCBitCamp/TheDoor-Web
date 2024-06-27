@@ -106,7 +106,7 @@
         // 소지품 이미지를 모달에 추가
         inventoryImages.forEach((imageObj, index) => {
           const itemImage = scene.add.image(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 100 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3);
-          const itemText = scene.add.text(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 20 + Math.floor(index / 4) * 140, imageObj.name, {
+          const itemText = scene.add.text(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 10 + Math.floor(index / 4) * 140, imageObj.name, {
             fontFamily: 'KyoboHandwriting2023wsa',
             fontSize: '25px', // 폰트 크기 조절
             fill: '#000000'
