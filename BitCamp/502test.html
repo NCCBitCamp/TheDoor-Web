@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Bitcamp 502 Room</title>
+  <title>5층 502호</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
   <style>
     body {
@@ -30,95 +30,103 @@
   <div id="game-container"></div>
 
   <script>
-    const config = {
-      type: Phaser.AUTO,
-      width: 1280,
-      height: 720,
-      parent: 'game-container',
-      scene: {
-        preload: preload,
-        create: create,
-        update: update
-      }
-    };
+  const config = {
+    type: Phaser.AUTO,
+    width: 1280,
+    height: 720,
+    parent: 'game-container',
+    scene: {
+      preload: preload,
+      create: create,
+      update: update
+    }
+  };
 
-    const game = new Phaser.Game(config);
-    let dialogueText, dialogueBox, backgrounds, currentBackgroundIndex = 0, isChoicesVisible = false, gamePhase = 'dialogue';
+  const game = new Phaser.Game(config);
+  let dialogueText, dialogueBox, backgrounds, currentBackgroundIndex = 0, isChoicesVisible = false, gamePhase = 'dialogue';
 
-    // 인벤토리 관련 변수 및 함수
-    let inventory = [];
-    let inventoryImages = []; // 소지품 이미지들을 저장할 배열
-    let inventoryText, inventoryBag, modal, modalBackground, modalText;
-    let modalItems = []; // 모달에 추가된 소지품 이미지들을 저장할 배열
+  // 인벤토리 관련 변수 및 함수
+  let inventory = [];
+  let inventoryImages = []; // 소지품 이미지들을 저장할 배열
+  let inventoryText, inventoryBag, modal, modalBackground, modalText;
+  let modalItems = []; // 모달에 추가된 소지품 이미지들을 저장할 배열
 
-    // 소지품 칸을 초기화하는 함수
-    const createInventory = (scene) => {
-      // 가방 이미지 추가
-      inventoryBag = scene.add.image(100, 100, 'bag').setInteractive();
-      inventoryBag.setScale(0.5);
-      inventoryBag.on('pointerdown', () => {
-        toggleInventoryModal(scene);
-      });
-      inventoryBag.on('pointerover', () => {
-        document.body.style.cursor = 'pointer';
-      });
-      inventoryBag.on('pointerout', () => {
-        document.body.style.cursor = 'default';
-      });
+  // 소지품 칸을 초기화하는 함수
+  const createInventory = (scene) => {
+    // 가방 이미지 추가
+    inventoryBag = scene.add.image(100, 100, 'bag').setInteractive();
+    inventoryBag.setScale(0.5);
+    inventoryBag.on('pointerdown', () => {
+      toggleInventoryModal(scene);
+    });
+    inventoryBag.on('pointerover', () => {
+      document.body.style.cursor = 'pointer';
+    });
+    inventoryBag.on('pointerout', () => {
+      document.body.style.cursor = 'default';
+    });
 
-      // 모달 창 생성
-      modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive(); // 배경색 변경 예시
-      modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
-        fontFamily: 'KyoboHandwriting2023wsa',
-        fontSize: '24px',
-        fill: '#000000'
-      }).setAlpha(0).setOrigin(0.5);
-      modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
-    };
+    // 모달 창 생성
+    modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive(); // 배경색 변경 예시
+    modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
+      fontFamily: 'KyoboHandwriting2023wsa',
+      fontSize: '24px',
+      fill: '#000000'
+    }).setAlpha(0).setOrigin(0.5);
+    modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
+  };
 
-    // 소지품 칸에 아이템을 추가하는 함수
-    const addItemToInventory = (item, imageKey) => {
-      // 아이템이 이미 소지품에 있는지 확인
-      if (!inventory.includes(item)) {
-        inventory.push(item);
-        inventoryImages.push({key: imageKey, name: item}); // 소지품 이미지와 이름을 저장
-        updateInventoryDisplay();
-      } else {
-        console.log('아이템이 이미 소지품에 있습니다.');
-      }
-    };
+  // 소지품 칸에 아이템을 추가하는 함수
+  const addItemToInventory = (item, imageKey) => {
+    // 아이템이 이미 소지품에 있는지 확인
+    if (!inventory.includes(item)) {
+      inventory.push(item);
+      inventoryImages.push({key: imageKey, name: item}); // 소지품 이미지와 이름을 저장
+      updateInventoryDisplay();
+    } else {
+      console.log('아이템이 이미 소지품에 있습니다.');
+    }
+  };
 
-    // 소지품 칸의 내용을 업데이트하는 함수
-    const updateInventoryDisplay = () => {
-      if (inventoryText) {
-        inventoryText.setText(inventory.map(item => item.name).join('\n'));
-      }
-    };
+  // 소지품 칸의 내용을 업데이트하는 함수
+  const updateInventoryDisplay = () => {
+    if (inventoryText) {
+      inventoryText.setText(inventory.map(item => item.name).join('\n'));
+    }
+  };
 
   // 아이템 세부 정보를 표시하는 함수
-  const showItemDetails = (scene, displayKey) => {
-  // 전체화면 이미지를 추가하고 보이게 설정
-  const fullscreenImage = scene.add.image(scene.cameras.main.centerX, scene.cameras.main.centerY, displayKey)
-    .setDisplaySize(scene.cameras.main.width, scene.cameras.main.height)
-    .setAlpha(0);
+  const showItemDetails = (scene, itemKey) => {
+    // 확대해서 보여줄 이미지를 설정
+    let enlargedImageKey;
+    if (itemKey === 'memo1') {
+      enlargedImageKey = 'memo1-1'; // memo1 클릭 시 보여줄 이미지
+    } else if (itemKey === 'memo2') {
+      enlargedImageKey = 'memo2-1'; // memo2 클릭 시 보여줄 이미지
+    }
+
+    // 전체화면 이미지를 추가하고 보이게 설정
+    const fullscreenImage = scene.add.image(scene.cameras.main.centerX, scene.cameras.main.centerY, enlargedImageKey)
+      .setDisplaySize(scene.cameras.main.width * 0.9, scene.cameras.main.height * 0.9)
+      .setAlpha(0)
+      .setInteractive();
 
     scene.tweens.add({
       targets: fullscreenImage,
       alpha: 1,
-      duration: 500,
-      onComplete: () => {
-        // 3초 후 이미지를 페이드 아웃하고 제거
-        scene.time.delayedCall(3000, () => {
-          scene.tweens.add({
-            targets: fullscreenImage,
-            alpha: 0,
-            duration: 500,
-            onComplete: () => {
-              fullscreenImage.destroy();
-            }
-          });
-        });
-      }
+      duration: 500
+    });
+
+    // 클릭 이벤트를 추가하여 이미지를 클릭하면 페이드 아웃하고 제거
+    fullscreenImage.on('pointerdown', () => {
+      scene.tweens.add({
+        targets: fullscreenImage,
+        alpha: 0,
+        duration: 500,
+        onComplete: () => {
+          fullscreenImage.destroy();
+        }
+      });
     });
   };
 
@@ -132,25 +140,23 @@
 
       // 소지품 이미지를 모달에 추가
       inventoryImages.forEach((imageObj, index) => {
-        const itemImage = scene.add.image(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 210 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3);
-        const itemText = scene.add.text(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 120 + Math.floor(index / 4) * 140, imageObj.name, {
+        const itemImage = scene.add.image(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 190 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3);
+        const itemText = scene.add.text(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 100 + Math.floor(index / 4) * 140, imageObj.name, {
           fontFamily: 'KyoboHandwriting2023wsa',
           fontSize: '25px', // 폰트 크기 조절
           fill: '#000000'
         }).setOrigin(0.5);
-
-        // 아이템 클릭 이벤트 추가
-        if (imageObj.key === 'memo1' || imageObj.key === 'memo2') {
-          itemImage.setInteractive();
-          itemImage.on('pointerdown', () => {
-            const displayKey = (imageObj.key === 'memo1') ? 'fullscreenMemo1' : 'fullscreenMemo2';
-            showItemDetails(scene, displayKey); // 전체화면 이미지 표시 함수 호출
-          });
-        }
-
         modal.add([itemImage, itemText]);
         modalItems.push(itemImage); // 추가된 소지품 이미지를 저장
         modalItems.push(itemText); // 추가된 소지품 텍스트를 저장
+
+        // 메모 아이템에 대한 클릭 이벤트 추가
+        if (imageObj.key === 'memo1' || imageObj.key === 'memo2') {
+          itemImage.setInteractive();
+          itemImage.on('pointerdown', () => {
+            showItemDetails(scene, imageObj.key);
+          });
+        }
       });
     } else {
       // 모달을 숨김
@@ -164,7 +170,7 @@
     }
   };
 
-  
+
     function preload() {
       this.load.image('background1', 'images/wake01.png');
       this.load.image('background2', 'images/mySeat.png');
@@ -173,9 +179,11 @@
       this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
       this.load.image('cable', 'images/cable.png');
       this.load.image('scissors', 'images/scissors.png');
-      this.load.image('memo', 'images/memo.png');
       this.load.image('memo1', 'images/memo1.png');
       this.load.image('memo2', 'images/memo2.png');
+      this.load.image('memo1-1', 'images/memo1-1.png');
+      this.load.image('memo2-1', 'images/memo2-1.png');
+      this.load.image('bag', 'images/bag.svg');
     }
 
     function create() {
@@ -192,6 +200,7 @@
 
   // showItemDetails 함수를 바인딩
   this.showItemDetails = showItemDetails.bind(this);
+
 
   const texts1 = ["여긴 어디지..."];
   const texts2 = ["뭔가 익숙한... 내 자리?", "학원에서 공부하다가 깜박 잠들었구나"];
@@ -219,10 +228,10 @@
     return this.tweens.timeline({
       targets: blackout,
       tweens: [
-        { alpha: 1, duration: 500, ease: 'Linear' }, // 화면을 검게
-        { alpha: 0, duration: 500, ease: 'Linear', hold: 500 }, // 다시 밝게
-        { alpha: 1, duration: 500, ease: 'Linear', hold: 500 },
-        { alpha: 0, duration: 500, ease: 'Linear', onComplete: () => {
+        { alpha: 1, duration: 300, ease: 'Linear' }, // 화면을 검게
+        { alpha: 0, duration: 300, ease: 'Linear', hold: 500 }, // 다시 밝게
+        { alpha: 1, duration: 300, ease: 'Linear', hold: 500 },
+        { alpha: 0, duration: 300, ease: 'Linear', onComplete: () => {
           isBlinking = false; // 눈 깜빡임이 완료되었음을 나타냄
           startDialogue(); // 대사 시작
         } }
@@ -242,9 +251,9 @@
     this.tweens.add({
       targets: itemImage,
       alpha: 1,
-      duration: 500,
+      duration: 150,
       yoyo: true,
-      hold: 2000,
+      hold: 500,
       onComplete: () => {
         itemImage.destroy();
       }
@@ -256,7 +265,7 @@
     return this.tweens.add({
       targets: backgrounds[currentBackgroundIndex],
       alpha: 0,
-      duration: 1000,
+      duration: 150,
     });
   };
 
@@ -267,7 +276,7 @@
     return this.tweens.add({
       targets: backgrounds[currentBackgroundIndex],
       alpha: 1,
-      duration: 1000,
+      duration: 150,
       onComplete: () => {
         // 텍스트 할당 로직을 조건에 따라 수정
         if (gamePhase === 'dialogue') {
@@ -435,51 +444,13 @@
 
 
   let isDebounced = false;
-  const debounceTime = 1200; // 디바운스 시간(ms)
+  const debounceTime = 500; // 디바운스 시간(ms)
 
   // 텍스트와 배경을 관리하는 로직
   // 다음 텍스트가 끝난 후 선택지로 돌아가는 로직을 추가
   this.input.on('pointerdown', () => {
     if (isBlinking) return; // 눈 깜빡임 상태일 때 클릭 무시
 
-      if (isChoicesVisible) return; // 선택지가 보이는 동안에는 다른 입력 무시
-      if (gamePhase === 'dialogue') {
-          if (currentIndex < currentTexts.length) {
-              dialogueText.setText(currentTexts[currentIndex]);
-              currentIndex++;
-          } else {
-              if (currentBackgroundIndex === 3 && currentTexts === texts4) { // texts4가 끝나면 background4에서 background3으로 돌아감
-                  fadeOutCurrentBackground().on('complete', () => {
-                      fadeInNextBackground(2); // background3을 페이드인
-                  });
-              } else if (currentBackgroundIndex < backgrounds.length - 1) {
-                  fadeOutCurrentBackground().on('complete', () => {
-                      fadeInNextBackground(currentBackgroundIndex + 1);
-                  });
-              } else if (currentBackgroundIndex === 2 && currentTexts === texts5) {
-                  // texts5가 끝나면 선택지 표시, 반복 방지
-                  showChoices();
-              }
-          }
-      } else if (gamePhase === 'nextTexts') {
-          if (currentIndex < currentTexts.length) {
-              dialogueText.setText(currentTexts[currentIndex]);
-              if (currentTexts[currentIndex] === "[가위]를 획득했다.") {
-                  showItemImage('scissors');
-              }
-              if (currentTexts[currentIndex] === "[수상한 메모1]을 획득했다." || currentTexts[currentIndex] === "[수상한 메모2]를 획득했다.") {
-                  showItemImage('memo');
-              }
-              if (currentTexts[currentIndex] === "[HDMI 케이블]을 획득했다.") {
-                  showItemImage('cable');
-              }
-              currentIndex++;
-          } else {
-              // nextTexts가 끝나면 선택지로 돌아감
-              console.log('nextTexts 끝남');
-              dialogueText.setText('또 어디를 조사해볼까?'); // 텍스트 초기화
-              showChoices();
-          }
     if (isDebounced) return; // 디바운스 상태일 때 클릭 무시
     isDebounced = true; // 디바운스 시작
     this.time.delayedCall(debounceTime, () => {
@@ -513,12 +484,12 @@
           addItemToInventory('가위', "scissors");
         }
         if (currentTexts[currentIndex] === "[수상한 메모1]을 획득했다.") {
-          showItemImage('memo');
-          addItemToInventory('수상한 메모1', "memo");
+          showItemImage('memo1');
+          addItemToInventory('수상한 메모1', "memo1");
         }
         if (currentTexts[currentIndex] === "[수상한 메모2]를 획득했다.") {
-          showItemImage('memo');
-          addItemToInventory('수상한 메모2', "memo");
+          showItemImage('memo2');
+          addItemToInventory('수상한 메모2', "memo2");
         }
         if (currentTexts[currentIndex] === "[HDMI 케이블]을 획득했다.") {
           showItemImage('cable');
