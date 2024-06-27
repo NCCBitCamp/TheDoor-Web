@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div{
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            height: 100px;
+            font-size: 1rem;
+            color: white;
+            margin: 20%;
+            }
+    </style>
+</head>
+<body style="background-color: black;">
+    <div class="text_box" data-trigger>
+        <span class="text"></span>
+    </div>
+    <script>
+        const content = "     1584년 월터 롤리 경은 로어노크 섬을 발견한다.";
+        const text = document.querySelector(".text");
+        let i = 0;
+
+        function typing(){
+            if (i < content.length) {
+            let txt = content.charAt(i);
+            text.innerHTML += txt;
+            i++;
+            }
+        }
+        setInterval(typing, 100)
+    </script>
+
+</body>
+</html>
