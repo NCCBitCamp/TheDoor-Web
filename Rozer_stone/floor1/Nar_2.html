@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            display: flex;
+            justify-content: left;
+            align-items: center;
+            height: 100px;
+            font-size: 1rem;
+            color: white;
+            margin: 20%;
+        }
+    </style>
+</head>
+<body style="background-color: black;">
+    <div class="text_box" data-trigger>
+        <span class="text"></span>
+    </div>
+    <audio id="audio"></audio>
+    <script>
+        const content = [
+            { text: "수많은 사람들이 이 미스터리를 풀기 위해 도전했다.", audio: "Nar_2_1.mp3" },
+            { text: "하지만 미스터리를 풀기는커녕 대다수의 사람들이 이 미스터리를 풀다가 실종되고만다.", audio: "Nar_2_2.mp3" },
+            { text: "저주인걸까?", audio: "Nar_2_3.mp3" },
+            { text: "몇일 휴가를 사용해 나는 그곳을 방문해보기로 했다.", audio: "Nar_2_4.mp3" },
+            { text: ".....별일 있겠어?                  ", audio: "Nar_2_5.mp3" }
+        ];
+        const textElement = document.querySelector(".text");
+        const audioElement = document.getElementById("audio");
+        let index = 0;
+        let charIndex = 0; //문장 길이
+        let isDeleting = false; //지울까요? 물어보기
+
+        function typing() {
+            if (index < content.length) {
+                if (!isDeleting && charIndex < content[index].text.length) {
+                    textElement.innerHTML += content[index].text.charAt(charIndex); // 한 글자씩 출력
+                    charIndex++; //그 다음 글자 대령
+                } else if (isDeleting && charIndex > 0) {
+                    textElement.innerHTML = content[index].text.substring(0, charIndex - 1); // 한 글자씩 지워
+                    charIndex--; // 그 전 글자 대령
+                } else if (!isDeleting && charIndex === content[index].text.length) {
+                    playAudio(content[index].audio);
+                    isDeleting = true; // 지울까요?를 true 변환
+                    setTimeout(typing, 4000); // 잠시 멈춤 후 지우기 시작
+                    return;
+                } else if (isDeleting && charIndex === 0) {
+                    isDeleting = false; // 이제 그만지워라. 지울가요?를 false 변환
+                    index++; // 다음줄로~
+                    if (index < content.length) {
+                        textElement.innerHTML += '<br>'; // 줄 바꿈 추가
+                    }
+                }
+            } else {
+                clearInterval(typingInterval);
+            }
+            setTimeout(typing, isDeleting ? 10 : 100); // 타이핑 속도와 지우기 속도 설정
+        }
+
+        function playAudio(audioSrc) {
+            audioElement.src = audioSrc;
+            audioElement.play();
+        }
+
+        typing(); // 글자 타이핑 시작
+    </script>
+
+</body>
+</html>
