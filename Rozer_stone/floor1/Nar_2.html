@@ -3,9 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>RozerStone</title>
     <style>
-        div {
+        body{
+            height: 99%;
+            width: 99%;
+        }
+        
+        body div {
             display: flex;
             justify-content: left;
             align-items: center;
@@ -14,11 +19,19 @@
             color: white;
             margin: 20%;
         }
+        #skipButton {
+            background: rgba(0, 0, 0, 0.5);
+            color: darkred;
+            font-weight: bold;
+        }
     </style>
 </head>
+<div style="display: flex; justify-content: center; align-items: center; margin-top: 10px; height: 12px;">
+    <button type="button" id="skipButton" name="skipButton" onclick="location.href='Nar_1.html'">Skip</button>
+</div>
 <body style="background-color: black;">
     <div class="text_box" data-trigger>
-        <span class="text"></span>
+        <span class="text" style="color: brown;"></span>
     </div>
     <audio id="audio"></audio>
     <script>
