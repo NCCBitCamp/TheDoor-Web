@@ -77,7 +77,27 @@ body {
     display: none; /* 처음에는 숨김 */
 }
 
+#left-button {
+    left: 10px;
+}
+
+#right-button {
+    right: 10px;
+}
 /* ---------------------------------------------------------------------- */
+
+.nav-button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(255, 255, 255, 0.8);
+    border: none;
+    padding: 10px;
+    font-size: 2rem;
+    cursor: pointer;
+    font-family: "Homemade Apple", 'yleeMortalHeartImmortalMemory', cursive;
+    z-index: 2;
+}
 
 .investigate-button, .enter-button {
     position: absolute;
@@ -125,6 +145,13 @@ body {
     background: radial-gradient(circle, rgba(0, 0, 0, 0) 0%, rgba(0, 0, 0, 0.8) 100%);
     z-index: 1; /* 게임 콘텐츠 위에 위치 */
     pointer-events: none; /* 마우스 이벤트가 통과하도록 설정 */
+}
+
+/* 클릭 가능한 영역에 대한 스타일 */
+.clickable-area {
+    position: absolute;
+    cursor: pointer;
+    z-index: 1000;
 }
 
 
