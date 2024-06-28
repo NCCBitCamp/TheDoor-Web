@@ -5,19 +5,36 @@
   <title>5층 502호</title>
   <script src="https://cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.js"></script>
   <style>
-    body {
-      margin: 0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      overflow: hidden;
-      font-family: 'KyoboHandwriting2023wsa', sans-serif;
-      cursor: default; /* 기본 커서 모양 설정 */
-    }
-    canvas {
-      display: block;
-    }
+      body {
+          margin: 0;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          height: 100vh;
+          overflow: hidden;
+          font-family: 'KyoboHandwriting2023wsa', sans-serif;
+          cursor: default;
+          background-color: rgba(0, 0, 0, 1); /* 바깥 배경 어둡게 설정 */
+        }
+        #game-container {
+          position: relative;
+          width: 1280px;
+          height: 720px;
+          margin: 0 auto;
+          overflow: hidden;
+        }
+        #settings-button {
+          position: absolute;
+          top: 18px;
+          right: 25px;
+          background: transparent;
+          border: none;
+          cursor: pointer;
+        }
+        #settings-button img {
+          width: 50px;
+          height: 50px;
+        }
     @font-face {
       font-family: 'KyoboHandwriting2023wsa';
       src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
@@ -27,7 +44,9 @@
   </style>
 </head>
 <body>
-  <div id="game-container"></div>
+  <div id="game-container">
+    <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg" alt="Settings"></button>
+  </div>
 
   <script>
   const config = {
@@ -50,11 +69,12 @@
   let inventoryImages = []; // 소지품 이미지들을 저장할 배열
   let inventoryText, inventoryBag, modal, modalBackground, modalText;
   let modalItems = []; // 모달에 추가된 소지품 이미지들을 저장할 배열
+  let memo2Clicked = false; // memo2 클릭 여부를 추적하는 변수, 철사 얻는 직접적 힌트기 때문에
 
   // 소지품 칸을 초기화하는 함수
   const createInventory = (scene) => {
     // 가방 이미지 추가
-    inventoryBag = scene.add.image(100, 100, 'bag').setInteractive();
+    inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
     inventoryBag.setScale(0.5);
     inventoryBag.on('pointerdown', () => {
       toggleInventoryModal(scene);
@@ -152,6 +172,9 @@
 
         // 메모 아이템에 대한 클릭 이벤트 추가
         if (imageObj.key === 'memo1' || imageObj.key === 'memo2') {
+          if (imageObj.key === 'memo2') {
+            memo2Clicked = true; // memo2가 클릭되었음을 기록
+          }
           itemImage.setInteractive();
           itemImage.on('pointerdown', () => {
             showItemDetails(scene, imageObj.key);
@@ -308,138 +331,180 @@
 
   // 선택지를 표시하는 함수
   const showChoices = () => {
-    isChoicesVisible = true;
-    gamePhase = 'choices';
-    const choices = [
-        { text: "1. 책상을 둘러본다.",
-          newChoices: [
-            { text: "1. 필기도구함을 조사한다.", nextTexts: ["...", "[가위]를 획득했다.", "이걸로 자물쇠를 자를 수는 없겠지만 어딘가 쓸 데가 있지 않을까"]},
-            { text: "2. 누군가의 가방을 조사한다.", nextTexts: ["가방에는 온갖 코딩책들이 들어있다.", "이걸 6개월만에 다 배우려고 하니까 미쳐버린게 분명해", "...", "아쉽지만 유용한 물건은 없는 듯 하다."]},
-            { text: "3. 책상 위를 조사한다.", nextTexts: ["책상 위에는 학생들의 온갖 소지품들이 어지럽게 놓여져있다.", "...", "어?", "모니터에 메모가 하나 붙어있다.", "[수상한 메모1]을 획득했다.", "못보던 글씨체인데 누가 쓴걸까?"]}
-          ]
-        },
-        { text: "2. 앞쪽을 둘러본다.",
-          newChoices: [
-            { text: "1. 메인 TV를 조사한다.", nextTexts: ["매일 강의할 때 보던 커다란 TV다.", "...", "[HDMI 케이블]을 획득했다.", "로프 대용으로 쓸 수 있지 않을까? 일단 챙겨두자."]},
-            { text: "2. 화이트보드를 조사한다.", nextTexts: ["화이트보드에 못 보던 글들이 적혀있다", "\"내보내줘내보내줘내보내줘\", \"Java를 Java볼 수 있을테면 Javava\"", "..."]},
-            { text: "3. 강사님 자리를 조사한다.", nextTexts: ["온갖 최신장비가 가득한 강사님의 자리다.", "이 키보드만 해도 100만원이 넘는다던데..", "...", "응?", "잘보니 키보드 아래에 뭔가 끼여져있다.", "[수상한 메모2]를 획득했다.", "강사님 글씨체는 아닌데 누가 여기 둔걸까?"]}
-          ]
-        },
-        { text: "3. 문을 다시 살펴본다.",
-          newChoices: [
-            { text: "1. 자물쇠를 조사한다.", nextTexts: ["굉장히 옛날 자물쇠로 보인다.", "구멍이 있는 걸로 봐선 열쇠가 필요해보인다.", "여기서 열쇠를 어떻게 구하지.."]},
-            { text: "2. 주위를 둘러본다.", nextTexts: ["분명 매일 보던 장소일텐데 뭔가 위화감이 느껴진다.", "분위기도 이상하고, 건물 자체가 평소보다 낡아보이는 듯한..", "..기분 탓이겠지?"]}
-          ]
-        }
-    ];
-    choices.forEach((choice, index) => {
-        const buttonY = 400 + index * 60; // 버튼 Y 위치 조정
-        const button = this.add.text(config.width - 420, buttonY, choice.text, { // 버튼 X 위치 조정
-            fontFamily: 'KyoboHandwriting2023wsa',
-            fontSize: '24px', // 폰트 크기
-            color: '#000',
-            backgroundColor: '#fff',
-            padding: { x: 20, y: 10 }, // 패딩
-            fixedWidth: 250 // 버튼 너비
-        }).setInteractive();
+      isChoicesVisible = true;
+      gamePhase = 'choices';
+      const choices = [
+          {
+              text: "1. 책상을 둘러본다.",
+              newChoices: [
+                  { text: "1. 필기도구함을 조사한다.", nextTexts: ["...", "[가위]를 획득했다.", "이걸로 자물쇠를 자를 수는 없겠지만 어딘가 쓸 데가 있지 않을까"] },
+                  { text: "2. 누군가의 가방을 조사한다.", nextTexts: ["가방에는 온갖 코딩책들이 들어있다.", "이걸 6개월만에 다 배우려고 하니까 미쳐버린게 분명해", "...", "아쉽지만 유용한 물건은 없는 듯 하다."] },
+                  { text: "3. 책상 위를 조사한다.", nextTexts: ["책상 위에는 학생들의 온갖 소지품들이 어지럽게 놓여져있다.", "...", "어?", "모니터에 메모가 하나 붙어있다.", "[수상한 메모1]을 획득했다.", "못보던 글씨체인데 누가 쓴걸까?"] }
+              ]
+          },
+          {
+              text: "2. 앞쪽을 둘러본다.",
+              newChoices: [
+                  { text: "1. 메인 TV를 조사한다.", nextTexts: ["매일 강의할 때 보던 커다란 TV다.", "...", "[HDMI 케이블]을 획득했다.", "로프 대용으로 쓸 수 있지 않을까? 일단 챙겨두자."] },
+                  { text: "2. 화이트보드를 조사한다.", nextTexts: ["화이트보드에 못 보던 글들이 적혀있다", "\"내보내줘내보내줘내보내줘\", \"Java를 Java볼 수 있을테면 Javava\"", "..."] },
+                  { text: "3. 강사님 자리를 조사한다.", nextTexts: ["온갖 최신장비가 가득한 강사님의 자리다.", "이 키보드만 해도 100만원이 넘는다던데..", "...", "응?", "잘보니 키보드 아래에 뭔가 끼여져있다.", "[수상한 메모2]를 획득했다.", "강사님 글씨체는 아닌데 누가 여기 둔걸까?"] }
+              ]
+          },
+          {
+              text: "3. 문을 다시 살펴본다.",
+              newChoices: [
+                  { text: "1. 자물쇠를 조사한다.", nextTexts: ["굉장히 옛날 자물쇠로 보인다.", "구멍이 있는 걸로 봐선 열쇠가 필요해보인다.", "여기서 열쇠를 어떻게 구하지.."] },
+                  { text: "2. 주위를 둘러본다.", nextTexts: ["분명 매일 보던 장소일텐데 뭔가 위화감이 느껴진다.", "분위기도 이상하고, 건물 자체가 평소보다 낡아보이는 듯한..", "..기분 탓이겠지?"] }
+              ]
+          }
+      ];
 
-        button.on('pointerover', () => {
-            document.body.style.cursor = 'pointer'; // 마우스를 올렸을 때 커서 모양 변경
-        });
+      // 조건이 충족되면 새로운 선택지를 추가
+      if (memo2Clicked && inventory.includes('가위') && inventory.includes('HDMI 케이블')) {
+          choices[2].newChoices.push(
+              { text: "3. 특수한 방법을 사용한다.", nextTexts: ["(메모에서 본 대로라면..)", "가위로 HDMI 케이블의 피복을 벗겨내고 [철사]를 획득했다!", "[철사]를 이용해서 자물쇠를 해제했다.", "드디어 문이 열렸다!", ""], style: { fill: '#FF0000' }, action: () => { window.location.href = 'http://192.168.0.181:5500/floor5.html'; } }
+          );
+      }
 
-        button.on('pointerout', () => {
-            document.body.style.cursor = 'default'; // 마우스가 버튼에서 벗어났을 때 커서 모양 원래대로
-        });
+      choices.forEach((choice, index) => {
+          const buttonY = 400 + index * 60; // 버튼 Y 위치 조정
+          const button = this.add.text(config.width - 420, buttonY, choice.text, {
+              fontFamily: 'KyoboHandwriting2023wsa',
+              fontSize: '24px', // 폰트 크기
+              fill: '#000', // 기본 텍스트 색상
+              backgroundColor: '#fff',
+              padding: { x: 20, y: 10 }, // 패딩
+              fixedWidth: 250 // 버튼 너비
+          }).setInteractive();
 
-        button.on('pointerdown', () => {
-            console.log(choice.text + ' 선택됨');
-            dialogueBox.setVisible(true); // 선택 후 텍스트 박스 다시 보이기
-            if (choice.response) {
-                dialogueText.setText(choice.response); // 선택에 따른 텍스트 출력
-            }
-            isChoicesVisible = false; // 선택 후 다시 텍스트를 보여줄 수 있게 함
-            // 선택지 버튼들을 제거
-            choices.forEach((choice, idx) => {
-                this.children.getByName(`choiceButton${idx}`).destroy();
-            });
-            document.body.style.cursor = 'default'; // 선택 후 커서 모양 원래대로
+          // 스타일 적용
+          if (choice.style) {
+              button.setStyle(choice.style);
+          }
 
-            // nextTexts 처리 추가
-            if (choice.nextTexts) {
-                currentTexts = choice.nextTexts;
-                currentIndex = 0;
-                gamePhase = 'nextTexts';
-                dialogueText.setText(currentTexts[currentIndex]);
-                currentIndex++;
+          button.on('pointerover', () => {
+              document.body.style.cursor = 'pointer'; // 마우스를 올렸을 때 커서 모양 변경
+          });
 
-                // 이미지 표시
-                if (choice.imageKey) {
-                    showItemImage(choice.imageKey);
-                }
-            }
+          button.on('pointerout', () => {
+              document.body.style.cursor = 'default'; // 마우스가 버튼에서 벗어났을 때 커서 모양 원래대로
+          });
 
-            // 새로운 선택지 표시
-            if (choice.newChoices) {
-                this.time.delayedCall(500, () => {
-                    showNewChoices(choice.newChoices);
-                });
-            }
-        }).setName(`choiceButton${index}`);
-    });
+          button.on('pointerdown', () => {
+              console.log(choice.text + ' 선택됨');
+              dialogueBox.setVisible(true); // 선택 후 텍스트 박스 다시 보이기
+              if (choice.response) {
+                  dialogueText.setText(choice.response); // 선택에 따른 텍스트 출력
+              }
+              isChoicesVisible = false; // 선택 후 다시 텍스트를 보여줄 수 있게 함
+              // 선택지 버튼들을 제거
+              choices.forEach((choice, idx) => {
+                  this.children.getByName(`choiceButton${idx}`).destroy();
+              });
+              document.body.style.cursor = 'default'; // 선택 후 커서 모양 원래대로
+
+              // nextTexts 처리 추가
+              if (choice.nextTexts) {
+                  currentTexts = choice.nextTexts;
+                  currentIndex = 0;
+                  gamePhase = 'nextTexts';
+                  dialogueText.setText(currentTexts[currentIndex]);
+                  currentIndex++;
+
+                  // nextTexts가 완료된 후 action 수행
+                  const checkNextTextsComplete = () => {
+                      if (currentIndex >= currentTexts.length) {
+                          if (choice.action) {
+                              choice.action();
+                          }
+                      } else {
+                          setTimeout(checkNextTextsComplete, 100); // 0.1초 후 다시 확인
+                      }
+                  };
+                  checkNextTextsComplete();
+              }
+
+              // 새로운 선택지 표시
+              if (choice.newChoices) {
+                  this.time.delayedCall(500, () => {
+                      showNewChoices(choice.newChoices);
+                  });
+              }
+          }).setName(`choiceButton${index}`);
+      });
   };
 
   // 선택지 안의 선택지에 대한 함수
   const showNewChoices = (newChoices) => {
-    isChoicesVisible = true;
-    gamePhase = 'newChoices';
-    newChoices.forEach((choice, index) => {
-      const buttonY = 400 + index * 60; // 버튼 Y 위치 조정
-      const button = this.add.text(config.width - 420, buttonY, choice.text, { // 버튼 X 위치 조정
-          fontFamily: 'KyoboHandwriting2023wsa',
-          fontSize: '24px', // 폰트 크기
-          color: '#000',
-          backgroundColor: '#fff',
-          padding: { x: 20, y: 10 }, // 패딩
-          fixedWidth: 300 // 버튼 너비
-      }).setInteractive();
+      isChoicesVisible = true;
+      gamePhase = 'newChoices';
+      newChoices.forEach((choice, index) => {
+          const buttonY = 400 + index * 60; // 버튼 Y 위치 조정
+          const button = this.add.text(config.width - 420, buttonY, choice.text, {
+              fontFamily: 'KyoboHandwriting2023wsa',
+              fontSize: '24px', // 폰트 크기
+              fill: '#000', // 기본 텍스트 색상
+              backgroundColor: '#fff',
+              padding: { x: 20, y: 10 }, // 패딩
+              fixedWidth: 250 // 버튼 너비
+          }).setInteractive();
 
-      button.on('pointerover', () => {
-          document.body.style.cursor = 'pointer'; // 마우스를 올렸을 때 커서 모양 변경
-      });
-
-      button.on('pointerout', () => {
-          document.body.style.cursor = 'default'; // 마우스가 버튼에서 벗어났을 때 커서 모양 원래대로
-      });
-
-      button.on('pointerdown', () => {
-          console.log(choice.text + ' 선택됨');
-          dialogueBox.setVisible(true); // 선택 후 텍스트 박스 다시 보이기
-          if (choice.response) {
-              dialogueText.setText(choice.response); // 선택에 따른 텍스트 출력
+          // 스타일 적용
+          if (choice.style) {
+              button.setStyle(choice.style);
           }
-          isChoicesVisible = false; // 선택 후 다시 텍스트를 보여줄 수 있게 함
-          // 선택지 버튼들을 제거
-          newChoices.forEach((choice, idx) => {
-              this.children.getByName(`newChoiceButton${idx}`).destroy();
+
+          button.on('pointerover', () => {
+              document.body.style.cursor = 'pointer'; // 마우스를 올렸을 때 커서 모양 변경
           });
-          document.body.style.cursor = 'default'; // 선택 후 커서 모양 원래대로
 
-          // nextTexts 처리 추가
-          if (choice.nextTexts) {
-              currentTexts = choice.nextTexts;
-              currentIndex = 0;
-              gamePhase = 'nextTexts';
-              dialogueText.setText(currentTexts[currentIndex]);
-              currentIndex++;
+          button.on('pointerout', () => {
+              document.body.style.cursor = 'default'; // 마우스가 버튼에서 벗어났을 때 커서 모양 원래대로
+          });
 
-              // 이미지 표시
-              if (choice.imageKey) {
-                  showItemImage(choice.imageKey);
+          button.on('pointerdown', () => {
+              console.log(choice.text + ' 선택됨');
+              dialogueBox.setVisible(true); // 선택 후 텍스트 박스 다시 보이기
+              if (choice.response) {
+                  dialogueText.setText(choice.response); // 선택에 따른 텍스트 출력
               }
-          }
-      }).setName(`newChoiceButton${index}`);
-    });
+              isChoicesVisible = false; // 선택 후 다시 텍스트를 보여줄 수 있게 함
+              // 선택지 버튼들을 제거
+              newChoices.forEach((choice, idx) => {
+                  this.children.getByName(`newChoiceButton${idx}`).destroy();
+              });
+              document.body.style.cursor = 'default'; // 선택 후 커서 모양 원래대로
+
+              // nextTexts 처리 추가
+              if (choice.nextTexts) {
+                  currentTexts = choice.nextTexts;
+                  currentIndex = 0;
+                  gamePhase = 'nextTexts';
+                  dialogueText.setText(currentTexts[currentIndex]);
+                  currentIndex++;
+
+                  // 이미지 표시
+                  if (choice.imageKey) {
+                      showItemImage(choice.imageKey);
+                  }
+
+                  // nextTexts가 완료된 후 action 수행
+                  const checkNextTextsComplete = () => {
+                      if (currentIndex >= currentTexts.length) {
+                          if (choice.action) {
+                              choice.action();
+                          }
+                      } else {
+                          setTimeout(checkNextTextsComplete, 100); // 0.1초 후 다시 확인
+                      }
+                  };
+                  checkNextTextsComplete();
+              }
+          }).setName(`newChoiceButton${index}`);
+      });
   };
+
+
 
 
 
