@@ -82,7 +82,7 @@
   <div id="game-container">
     <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg" alt="Settings"></button>
     <button id="prev-button" class="nav-button" onclick="viewSection(-1); event.stopPropagation();"><</button>
-    <button id="next-button" class="nav-button" onclick="viewSection(1); event.stopPropagation();">></button>
+        <button id="next-button" class="nav-button" onclick="viewSection(1); event.stopPropagation();">></button>
   </div>
 
   <script>
@@ -281,53 +281,81 @@
     }
 
     function create() {
-      bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+  bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-      var scaleX = config.width / bgImage.width;
-      var scaleY = config.height / bgImage.height;
-      var scale = Math.max(scaleX, scaleY);
+  var scaleX = config.width / bgImage.width;
+  var scaleY = config.height / bgImage.height;
+  var scale = Math.max(scaleX, scaleY);
 
-      bgImage.setScale(scale).setOrigin(0, 0);
+  bgImage.setScale(scale).setOrigin(0, 0);
 
-      camera = this.cameras.main;
-      camera.setViewport(0, 0, config.width, config.height);
+  camera = this.cameras.main;
+  camera.setViewport(0, 0, config.width, config.height);
 
-      sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+  sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
 
-      alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
-      alertIcon.setScale(0.5);
-      alertIcon.on('pointerdown', () => showDialog(texts0));
+  alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
+  alertIcon.setScale(0.5);
+  alertIcon.on('pointerdown', () => showDialog(texts0));
 
-      teacherImage = this.add.image(920, 400, 'teacher');
-      teacherImage.setScale(0.25);
-      teacherImage.setVisible(false);
+  teacherImage = this.add.image(920, 400, 'teacher');
+  teacherImage.setScale(0.25);
+  teacherImage.setVisible(false);
 
-      dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
-      dialogBox.setVisible(false);
-      dialogBox.on('pointerdown', () => {
-        if (!initialDialogClick || choiceSelected) {
-          advanceDialogue();
-        }
-      });
-
-      dialogText = this.add.text(config.width / 2, config.height - 70, '', {
-        fontFamily: 'KyoboHandwriting2023wsa',
-        fontSize: '35px',
-        fill: '#000000',
-        wordWrap: { width: 1000, useAdvancedWrap: true }
-      }).setOrigin(0.5).setAlign('center');
-      dialogText.setVisible(false);
-
-      createInventory(this);
-
-      createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
-      createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
-      createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
-      createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
-      createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
-      createClickableArea(this, 1760, 215, 125, 200, texts5); // 비상구
-      createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
+  dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
+  dialogBox.setVisible(false);
+  dialogBox.on('pointerdown', () => {
+    if (!initialDialogClick || choiceSelected) {
+      advanceDialogue();
     }
+  });
+
+  dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+    fontFamily: 'KyoboHandwriting2023wsa',
+    fontSize: '35px',
+    fill: '#000000',
+    wordWrap: { width: 1000, useAdvancedWrap: true }
+  }).setOrigin(0.5).setAlign('center');
+  dialogText.setVisible(false);
+
+  createInventory(this);
+
+  createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
+  createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
+  createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
+  createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
+  createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
+  createClickableArea(this, 1760, 215, 125, 200, texts5); // 비상구
+  createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
+
+  this.input.on('pointerdown', (pointer) => {
+    if (isChoicesVisible) return;
+    if (gamePhase === 'dialogue') {
+        if (currentIndex < currentTexts.length) {
+            dialogText.setText(currentTexts[currentIndex]);
+            currentIndex++;
+        }
+    } else if (gamePhase == 'nextTexts') {
+        if (currentIndex < currentTexts.length) {
+            dialogText.setText(currentTexts[currentIndex]);
+            if (currentTexts[currentIndex] === "[수상한 메모3]을 획득했다.") {
+                console.log('수상한 메모3 조건 충족');
+                showItemImage('memo3');
+                addItemToInventory('수상한 메모3', 'memo3');
+            }
+            if (currentTexts[currentIndex] === "[수상한 메모4]을 획득했다.") {
+                console.log('수상한 메모4 조건 충족');
+                showItemImage('memo4');
+                addItemToInventory('수상한 메모4', 'memo4');
+            }
+            currentIndex++;
+        } else {
+            dialogText.setText('또 어디를 조사해볼까?');
+            showChoices();
+        }
+    }
+});
+}
 
     function createClickableArea(scene, x, y, width, height, callbackOrTexts) {
       const clickArea = scene.add.zone(x, y, width, height).setOrigin(0).setInteractive();
@@ -387,20 +415,23 @@
     }
 
     function advanceDialogue() {
-      if (currentTextIndex == 2 && currentTexts == texts0) {
+    console.log('advanceDialogue called'); // Add this line
+    if (currentTextIndex == 2 && currentTexts == texts0) {
         teacherImage.setVisible(true);
-      }
-      if (currentTextIndex < currentTexts.length) {
+    }
+    if (currentTextIndex < currentTexts.length) {
         dialogText.setText(currentTexts[currentTextIndex]);
+        console.log('currentTextIndex:', currentTextIndex); // Add this line
+        console.log('currentTexts[currentTextIndex]:', currentTexts[currentTextIndex]); // Add this line
         currentTextIndex++;
-        return;
-      } else {
+    } else {
         dialogBox.setVisible(false);
         dialogText.setVisible(false);
         teacherImage.setVisible(false);
         initialDialogClick = true;
-      }
     }
+}
+
 
     function showClickDialog() {
       dialogBox.setVisible(true);
@@ -511,37 +542,6 @@
         }).setName(`newChoiceButton${index}`);
       });
     }
-
-    this.input.on('pointerdown', () => {
-      if (isChoicesVisible) return;
-      if (gamePhase === 'dialogue') {
-        if (currentIndex < currentTexts.length) {
-          dialogueText.setText(currentTexts[currentIndex]);
-          console.log("dialogue:" + currentTexts[currentIndex]); // Print the current text line to the console
-          currentIndex++;
-        }
-      } else if (gamePhase == 'nextTexts') {
-        if (currentIndex < currentTexts.length) {
-          dialogueText.setText(currentTexts[currentIndex]);
-          console.log('현재 텍스트:', currentTexts[currentIndex]); // Print the current text line to the console
-
-          if (currentTexts[currentIndex] === "[수상한 메모3]을 획득했다.") {
-            console.log('수상한 메모3 조건 충족');
-            showItemImage('memo3');
-            addItemToInventory('수상한 메모3', 'memo3');
-          }
-          if (currentTexts[currentIndex] === "[수상한 메모4]을 획득했다.") {
-            console.log('수상한 메모4 조건 충족');
-            showItemImage('memo4');
-            addItemToInventory('수상한 메모4', 'memo4');
-          }
-          currentIndex++;
-        } else {
-          dialogueText.setText('또 어디를 조사해볼까?');
-          showChoices();
-        }
-      }
-    });
 
     const showItemImage = (imageKey) => {
       const itemImage = game.scene.scenes[0].add.image(config.width / 2, config.height / 2, imageKey).setScale(0.5).setAlpha(0);
