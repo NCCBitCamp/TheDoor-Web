@@ -29,7 +29,7 @@
 
     .nav-button {
       position: absolute;
-      top: 50%;
+      top: 78%;
       transform: translateY(-50%);
       background-color: white;
       color: black;
@@ -40,12 +40,18 @@
     }
 
     #prev-button {
-      left: 0;
+      position: fixed;
+      left: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       font-family: 'KyoboHandwriting2023wsa';
     }
 
     #next-button {
-      right: 0;
+      position: fixed;
+      right: 10px;
+      top: 50%;
+      transform: translateY(-50%);
       font-family: 'KyoboHandwriting2023wsa';
     }
 
@@ -381,7 +387,7 @@
     }
 
     function advanceDialogue() {
-      if(currentTextIndex == 2 && currentTexts == texts0) {
+      if (currentTextIndex == 2 && currentTexts == texts0) {
         teacherImage.setVisible(true);
       }
       if (currentTextIndex < currentTexts.length) {
