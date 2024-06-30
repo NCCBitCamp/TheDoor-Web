@@ -167,6 +167,7 @@
     let modalItems = [];
 
     const createInventory = (scene) => {
+      // Existing inventory bag setup
       inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
       inventoryBag.setScale(0.5);
       inventoryBag.on('pointerdown', () => {
@@ -179,6 +180,10 @@
         document.body.style.cursor = 'default';
       });
 
+      // Overlay setup
+      overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
+
+      // Modal setup
       modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive();
       modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
         fontFamily: 'KyoboHandwriting2023wsa',
@@ -187,6 +192,7 @@
       }).setAlpha(0).setOrigin(0.5);
       modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
     };
+
 
     const addItemToInventory = (item, imageKey) => {
       if (!inventory.some(inventoryItem => inventoryItem.name === item)) {
@@ -212,7 +218,7 @@
         enlargedImageKey = 'memo3-1';
       }
 
-      const fullscreenImage = scene.add.image(scene.cameras.main.centerX, scene.cameras.main.centerY, enlargedImageKey)
+      const fullscreenImage = scene.add.image(scene.cameras.main.scrollX + scene.cameras.main.centerX, scene.cameras.main.scrollY + scene.cameras.main.centerY, enlargedImageKey)
         .setDisplaySize(scene.cameras.main.width * 0.9, scene.cameras.main.height * 0.9)
         .setAlpha(0)
         .setInteractive();
@@ -236,38 +242,44 @@
     };
 
     const toggleInventoryModal = (scene) => {
-      if (modal.alpha === 0) {
-        modal.setAlpha(1);
-        modalBackground.setAlpha(0.8);
-        modalText.setAlpha(1);
+  if (modal.alpha === 0) {
+    modal.setAlpha(1);
+    modalBackground.setAlpha(0.8);
+    modalText.setAlpha(1);
+    overlay.setAlpha(0.5); // Show overlay
 
-        inventoryImages.forEach((imageObj, index) => {
-          const itemImage = scene.add.image(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 190 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3);
-          const itemText = scene.add.text(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 100 + Math.floor(index / 4) * 140, imageObj.name, {
-            fontFamily: 'KyoboHandwriting2023wsa',
-            fontSize: '25px',
-            fill: '#000000'
-          }).setOrigin(0.5);
-          modal.add([itemImage, itemText]);
-          modalItems.push(itemImage);
-          modalItems.push(itemText);
+    inventoryImages.forEach((imageObj, index) => {
+      const itemImage = scene.add.image(scene.cameras.main.scrollX + scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.scrollY + scene.cameras.main.centerY - 190 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3);
+      const itemText = scene.add.text(scene.cameras.main.scrollX + scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.scrollY + scene.cameras.main.centerY - 100 + Math.floor(index / 4) * 140, imageObj.name, {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '25px',
+        fill: '#000000'
+      }).setOrigin(0.5);
+      modal.add([itemImage, itemText]);
+      modalItems.push(itemImage);
+      modalItems.push(itemText);
 
-          if (imageObj.key === 'memo3' || imageObj.key === 'memo4') {
-            itemImage.setInteractive();
-            itemImage.on('pointerdown', () => {
-              showItemDetails(scene, imageObj.key);
-            });
-          }
+      if (imageObj.key === 'memo3' || imageObj.key === 'memo4') {
+        itemImage.setInteractive();
+        itemImage.on('pointerdown', () => {
+          showItemDetails(scene, imageObj.key);
         });
-      } else {
-        modal.setAlpha(0);
-        modalBackground.setAlpha(0);
-        modalText.setAlpha(0);
-
-        modalItems.forEach(item => item.destroy());
-        modalItems = [];
       }
-    };
+    });
+  } else {
+    modal.setAlpha(0);
+    modalBackground.setAlpha(0);
+    modalText.setAlpha(0);
+    overlay.setAlpha(0); // Hide overlay
+
+    modalItems.forEach(item => item.destroy());
+    modalItems = [];
+  }
+};
+
+
+
+
 
     function preload() {
       this.load.image('background', 'images/5floorBD.png');
@@ -281,81 +293,81 @@
     }
 
     function create() {
-  bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+      bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-  var scaleX = config.width / bgImage.width;
-  var scaleY = config.height / bgImage.height;
-  var scale = Math.max(scaleX, scaleY);
+      var scaleX = config.width / bgImage.width;
+      var scaleY = config.height / bgImage.height;
+      var scale = Math.max(scaleX, scaleY);
 
-  bgImage.setScale(scale).setOrigin(0, 0);
+      bgImage.setScale(scale).setOrigin(0, 0);
 
-  camera = this.cameras.main;
-  camera.setViewport(0, 0, config.width, config.height);
+      camera = this.cameras.main;
+      camera.setViewport(0, 0, config.width, config.height);
 
-  sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+      sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
 
-  alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
-  alertIcon.setScale(0.5);
-  alertIcon.on('pointerdown', () => showDialog(texts0));
+      alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
+      alertIcon.setScale(0.5);
+      alertIcon.on('pointerdown', () => showDialog(texts0));
 
-  teacherImage = this.add.image(920, 400, 'teacher');
-  teacherImage.setScale(0.25);
-  teacherImage.setVisible(false);
+      teacherImage = this.add.image(920, 400, 'teacher');
+      teacherImage.setScale(0.25);
+      teacherImage.setVisible(false);
 
-  dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
-  dialogBox.setVisible(false);
-  dialogBox.on('pointerdown', () => {
-    if (!initialDialogClick || choiceSelected) {
-      advanceDialogue();
-    }
-  });
+      dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
+      dialogBox.setVisible(false);
+      dialogBox.on('pointerdown', () => {
+        if (!initialDialogClick || choiceSelected) {
+          advanceDialogue();
+        }
+      });
 
-  dialogText = this.add.text(config.width / 2, config.height - 70, '', {
-    fontFamily: 'KyoboHandwriting2023wsa',
-    fontSize: '35px',
-    fill: '#000000',
-    wordWrap: { width: 1000, useAdvancedWrap: true }
-  }).setOrigin(0.5).setAlign('center');
-  dialogText.setVisible(false);
+      dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '35px',
+        fill: '#000000',
+        wordWrap: { width: 1000, useAdvancedWrap: true }
+      }).setOrigin(0.5).setAlign('center');
+      dialogText.setVisible(false);
 
-  createInventory(this);
+      createInventory(this);
 
-  createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
-  createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
-  createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
-  createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
-  createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
-  createClickableArea(this, 1760, 215, 125, 200, texts5); // 비상구
-  createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
+      createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
+      createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
+      createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
+      createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
+      createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
+      createClickableArea(this, 1760, 215, 125, 200, texts5); // 비상구
+      createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
 
-  this.input.on('pointerdown', (pointer) => {
-    if (isChoicesVisible) return;
-    if (gamePhase === 'dialogue') {
-        if (currentIndex < currentTexts.length) {
+      this.input.on('pointerdown', (pointer) => {
+        if (isChoicesVisible) return;
+        if (gamePhase === 'dialogue') {
+          if (currentIndex < currentTexts.length) {
             dialogText.setText(currentTexts[currentIndex]);
             currentIndex++;
-        }
-    } else if (gamePhase == 'nextTexts') {
-        if (currentIndex < currentTexts.length) {
+          }
+        } else if (gamePhase == 'nextTexts') {
+          if (currentIndex < currentTexts.length) {
             dialogText.setText(currentTexts[currentIndex]);
             if (currentTexts[currentIndex] === "[수상한 메모3]을 획득했다.") {
-                console.log('수상한 메모3 조건 충족');
-                showItemImage('memo3');
-                addItemToInventory('수상한 메모3', 'memo3');
+              console.log('수상한 메모3 조건 충족');
+              showItemImage('memo3');
+              addItemToInventory('수상한 메모3', 'memo3');
             }
             if (currentTexts[currentIndex] === "[수상한 메모4]을 획득했다.") {
-                console.log('수상한 메모4 조건 충족');
-                showItemImage('memo4');
-                addItemToInventory('수상한 메모4', 'memo4');
+              console.log('수상한 메모4 조건 충족');
+              showItemImage('memo4');
+              addItemToInventory('수상한 메모4', 'memo4');
             }
             currentIndex++;
-        } else {
+          } else {
             dialogText.setText('또 어디를 조사해볼까?');
             showChoices();
+          }
         }
+      });
     }
-});
-}
 
     function createClickableArea(scene, x, y, width, height, callbackOrTexts) {
       const clickArea = scene.add.zone(x, y, width, height).setOrigin(0).setInteractive();
@@ -378,19 +390,17 @@
       teacherImage.y = camera.scrollY + 400;
 
       modalBackground.x = camera.scrollX + config.width / 2;
-      modalBackground.y = camera.scrollY + config.height / 2;
+      modalBackground.y = camera.scrollY + config.height / 2 - 180;
       modalText.x = camera.scrollX + config.width / 2;
-      modalText.y = camera.scrollY + config.height / 2 - 120;
-      modalItems.forEach((item, index) => {
-        item.x = camera.scrollX + config.width / 2 - 300 + (index % 4) * 200;
-        item.y = camera.scrollY + config.height / 2 - 100 + Math.floor(index / 4) * 140;
-      });
+      modalText.y = camera.scrollY + config.height / 2 - 300;
 
       if (inventoryBag) {
         inventoryBag.x = camera.scrollX + 1150;
         inventoryBag.y = camera.scrollY + 40;
       }
     }
+
+
 
     function viewSection(direction) {
       if (dialogBox.visible) return;
@@ -415,22 +425,22 @@
     }
 
     function advanceDialogue() {
-    console.log('advanceDialogue called'); // Add this line
-    if (currentTextIndex == 2 && currentTexts == texts0) {
+      console.log('advanceDialogue called'); // Add this line
+      if (currentTextIndex == 2 && currentTexts == texts0) {
         teacherImage.setVisible(true);
-    }
-    if (currentTextIndex < currentTexts.length) {
+      }
+      if (currentTextIndex < currentTexts.length) {
         dialogText.setText(currentTexts[currentTextIndex]);
         console.log('currentTextIndex:', currentTextIndex); // Add this line
         console.log('currentTexts[currentTextIndex]:', currentTexts[currentTextIndex]); // Add this line
         currentTextIndex++;
-    } else {
+      } else {
         dialogBox.setVisible(false);
         dialogText.setVisible(false);
         teacherImage.setVisible(false);
         initialDialogClick = true;
+      }
     }
-}
 
 
     function showClickDialog() {
