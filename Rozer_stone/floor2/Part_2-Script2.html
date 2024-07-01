@@ -36,6 +36,22 @@
             background: black;
             z-index: 2;
         }
+
+        @keyframes flash {
+            0% {
+                background-color: white;
+            }
+            50% {
+                background-color: black;
+            }
+            100% {
+                background-color: white;
+            }
+        }
+        .flashing {
+            animation: flash 1s infinite;
+        }
+
     </style>
 </head>
 <body>
@@ -45,7 +61,7 @@
     <img class="middle" onclick="redirectToNaver()">
     <img class="comment_area" onclick="redirectTo2_C()">
     <script>
-        const content = "아니... 어디까지 내려가는거야...?";
+        const content = ". . .";
         const text = document.querySelector(".text");
         const comment_area = document.querySelector(".comment_area");
         let i = 0;
@@ -57,18 +73,24 @@
                 text.innerHTML += txt;
                 i++;
             } else {
-                setTimeout(() => {
+            setTimeout(() => {
                 comment_area.src = "";
-                }, 2000);
-                // 2초 후 코멘트content2 로 나오도록 하고싶다
-                // 3초후 2-C로 이동
-                setTimeout(redirectTo2_C, 3000);
+                // 화면 반짝이는 효과 추가
+                document.body.classList.add('flashing');
+                setTimeout(() => {
+                document.body.classList.remove('flashing');
+                }, 1000);
+            }, 2000);
+
+            // 3초 후 2-C로 이동
+            setTimeout(redirectTo2_C, 3000);
             }
         }
+        
         setInterval(typing, 100);
 
         function redirectTo2_C() {
-            window.location.href = "Part_2_Cd.html";
+            window.location.href = "Part_2_C.html";
         }
     </script>
 </body>
