@@ -5,11 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>RozerStone</title>
     <style>
-        body{
+        body {
             height: 99%;
             width: 99%;
         }
-        
+
         body div {
             display: flex;
             justify-content: left;
@@ -21,15 +21,15 @@
         }
         #skipButton {
             background: rgba(0, 0, 0, 0.5);
-            color: darkred;
+            color: rgb(238, 170, 170);
             font-weight: bold;
         }
     </style>
 </head>
-<div style="display: flex; justify-content: center; align-items: center; margin-top: 10px; height: 12px;">
-    <button type="button" id="skipButton" name="skipButton" onclick="location.href='Nar_2.html'">Skip</button>
-</div>
 <body style="background-color: black;">
+    <div style="display: flex; justify-content: center; align-items: center; margin-top: 10px; height: 12px;">
+        <button type="button" id="skipButton" name="skipButton" onclick="location.href='Nar_2.html'">Skip</button>
+    </div>
     <div class="text_box" data-trigger>
         <span class="text" style="color: brown;"></span>
     </div>
@@ -43,14 +43,15 @@
             { text: "2차 식민지 원정대는 원인을 분석해 그들과의 관계 개선을 시도하여 성공한다.", audio: "Nar_2_1.mp3" },
             { text: "하지만 . . .", audio: "Nar_2_1.mp3" },
             { text: "존 화이트가 본국인 영국에 보고하러간 사이 영국은 에스파냐와 100년 전쟁을 시작한다.", audio: "Nar_2_1.mp3" },
-            { text: "로어노크 식민지는 고립되었다.", audio: "Nar_2_1.mp3" }
+            { text: "로어노크 식민지는 고립되었다.   >skip", audio: "Nar_2_1.mp3" }
         ];
         const textElement = document.querySelector(".text");
         const audioElement = document.getElementById("audio");
-        
+
         let index = 0;
         let charIndex = 0;
         let isDeleting = false;
+        let typingInterval;
 
         function typing() {
             if (index < content.length) {
@@ -83,8 +84,13 @@
             audioElement.play();
         }
 
+        document.body.addEventListener('click', () => {
+            if (index === content.length && !isDeleting && charIndex === 0) {
+                location.href = 'Nar_2.html';
+            }
+        });
+
         typing(); // 글자 타이핑 시작
     </script>
-
 </body>
 </html>
