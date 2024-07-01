@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2층</title>
+    <title>유리실</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <style>
         body {
@@ -17,7 +17,6 @@
             font-family: 'KyoboHandwriting2023wsa', sans-serif;
             cursor: default;
             background-color: rgba(0, 0, 0, 1);
-            /* 바깥 배경 어둡게 설정 */
         }
 
         #game-container {
@@ -90,14 +89,12 @@
 <body>
     <div id="game-container">
         <button id="prev-button" class="nav-button" onclick="viewSection(-1)"><</button>
-                <button id="next-button" class="nav-button" onclick="viewSection(1)">></button>
-                <button id="back-button" class="nav-button" style="display:none;" onclick="goBack()">Back</button>
-                <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg"
-                        alt="Settings"></button>
+        <button id="next-button" class="nav-button" onclick="viewSection(1)">></button>
+        <button id="back-button" class="nav-button" style="display:none;" onclick="goBack()">Back</button>
+        <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg" alt="Settings"></button>
     </div>
-
     <script>
-        let config = {
+        const config = {
             type: Phaser.AUTO,
             width: 1280,
             height: 720,
@@ -110,24 +107,28 @@
         };
 
         const game = new Phaser.Game(config);
-        let camera;
-        let bgImage;
-        let currentSection = 0;
-        let totalSections = 3;
-        let sectionWidth;
-        let dialogBox;
-        let dialogText;
-        let noteImage;
-        let currentLineIndex = 0;
-        let clickableZones = [];
-        let lockedImage;
-        let timerText;
-        let gameOverText;
 
         let inventory = [];
         let inventoryImages = [];
         let inventoryText, inventoryBag, modal, modalBackground, modalText;
-        let modalItems = []; 
+        let modalItems = [];
+        let dialogBox, dialogText;
+        let confirmBox, confirmText, yesButton, noButton;
+
+        const showItemImage = (imageKey) => {
+            const scene = game.scene.scenes[0];
+            const itemImage = scene.add.image(scene.cameras.main.scrollX + scene.cameras.main.centerX, scene.cameras.main.scrollY + scene.cameras.main.centerY, imageKey).setScale(0.5).setAlpha(0);
+            scene.tweens.add({
+                targets: itemImage,
+                alpha: 1,
+                duration: 150,
+                yoyo: true,
+                hold: 500,
+                onComplete: () => {
+                    itemImage.destroy();
+                }
+            });
+        };
 
         const createInventory = (scene) => {
             inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
@@ -142,7 +143,6 @@
                 document.body.style.cursor = 'default';
             });
 
-            // 모달 창 생성
             modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0); // 배경색 변경 예시
             modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
                 fontFamily: 'KyoboHandwriting2023wsa',
@@ -152,20 +152,13 @@
             modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
         };
 
-        const loadInventoryFromLocalStorage = () => {
-            const savedInventory = JSON.parse(localStorage.getItem('inventory'));
-            const savedInventoryImages = JSON.parse(localStorage.getItem('inventoryImages'));
-            if (savedInventory && savedInventoryImages) {
-                inventory = savedInventory;
-                inventoryImages = savedInventoryImages;
-            }
-        };
-
         const addItemToInventory = (item, imageKey) => {
             if (!inventory.includes(item)) {
                 inventory.push(item);
-                inventoryImages.push({ key: imageKey, name: item }); // 소지품 이미지와 이름을 저장
+                inventoryImages.push({ key: imageKey, name: item });
                 updateInventoryDisplay();
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                localStorage.setItem('inventoryImages', JSON.stringify(inventoryImages));
             } else {
                 console.log('아이템이 이미 소지품에 있습니다.');
             }
@@ -180,9 +173,9 @@
         const showItemDetails = (scene, itemKey) => {
             let enlargedImageKey;
             if (itemKey === 'memo1') {
-                enlargedImageKey = 'memo1-1'; // memo1 클릭 시 보여줄 이미지
+                enlargedImageKey = 'memo1-1';
             } else if (itemKey === 'memo2') {
-                enlargedImageKey = 'memo2-1'; // memo2 클릭 시 보여줄 이미지
+                enlargedImageKey = 'memo2-1';
             }
 
             const fullscreenImage = scene.add.image(scene.cameras.main.centerX, scene.cameras.main.centerY, enlargedImageKey)
@@ -196,6 +189,7 @@
                 duration: 500
             });
 
+            // 클릭 이벤트를 추가하여 이미지를 클릭하면 페이드 아웃하고 제거
             fullscreenImage.on('pointerdown', () => {
                 scene.tweens.add({
                     targets: fullscreenImage,
@@ -206,6 +200,18 @@
                     }
                 });
             });
+        };
+        
+        const useYuriRoomKey = (scene) => {
+            inventory = inventory.filter(item => item !== '유리실 열쇠');
+            inventoryImages = inventoryImages.filter(imageObj => imageObj.name !== '유리실 열쇠');
+            updateInventoryDisplay();
+
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            localStorage.setItem('inventoryImages', JSON.stringify(inventoryImages));
+
+            hideConfirmationDialog();
+            window.location.href = 'floor2.html';
         };
 
         const toggleInventoryModal = (scene) => {
@@ -225,10 +231,10 @@
                     modalItems.push(itemImage);
                     modalItems.push(itemText);
 
-                    if (imageObj.key === 'memo1' || imageObj.key === 'memo2') {
+                    if (imageObj.name === '유리실 열쇠') {
                         itemImage.setInteractive();
                         itemImage.on('pointerdown', () => {
-                            showItemDetails(scene, imageObj.key);
+                            showConfirmationDialog(scene, '유리실 열쇠');
                         });
                     }
                 });
@@ -238,7 +244,7 @@
                 modalText.setAlpha(0);
 
                 modalItems.forEach(item => item.destroy());
-                modalItems = []; 
+                modalItems = [];
             }
         };
 
@@ -264,123 +270,164 @@
             });
         }
 
-        function createClickableZone(scene, x, y, width, height, clickHandler) {
-            const zone = scene.add.zone(x, y, width, height).setOrigin(0.5).setInteractive();
-            zone.on('pointerover', () => {
-                document.body.style.cursor = 'pointer';
-            });
-            zone.on('pointerout', () => {
-                document.body.style.cursor = 'default';
-            });
-            zone.on('pointerdown', () => {
-                clickHandler();
-            });
-            clickableZones.push(zone);
-        }
-
-        function clearClickableAreas() {
-            clickableZones.forEach(zone => zone.destroy());
-            clickableZones = [];
-        }
-
-        function createClickableAreas(scene) {
-            // 유리실 클릭 영역
-            createClickableZone(scene, 1080, 255, 470, 310, () => {
-                window.location.href = '201Room.html';
-            });
-            // 강의실1 클릭 영역
-            createClickableZone(scene, 220, 310, 120, 200, () => showDialogue(["창문 틈으로 교실이 보인다.", "시설이 좋아보이는 강의실이다...", "...", "엄청난 컴퓨터다..."]));
-
-            // 강의실2 클릭 영역
-            createClickableZone(scene, 405, 310, 120, 200, () => showDialogue(["강의실 내부가 조금 보인다.", "근사해보이는 강의실...", "의자가 편해보인다.", "문이 잠겨있어 들어갈 수는 없다."]));
-
-            // 강의실3 클릭 영역
-            createClickableZone(scene, 600, 310, 120, 200, () => showDialogue(["문이 잠겨있지만 창문으로 안이 보인다.", "...대단해보이는 강의실이다.", "자리가 넓어보인다.", "..."]));
-
-            // 비상계단 클릭 영역
-            createClickableZone(scene, 1565, 282.5, 130, 255, () => {
-                if (inventory.includes('비상구 열쇠')) {
-                    window.location.href = 'floor1.html';
-                } else {
-                    showDialogue(["비상계단의 문이 굳게 닫혀있다.", "이전처럼 문을 열 수 있는 방법이 없을까?"]);
-                }
-            });
-
-            // 엘리베이터 클릭 영역
-            createClickableZone(scene, 1944, 310, 346, 200, () => showDialogue(["엘리베이터다.", "움직이지 않을 것을 알기에 더이상 버튼은 누르지 않는다.", "어떻게 작동시킬 수 있지?"]));
-        }
-
-        function changeBackground(scene, textureKey) {
-            clearClickableAreas();
-            bgImage.setTexture(textureKey);
-            let scaleX = config.width / bgImage.width;
-            let scaleY = config.height / bgImage.height;
-            let scale = Math.max(scaleX, scaleY);
-            bgImage.setScale(scale).setOrigin(0, 0);
-
-            document.body.style.cursor = 'default';
-        }
-
         function hideNavButtons() {
             document.getElementById('prev-button').style.display = 'none';
             document.getElementById('next-button').style.display = 'none';
         }
 
         function preload() {
-            this.load.image('background', 'images/2floorBD.png');
             this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
+            this.load.image('locked', 'images/locked.png');
             this.load.image('bag', 'images/bag.svg');
             this.load.image('key', 'images/key.png');
+            this.load.image('exitkey', 'images/exitkey.png');
+            this.load.image('confirmBox', 'images/dialogueBox.png');
         }
 
         function create() {
-            bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+            const bgImage = this.add.image(0, 0, 'locked').setOrigin(0, 0);
 
-            let scaleX = config.width / bgImage.width;
-            let scaleY = config.height / bgImage.height;
-            let scale = Math.max(scaleX, scaleY);
+            const scaleX = this.cameras.main.width / bgImage.width;
+            const scaleY = this.cameras.main.height / bgImage.height;
 
-            bgImage.setScale(scale).setOrigin(0, 0);
+            const scale = Math.max(scaleX, scaleY);
+            bgImage.setScale(scale).setScrollFactor(0);
 
-            camera = this.cameras.main;
-            camera.setViewport(0, 0, config.width, config.height);
+            bgImage.x = this.cameras.main.width / 2 - (bgImage.displayWidth / 2);
+            bgImage.y = this.cameras.main.height / 2 - (bgImage.displayHeight / 2);
 
-            sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+            createInventory(this);
+            hideNavButtons();
 
-            dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
-            dialogBox.setVisible(false);
+            timerText = this.add.text(50, 25, '02:00', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '40px',
+                fill: '#ff0000'
+            }).setScrollFactor(0);
 
-            dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+            startTimer(this, 120);
+
+            const clickArea1 = this.add.zone(650, 95, 650, 190).setOrigin(0.5).setInteractive();
+            clickArea1.on('pointerdown', () => {
+                window.location.href = 'game.html';
+            });
+
+            const clickArea2 = this.add.zone(130, 590, 100, 90).setOrigin(0.5).setInteractive();
+            if (localStorage.getItem('returnedFromGame') === 'true') {
+                clickArea2.on('pointerdown', () => {
+                    showDialogue(["[유리실 열쇠]를 획득했다."]);
+                    showItemImage('exitkey');
+                    addItemToInventory('유리실 열쇠', 'exitkey');
+                });
+                localStorage.removeItem('returnedFromGame');
+            }
+
+            const clickArea3 = this.add.zone(140, 680, 100, 70).setOrigin(0.5).setInteractive();
+            clickArea3.on('pointerdown', () => {
+                showDialogue(["[비상구 열쇠]를 획득했다."]);
+                showItemImage('key');
+                addItemToInventory('비상구 열쇠', 'key');
+            });
+
+            dialogBox = this.add.image(this.cameras.main.width / 2, this.cameras.main.height - 100, 'dialogueBox').setOrigin(0.5, 1).setInteractive();
+            dialogText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height - 120, '', {
                 fontFamily: 'KyoboHandwriting2023wsa',
                 fontSize: '35px',
                 fill: '#000000',
-                wordWrap: { width: 1000, useAdvancedWrap: true }
-            }).setOrigin(0.5).setAlign('center');
+                wordWrap: { width: 600, useAdvancedWrap: true }
+            }).setOrigin(0.5);
+
+            dialogBox.setVisible(false);
             dialogText.setVisible(false);
 
-            createInventory(this);
-            loadInventoryFromLocalStorage();
-            updateInventoryDisplay();
-            createClickableAreas(this);
+            confirmBox = this.add.image(this.cameras.main.centerX, this.cameras.main.centerY, 'confirmBox').setOrigin(0.5).setAlpha(0).setScale(0.5);
+            confirmText = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY - 40, '사용하시겠습니까?', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '24px',
+                fill: '#000000',
+                wordWrap: { width: 600, useAdvancedWrap: true }
+            }).setOrigin(0.5).setAlpha(0);
+
+            yesButton = this.add.text(this.cameras.main.centerX - 50, this.cameras.main.centerY + 20, '네', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '24px',
+                fill: '#00ff00'
+            }).setInteractive().setOrigin(0.5).setAlpha(0).on('pointerdown', () => {
+                useYuriRoomKey(game.scene.scenes[0]);
+            });
+
+            noButton = this.add.text(this.cameras.main.centerX + 50, this.cameras.main.centerY + 20, '아니오', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '24px',
+                fill: '#ff0000'
+            }).setInteractive().setOrigin(0.5).setAlpha(0).on('pointerdown', () => {
+                hideConfirmationDialog();
+            });
+        }
+
+        function showConfirmationDialog(scene, itemName) {
+            confirmBox.setAlpha(1);
+            confirmText.setAlpha(1).setText(`${itemName}를 사용하시겠습니까?`);
+            yesButton.setAlpha(1);
+            noButton.setAlpha(1);
+
+            scene.tweens.add({
+                targets: [confirmBox, confirmText, yesButton, noButton],
+                alpha: 1,
+                duration: 500
+            });
+        }
+
+        function hideConfirmationDialog() {
+            confirmBox.setAlpha(0);
+            confirmText.setAlpha(0);
+            yesButton.setAlpha(0);
+            noButton.setAlpha(0);
+        }
+
+        function startTimer(scene, duration) {
+            let timer = duration;
+
+            const timerInterval = setInterval(() => {
+                let minutes = Math.floor(timer / 60);
+                let seconds = timer % 60;
+                seconds = seconds < 10 ? '0' + seconds : seconds;
+
+                timerText.setText(`${minutes}:${seconds}`);
+                timer--;
+
+                if (timer < 0) {
+                    clearInterval(timerInterval);
+                    showGameOver(scene);
+                }
+            }, 1000);
+        }
+
+        function showGameOver(scene) {
+            let graphics = scene.add.graphics();
+            graphics.fillStyle(0x000000, 1);
+            graphics.fillRect(0, 0, config.width, config.height);
+
+            gameOverText = scene.add.text(config.width / 2, config.height / 2, 'Game Over', {
+                fontFamily: 'KyoboHandwriting2023wsa',
+                fontSize: '64px',
+                fill: '#ffffff'
+            }).setOrigin(0.5).setScrollFactor(0);
+
+            setTimeout(() => {
+                window.location.href = 'floor2.html';
+            }, 3000);
         }
 
         function update() {
-            dialogBox.x = camera.scrollX + config.width / 2;
-            dialogBox.y = camera.scrollY + 530;
+            timerText.x = this.cameras.main.scrollX + 50;
+            timerText.y = this.cameras.main.scrollY + 50;
 
-            dialogText.x = camera.scrollX + config.width / 2;
-            dialogText.y = camera.scrollY + config.height - 70;
-        }
+            dialogBox.x = this.cameras.main.scrollX + this.cameras.main.width / 2;
+            dialogBox.y = this.cameras.main.scrollY + 800;
 
-        function viewSection(direction) {
-            if (dialogBox.visible) return;
-
-            currentSection += direction;
-            if (currentSection < 0) currentSection = 0;
-            if (currentSection >= totalSections) currentSection = totalSections - 1;
-
-            camera.scrollX = sectionWidth * currentSection;
-            camera.scrollY = 0;
+            dialogText.x = this.cameras.main.scrollX + this.cameras.main.width / 2;
+            dialogText.y = this.cameras.main.scrollY + this.cameras.main.height - 70;
         }
     </script>
 </body>
