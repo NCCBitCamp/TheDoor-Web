@@ -63,10 +63,10 @@ function checkGuess() {
   //----------------------//
   // 5개가 아닐 때 오류알람 // 
   //----------------------//
-  // if (guessString.length != 5) {
-  //   toastr.error("Not enough letters!");
-  //   return;
-  // }
+  if (guessString.length != 5) {
+    toastr.error("Not enough letters!");
+    return;
+  }
 
   //------------------------------//
   // 사용자 입력값이 단어가 아닐 때 // 
@@ -115,7 +115,7 @@ function checkGuess() {
   // 정답 맞췄을 때   // 
   //-----------------//
   if (guessString === rightGuessString) {
-    toastr.success("!");
+    toastr.success("collect!! you won!!");
     guessesRemaining = 0;
     return;
   } else {

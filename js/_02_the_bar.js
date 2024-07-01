@@ -224,7 +224,7 @@ function addPaperArea() {
 // 월들 영역 클릭 이벤트를 처리하는 함수 //
 // ---------------------------------- //
 function addWordleArea() {
-    const wordleArea = { x: 608 , y: 334, width: 231, height: 248, href: '../game/wordle/index01.html'};
+    const wordleArea = { x: 608 , y: 334, width: 231, height: 248, href: '../game/wordle/wordle.html'};
 
     const overlay = document.createElement('div');
     overlay.classList.add('wordle-area');
@@ -253,7 +253,7 @@ function addWordleArea() {
     // 클릭 이벤트 리스너 추가
     overlay.addEventListener('click', function(event) {
         event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-        window.location.href = '../game/wordle/index01.html';
+        window.location.href = '../game/wordle/wordle.html';
     });
 }
 
