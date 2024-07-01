@@ -1,3 +1,12 @@
+document.addEventListener('DOMContentLoaded', function () {
+    const myModal = new bootstrap.Modal(document.getElementById('intro'), {
+        keyboard: false
+    });
+
+    // 초기 영역 추가
+    addClickableAreas();
+});
+
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false; 
 let secondImageDisplayed = false; 
@@ -249,5 +258,6 @@ function resetLiquorClickCounts() {
         liquorClickCounts[key] = 0;
     }
 }
+
 // 초기 영역 추가
 addClickableAreas();

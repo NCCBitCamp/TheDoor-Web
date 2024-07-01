@@ -11,7 +11,7 @@
         /* 나중에 css로 정리하기 */
         /* 모달 속 내용 ??아이템 넣어야함 */
 
-        .modal-content {
+        .useritem_modal-content {
             display: flex;
             flex-direction: column;
             width: 10rem;
@@ -22,7 +22,7 @@
             border: none;
         }
 
-        .modal-body {
+        .useritem_modal-body {
             position: fixed;
             right: 0;
             /* background-color: rgba(116, 66, 33, 0.877); */
@@ -30,7 +30,7 @@
         }
 
         /* 버튼 위치 */
-        button {
+        #button-item {
             width: auto;
             height: auto;
             position: fixed;
@@ -39,7 +39,7 @@
         }
 
         /* 버튼 색 */ 
-        .btn-primary {
+        .btn-primary-item {
             --bs-btn-color: #fff;
             --bs-btn-bg: rgba(116, 66, 33, 0.877);
             --bs-btn-border-color: rgba(116, 66, 33, 0.877);
@@ -59,7 +59,7 @@
         /*-----------------------*/
         /*    아이템 매핑 box     */
         /*-----------------------*/
-        .box1 {
+        .box1-item {
             width: 8rem;
             height: 8rem;
             border-radius: 10%;
@@ -74,7 +74,7 @@
             cursor:pointer;
         }
 
-        .box2 {
+        .box2-item  {
             text-align: center;
             width: 8rem;
             height: 8rem;
@@ -84,7 +84,7 @@
             background-position: center;
         }
 
-        .box3 {
+        .box3-item  {
             text-align: center;
             width: 8rem;
             height: 8rem;
@@ -94,7 +94,7 @@
             background-position: center;
         }
 
-        .box4 {
+        .box4-item  {
             text-align: center;
             width: 8rem;
             height: 8rem;
@@ -104,7 +104,7 @@
             background-position: center;
         }
 
-        .box5 {
+        .box5-item  {
             text-align: center;
             width: 8rem;
             height: 8rem;
@@ -117,22 +117,22 @@
 </head>
 <body>
     <!-- 모달 버튼(아이템창 버튼) -->
-    <button type="button" class="btn btn-primary" 
-            data-bs-toggle="modal" data-bs-target="#intro">💼</button>
+    <button type="button" id="button-item" class="btn btn-primary-item" 
+            data-bs-toggle="modal" data-bs-target="#intro">💼item💼</button>
 
     <!-- 모달 창 영역 -->
     <!-- 화면 흐려지는 효과 fade 쓰게되면 뚝뚝 끊겨서 제거 -->
     <div class="modal" id="intro">
         <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-body">
+            <div class="useritem_modal-content">
+                <div class="useritem_modal-body">
                     <table>
                         <!-- ??아이템을 어떻게 담아야할까? -->
-                        <tr><div class="box1"></div></tr>
-                        <tr><div class="box2"></div></tr>
-                        <tr><div class="box3"></div></tr>
-                        <tr><div class="box4"></div></tr>
-                        <tr><div class="box5"></div></tr>
+                        <tr><div class="box1-item "></div></tr>
+                        <tr><div class="box2-item "></div></tr>
+                        <tr><div class="box3-item "></div></tr>
+                        <tr><div class="box4-item "></div></tr>
+                        <tr><div class="box5-item "></div></tr>
                     </table>
                 </div>
             </div>
