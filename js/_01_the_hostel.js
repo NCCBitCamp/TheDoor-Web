@@ -63,7 +63,7 @@ function addButton() {
     
     // 버튼 클릭 이벤트 추가
     button.addEventListener('click', function() {
-        alert('성실히 조사에 임해보자');
+        // alert('성실히 조사에 임해보자');
         // 필요한 작업 추가 (예: 페이지 이동)
         // window.location.href = 'investigation_page.html';
         button.remove(); // 버튼 제거

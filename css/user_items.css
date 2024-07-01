@@ -21,6 +21,7 @@
 #button-item {
     width: auto;
     height: auto;
+    font-size: 24px; /* 아이콘 크기 조정 */
     position: absolute; /* game-container 내부에서 절대 위치 설정 */
     top: 20px;
     right: 20px;
@@ -57,3 +58,60 @@
     align-items: center;
     justify-content: flex-end;
 }
+
+  /*-----------------------*/
+        /*    아이템 매핑 box     */
+        /*-----------------------*/
+        .box1-item {
+            width: 8rem;
+            height: 8rem;
+            border-radius: 10%;
+            margin-bottom: 10px;
+            background-repeat : no-repeat;
+            background-position: center;
+
+            /*-----------------------*/
+            /*아이템 획득시 추가할 내용*/
+            /*-----------------------*/
+            background-image: url(../사용자아이템창/쟁미.png);
+            cursor:pointer;
+        }
+
+        .box2-item {
+            text-align: center;
+            width: 8rem;
+            height: 8rem;
+            border-radius: 10%;
+            margin-bottom: 10px;
+            background-repeat : no-repeat;
+            background-position: center;
+        }
+
+        .box3-item {
+            text-align: center;
+            width: 8rem;
+            height: 8rem;
+            border-radius: 10%;
+            margin-bottom: 10px;
+            background-repeat : no-repeat;
+            background-position: center;
+        }
+
+        .box4-item {
+            text-align: center;
+            width: 8rem;
+            height: 8rem;
+            border-radius: 10%;
+            margin-bottom: 10px;
+            background-repeat : no-repeat;
+            background-position: center;
+        }
+
+        .box5-item {
+            text-align: center;
+            width: 8rem;
+            height: 8rem;
+            border-radius: 10%;
+            background-repeat : no-repeat;
+            background-position: center;
+        }
