@@ -45,47 +45,40 @@
         img:hover{
             pointer-events: visiblePainted;
         }
-        .candle {
+        .lever {
             position: absolute;
             z-index: 1;
             width: 2vw;
-            height: 6vh;
-            right: 46%;
-            top: 41%;
-        }
-        .paper1 {
-            z-index: 2;
-            width: 5vw;
-            height: 5vh;
-            right: 43%;
-            top: 48%;
-         }
-        .paper10 {
-            z-index: 2;
-            width: 4vw;
-            height: 3vh;
-            right: 55%;
-            top: 48%;
-        }
-        .book1 {
-            z-index: 3;
-            width: 5vw;
-            height: 5vh;
-            right: 46%;
-            top: 45%;
-            rotate: -30deg;
-        }
-        .book23 {
-            z-index: 2;
-            width: 4vw;
-            height: 4vw;
-            right: 44%;
+            height: 12vh;
+            right: 59%;
             top: 44%;
+            rotate: -47deg;
+         }
+        .leverBody {
+            position: absolute;
+            z-index: 2;
+            width: 10vw;
+            height: 10vh;
+            right: 52%;
+            top: 48%;
         }
-        .book3{
-            right: 54%;
-            height: 4vh;
+        .tortureTable {
+            position: absolute;
+            z-index: 3;
+            width: 18vw;
+            height: 16vh;
+            right: 37%;
             top: 46%;
+        }
+        .skel2{
+            z-index: 4;
+            position: absolute;
+            width: 14vw;
+            height: 13vh;
+            right: 41%;
+            top: 43%;
+            transform: scaleX(-1);
+            rotate: 190deg;
         }
         .inventory_button {
             position: absolute;
@@ -109,12 +102,10 @@
         </div>
         <div>
             <img src="Part_2_C.png" class="middle bgimg">
-            <img src="image/종이1.png" class="middle paper1" onclick="getItem()">
-            <img src="image/종이10.png" class="middle paper10" onclick="getItem()">
-            <img src="image/양초.png" class="middle candle" onclick="getItem()">
-            <img src="image/책상위맨위책.png" class="middle book1" onclick="getItem()">
-            <img src="image/책상위책2.png" class="middle book23" onclick="getItem()">
-            <img src="image/책상위책3.png" class="middle book23 book3" onclick="getItem()">
+            <img src="image/고문대.png" class="tortureTable" onclick="getItem()">
+            <img src="image/레버.png" class="lever" onclick="getItem()">
+            <img src="image/레버받침대.png" class="leverBody" onclick="getItem()">
+            <img src="image/해골2.png" class="skel2" onclick="getItem()">
             <img src="comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
         </div>
         <a href="Part_2_L.html" class="carousel-control-prev" data-bs-slide="prev">
