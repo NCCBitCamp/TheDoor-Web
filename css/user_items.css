@@ -2,6 +2,7 @@
 .useritem_modal-content {
     display: flex;
     flex-direction: column;
+    top: 0;
     width: 100%;
     height: auto;
     pointer-events: auto;
@@ -11,7 +12,7 @@
 }
 
 .useritem_modal-body {
-    position: relative;
+    position: fixed;
     right: 0;
     background-image: url(../사용자아이템창/아이템창우주최종2.jpg);
     background-size: cover; /* 이미지를 커버 모드로 설정 */
@@ -59,7 +60,7 @@
     justify-content: flex-end;
 }
 
-  /*-----------------------*/
+        /*-----------------------*/
         /*    아이템 매핑 box     */
         /*-----------------------*/
         .box1-item {
