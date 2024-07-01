@@ -1,0 +1,140 @@
+body {
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+    font-family: 'KyoboHandwriting2023wsa', sans-serif;
+    cursor: default;
+    background-color: rgba(0, 0, 0, 1); /* 바깥 배경 어둡게 설정 */
+}
+#game-container {
+    position: relative;
+    width: 1280px;
+    height: 720px;
+    margin: 0 auto;
+    overflow: hidden;
+}
+.nav-button {
+    position: absolute;
+    top: 78%;
+    transform: translateY(-50%);
+    background-color: white;
+    color: black;
+    border: none;
+    font-size: 24px;
+    cursor: pointer;
+    padding: 10px;
+  }
+#prev-button {
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'KyoboHandwriting2023wsa';
+  }
+#next-button {
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-family: 'KyoboHandwriting2023wsa';
+  }
+#back-button {
+    top: 8%;
+    left: 8%;
+    transform: translateX(-50%);
+    font-family: 'KyoboHandwriting2023wsa';
+    display: none;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+}
+#back-button img {
+    width: 60px;
+    height: 60px;
+}
+#settings-button {
+position: absolute;
+top: 18px;
+right: 25px;
+background: transparent;
+border: none;
+cursor: pointer;
+}
+#settings-button img {
+    width: 50px;
+    height: 50px;
+}
+/* 입력 상자 스타일 */
+#inputBox {
+    position: absolute;
+    bottom: 270px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 34px;
+    font-family: 'KyoboHandwriting2023wsa';
+    padding: 10px;
+    border: 2px solid #8B4513; /* Dark brown border */
+    border-radius: 5px;
+    background-color: #F5DEB3; /* Light brown background */
+    color: #8B4513; /* Dark brown text */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow */
+    display: none;
+    width: 240px; /* 고정된 너비 */
+    height: 50px; /* 고정된 높이 */
+    box-sizing: border-box; /* 패딩과 테두리 포함 */
+}
+
+/* 버튼 스타일 */
+#submitButton {
+    position: absolute;
+    bottom: 269px;
+    left: calc(50% + 160px);
+    transform: translateX(-50%);
+    font-size: 24px;
+    font-family: 'KyoboHandwriting2023wsa';
+    padding: 12px 30px;
+    display: none;
+    background-color: #8B4513; /* Dark brown background */
+    color: white; /* White text */
+    border: none; /* Remove borders */
+    border-radius: 5px; /* Rounded corners */
+    cursor: pointer; /* Pointer/hand icon */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow */
+    transition: all 0.3s ease; /* Animation for hover effect */
+}
+
+#submitButton:hover {
+    background-color: #A0522D; /* Lighter brown background on hover */
+}
+
+#submitButton:active {
+    background-color: #5C3317; /* Darker brown background on click */
+    box-shadow: 0 2px #666; /* Smaller shadow */
+    transform: translateX(-50%) translateY(4px); /* Move the button down */
+}
+
+@font-face {
+    font-family: 'KyoboHandwriting2023wsa';
+    src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
+    font-weight: normal;
+    font-style: normal;
+}
+
+@font-face {
+    font-family: 'LABDigital';
+    font-weight: normal;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.ttf') format("truetype");
+    font-display: swap;
+}
+
+.digital-font {
+    font-family: 'LABDigital', sans-serif;
+}
