@@ -1,3 +1,4 @@
+// x,y값 찾기 (좌표로) --비율
 // document.addEventListener('mousemove', function(event) {
 //     const vw = window.innerWidth;
 //     const vh = window.innerHeight;
@@ -8,19 +9,19 @@
 //     console.log(`Mouse position: X=${x}vw, Y=${y}vh`);
 // });
 
-document.getElementById('game-container').addEventListener('mousemove', function(event) {
-    const gameContainer = document.getElementById('game-container');
-    const rect = gameContainer.getBoundingClientRect();
+// x,y값 찾기 (좌표로)--vertex
+// document.getElementById('game-container').addEventListener('mousemove', function(event) {
+//     const gameContainer = document.getElementById('game-container');
+//     const rect = gameContainer.getBoundingClientRect();
     
-    const x = event.clientX - rect.left;
-    const y = event.clientY - rect.top;
+//     const x = event.clientX - rect.left;
+//     const y = event.clientY - rect.top;
     
-    console.log(`Mouse position relative to game-container: X=${x}, Y=${y}`);
-});
+//     console.log(`Mouse position relative to game-container: X=${x}, Y=${y}`);
+// });
 
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false; 
-
 
 const imageElement = document.getElementById('right-wall-image');
 const leftButton = document.getElementById('left-button');
@@ -29,7 +30,7 @@ const rightButton = document.getElementById('right-button');
 // 클릭 가능한 영역을 추가하는 함수
 function addClickableAreas() {
     const clickableAreas = [
-        { id: 'rushhourgame', x: 117 , y: 185, width: 260, height: 230, image: '../image/images/rightwall/러시아워.PNG' },
+        { id: 'rushhourgame', x: 117 , y: 185, width: 260, height: 230, href: '../game/rushhour/rushhour.html' },
         { id: 'woman-frame', x: 520, y: 110, width: 140, height: 160, image: '../image/images/rightwall/여자액자2.PNG' },
         { id: 'fish-frame', x: 714, y: 150, width: 150, height: 170, image: '../image/images/rightwall/물고기액자2.PNG' },
         { id: 'shadow-right-frame', x: 917, y: 76, width: 180, height: 210, image: '../image/images/rightwall/그림자액자2.PNG' },
