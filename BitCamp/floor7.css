@@ -7,6 +7,7 @@ body {
     overflow: hidden;
     font-family: 'KyoboHandwriting2023wsa', sans-serif;
     cursor: default;
+    background-color: rgba(0, 0, 0, 1); /* 바깥 배경 어둡게 설정 */
 }
 #game-container {
     position: relative;
@@ -25,15 +26,21 @@ body {
     font-size: 24px;
     cursor: pointer;
     padding: 10px;
-}
+  }
 #prev-button {
-    left: 0;
+    position: fixed;
+    left: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     font-family: 'KyoboHandwriting2023wsa';
-}
+  }
 #next-button {
-    right: 0;
+    position: fixed;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
     font-family: 'KyoboHandwriting2023wsa';
-}
+  }
 #back-button {
     top: 8%;
     left: 8%;
@@ -63,10 +70,11 @@ cursor: pointer;
 /* 입력 상자 스타일 */
 #inputBox {
     position: absolute;
-    bottom: 200px;
+    bottom: 270px;
     left: 50%;
     transform: translateX(-50%);
-    font-size: 24px;
+    font-size: 34px;
+    font-family: 'KyoboHandwriting2023wsa';
     padding: 10px;
     border: 2px solid #8B4513; /* Dark brown border */
     border-radius: 5px;
@@ -74,16 +82,20 @@ cursor: pointer;
     color: #8B4513; /* Dark brown text */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Add a shadow */
     display: none;
+    width: 240px; /* 고정된 너비 */
+    height: 50px; /* 고정된 높이 */
+    box-sizing: border-box; /* 패딩과 테두리 포함 */
 }
 
 /* 버튼 스타일 */
 #submitButton {
     position: absolute;
-    bottom: 200px;
-    left: calc(50% + 150px);
+    bottom: 269px;
+    left: calc(50% + 160px);
     transform: translateX(-50%);
     font-size: 24px;
-    padding: 10px 20px;
+    font-family: 'KyoboHandwriting2023wsa';
+    padding: 12px 30px;
     display: none;
     background-color: #8B4513; /* Dark brown background */
     color: white; /* White text */
@@ -103,9 +115,26 @@ cursor: pointer;
     box-shadow: 0 2px #666; /* Smaller shadow */
     transform: translateX(-50%) translateY(4px); /* Move the button down */
 }
+
 @font-face {
     font-family: 'KyoboHandwriting2023wsa';
     src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
     font-weight: normal;
     font-style: normal;
+}
+
+@font-face {
+    font-family: 'LABDigital';
+    font-weight: normal;
+    font-style: normal;
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.eot');
+    src: url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.eot?#iefix') format('embedded-opentype'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.woff2') format('woff2'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.woff') format('woff'),
+         url('https://cdn.jsdelivr.net/gh/webfontworld/fontlab/LABDigital.ttf') format("truetype");
+    font-display: swap;
+}
+
+.digital-font {
+    font-family: 'LABDigital', sans-serif;
 }
