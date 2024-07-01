@@ -29,7 +29,7 @@ const sharedTimer = {
   },
 
   redirectToDeadInDark() {
-      window.location.href = 'Dead_In_Dark.html';
+      window.location.href = '../floor1/Dead_In_Dark.html';
   }
 };
 
