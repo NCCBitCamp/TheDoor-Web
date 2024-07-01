@@ -14,7 +14,7 @@
     right: 0;
     height: auto;
     /* background-color: rgba(116, 66, 33, 0.877); */
-    background-image: url(../사용자아이템창/아이템창.jpg);
+    background-image: url(../image/images/useritem/아이템창.jpg);
 }
 /* .useritem_modal-body {
     position: fixed;
@@ -71,85 +71,107 @@
         /*-----------------------*/
         .box1-item {
             width: 10rem;
-            height: 10rem;
+            height: 9.0rem;
             border-radius: 10%;
-            margin-bottom: 10px;
             background-repeat : no-repeat;
-            background-position: center;
-
+            background-position: bottom;
             /*-----------------------*/
             /*아이템 획득시 추가할 내용*/
             /*-----------------------*/
-            background-image: url(../사용자아이템창/쟁미.png);
+            background-image: url(../image/images/useritem/칵테일잔.PNG);
+            background-size: 50%;
+            cursor:pointer;
+        }
+        .box1-1-item {
+            width: 10rem;
+            height: 9.5rem;
+            border-radius: 10%;
+            background-repeat : no-repeat;
+            background-position: center;
+            background-image: url(../사용자아이템창/칵테일잔.PNG);
             cursor:pointer;
         }
 
         .box2-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height: 9rem;
             border-radius: 10%;
-            margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/깨진액자.PNG);
+            background-size: 80%;
             cursor:pointer;
         }
 
         .box3-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height: 8.6rem;
             border-radius: 10%;
-            margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/심장.PNG);
+            background-size: 50%;
             cursor:pointer;
         }
 
         .box4-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height: 8.6rem;
             border-radius: 10%;
-            margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/가위.png);
+            background-size: 80%;
+            cursor:pointer;
+        }
+
+        .box4-1-item {
+            text-align: center;
+            width: 10rem;
+            height: 8.6rem;
+            border-radius: 10%;
+            background-repeat : no-repeat;
+            background-position: center;
+            background-image: url(../image/images/useritem/쟁미.png);
+            background-size: cover;
             cursor:pointer;
         }
 
         .box5-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height: 8.7rem;
             border-radius: 10%;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/손목시계.PNG);
+            background-size: 75%;
             cursor:pointer;
         }
         .box6-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height:8.6rem;
             border-radius: 10%;
-            margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/반지.PNG);
+            background-size: 70%;
             cursor:pointer;
         }
 
         .box7-item {
             text-align: center;
             width: 10rem;
-            height: 10rem;
+            height: 8.6rem;
             border-radius: 10%;
             background-repeat : no-repeat;
             background-position: center;
-            /* background-image: url(../사용자아이템창/쟁미.png); */
+            background-image: url(../image/images/useritem/동전.png);
+            background-size: 75%;
             cursor:pointer;
         }
         
