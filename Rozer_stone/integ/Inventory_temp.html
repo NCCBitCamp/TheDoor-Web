@@ -73,9 +73,7 @@
     
     <!-- 인벤토리에서 돌아가는 버튼 -->
     <div>
-        <a href="Part_1_C.html">
-            <img src="Inventory_back.png" class="back_button">
-        </a>
+        <img src="Inventory_back.png" class="back_button" onclick="getBack()">
     </div>
     
     <script>
@@ -98,6 +96,16 @@
             });
         });
 
+
+        // 인벤 돌아가기 버튼 선택
+        const backButton = document.getElementById('backButton');
+
+        // 마우스 클릭 이벤트 리스너 등록
+        backButton.addEventListener('click', mouseclick);
+        function getBack(){    
+            // 뒤로 가기 기능 구현
+            window.history.back();
+        }
         // 아이템을 제거하는 함수
         function removeItem(index) {
             let inventory = JSON.parse(localStorage.getItem('inventory')) || []; // 로컬 스토리지에서 인벤토리 데이터를 가져옴
