@@ -41,10 +41,10 @@
             0% {
                 background-color: white;
             }
-            50% {
+            20% {
                 background-color: black;
             }
-            100% {
+            60% {
                 background-color: white;
             }
         }
@@ -58,40 +58,44 @@
     <div class="text_box" data-trigger>
         <span class="text"></span>
     </div>
-    <img class="middle" onclick="redirectToNaver()">
-    <img class="comment_area" onclick="redirectTo2_C()">
+    <img class="middle">
+    <img class="comment_area">
     <script>
         const content = ". . .";
         const text = document.querySelector(".text");
         const comment_area = document.querySelector(".comment_area");
         let i = 0;
 
-        function typing(){
+        function typing() {
             comment_area.src = "comment_area_bloody.png";
             if (i < content.length) {
                 let txt = content.charAt(i);
                 text.innerHTML += txt;
                 i++;
-            } else {
-            setTimeout(() => {
-                comment_area.src = "";
+            } 
+            else {
+                playAudio('성냥1.mp3'); // 성냥 소리 재생
                 // 화면 반짝이는 효과 추가
                 document.body.classList.add('flashing');
                 setTimeout(() => {
-                document.body.classList.remove('flashing');
-                }, 1000);
-            }, 2000);
+                    document.body.classList.remove('flashing');
+                    }, 1000)
 
-            // 3초 후 2-C로 이동
-            setTimeout(redirectTo2_C, 3000);
+                // 클릭 이벤트 종료 후 0.5초 후에 페이지 이동
+                setTimeout(function() {
+                    window.location.href = 'Part_2_R.html';
+                    }, 500)
             }
         }
 
+
         setInterval(typing, 100);
 
-        function redirectTo2_C() {
-            window.location.href = "Part_2_R.html";
+        function playAudio(audioSrc) {
+            const audio = new Audio(audioSrc);
+            audio.play();
         }
+
     </script>
 </body>
 </html>

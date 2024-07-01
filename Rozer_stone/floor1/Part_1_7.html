@@ -69,10 +69,10 @@
             0% {
                 background-color: white;
             }
-            50% {
+            20% {
                 background-color: black;
             }
-            100% {
+            60% {
                 background-color: white;
             }
         }
@@ -122,32 +122,23 @@
             modal.style.display = "flex"; // 모달 창 열기
         });
 
-        // yesButton.addEventListener('click', function() {
-        //     modal.style.display = "none"; // 모달 창 닫기
-        //     playAudio('성냥1.mp3'); // 성냥 소리 재생
-        //     setTimeout(function() {
-        //         window.location.href = 'Part_1_C.html'; // 일정 시간 후 페이지 이동
-        //     }, 3000); // 3초 후에 이동
-        // });
         yesButton.addEventListener('click', function() {
         modal.style.display = "none"; // 모달 창 닫기
         playAudio('성냥1.mp3'); // 성냥 소리 재생
 
-        // 2초 후 코멘트 박스 지우기, 화면 반짝이기
-        setTimeout(() => {
-        comment_area.src = "";
         // 화면 반짝이는 효과 추가
         document.body.classList.add('flashing');
         setTimeout(() => {
             document.body.classList.remove('flashing');
-        }, 1000);
-        }, 2000);
+            }, 1000);
 
-        // 3초 후 Part_1_C.html로 이동
+        // 클릭 이벤트 종료 후 0.5초 후에 페이지 이동
         setTimeout(function() {
-        window.location.href = 'Part_1_C.html';
-        }, 3000);
+            window.location.href = 'Part_1_C.html';
+            }, 500);
         });
+
+
 
         noButton.addEventListener('click', function() {
             modal.style.display = "none"; // 모달 창 닫기
