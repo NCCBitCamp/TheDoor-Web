@@ -1,12 +1,3 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const myModal = new bootstrap.Modal(document.getElementById('intro'), {
-        keyboard: false
-    });
-
-    // 초기 영역 추가
-    addClickableAreas();
-});
-
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false; 
 let secondImageDisplayed = false; 
@@ -33,7 +24,7 @@ const liquorAreas = [
 
 const imageElement = document.getElementById('bar-image');
 
-// 클릭 가능한 영역을 추가하는 함수
+// 클릭 가능한 영역을 추가하는 함수 
 function addClickableAreas() {
     const clickableAreas = [
         { id: 'boyfriend-area', x: 270, y: 300, width: 180, height: 440 }, // 남자친구 영역
@@ -143,8 +134,10 @@ function handleOverlayClick(event, area) {
         return clickX >= area.x && clickX <= (area.x + area.width) &&
                clickY >= area.y && clickY <= (area.y + area.height);
     }
-
-    // 남자친구 영역 클릭 시 동작
+    
+    //--------------------------//
+    // 남자친구 영역 클릭 시 동작 //
+    //--------------------------//
     if (area.id === 'boyfriend-area' && checkAreaClick(area) && !buttonDisplayed) {
         imageElement.src = '../image/images/barpage/내버려둬.PNG';
         otherAreaClicked = true; 
@@ -195,7 +188,9 @@ function handleLiquorClick(event, area) {
     }
 }
 
-// 특정 영역을 클릭했을 때 추가되는 함수
+// ------------------------------------------- //
+// 특정 영역을 클릭했을 때 종이 영역 추가되는 함수 // 
+// ------------------------------------------- //
 function addPaperArea() {
     const paperArea = { x: 495, y: 717, width: 126, height: 63 };
 
@@ -222,14 +217,46 @@ function addPaperArea() {
     // 클릭 이벤트 리스너 추가
     overlay.addEventListener('click', function(event) {
         event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-        handlePaperClick(event, paperArea);
+        addWordleArea();
+    });
+}
+// ---------------------------------- //
+// 월들 영역 클릭 이벤트를 처리하는 함수 //
+// ---------------------------------- //
+function addWordleArea() {
+    const wordleArea = { x: 608 , y: 334, width: 231, height: 248, href: '../game/wordle/index01.html'};
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('wordle-area');
+    overlay.style.position = 'absolute'; // 오버레이를 절대 위치로 설정
+    overlay.style.left = wordleArea.x + 'px';
+    overlay.style.top = wordleArea.y + 'px';
+    overlay.style.width = wordleArea.width + 'px';
+    overlay.style.height = wordleArea.height + 'px';
+    overlay.style.backgroundColor = 'transparent'; // 영역이 보이지 않도록 투명하게 설정
+    overlay.style.pointerEvents = 'auto'; // 오버레이가 클릭 이벤트를 받도록 설정
+
+    document.getElementById('game-container').appendChild(overlay);
+
+    overlay.addEventListener('mouseenter', function() {
+        document.body.style.cursor = 'pointer';
+    });
+    overlay.addEventListener('mouseleave', function() {
+        document.body.style.cursor = 'default';
+    });
+
+    otherAreaClicked = true; 
+    imageElement.src = '../image/images/barpage/신문.png';
+    addCloseButton();
+    removeClickableAreas(); // 영역 제거
+
+    // 클릭 이벤트 리스너 추가
+    overlay.addEventListener('click', function(event) {
+        event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+        window.location.href = '../game/wordle/index01.html';
     });
 }
 
-// 종이 영역 클릭 이벤트를 처리하는 함수
-function handlePaperClick(event, area) {
-    imageElement.src = '../image/images/barpage/신문.png';
-}
 
 // 클릭 횟수를 확인하는 함수
 function checkLiquorClickCombination() {
@@ -258,6 +285,5 @@ function resetLiquorClickCounts() {
         liquorClickCounts[key] = 0;
     }
 }
-
 // 초기 영역 추가
 addClickableAreas();
