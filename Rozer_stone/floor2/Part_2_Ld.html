@@ -21,6 +21,7 @@
             color: black;
             z-index: 2; /* 텍스트를 이미지 위에 표시하기 위해 z-index 설정 */
             font-size: large;
+            left: 38%;
         }
         .comment_area {
             position: absolute;
@@ -51,40 +52,6 @@
             right: 46%;
             top: 41%;
         }
-        .paper1 {
-            z-index: 2;
-            width: 5vw;
-            height: 5vh;
-            right: 43%;
-            top: 48%;
-         }
-        .paper10 {
-            z-index: 2;
-            width: 4vw;
-            height: 3vh;
-            right: 55%;
-            top: 48%;
-        }
-        .book1 {
-            z-index: 3;
-            width: 5vw;
-            height: 5vh;
-            right: 46%;
-            top: 45%;
-            rotate: -30deg;
-        }
-        .book23 {
-            z-index: 2;
-            width: 4vw;
-            height: 4vw;
-            right: 44%;
-            top: 44%;
-        }
-        .book3{
-            right: 54%;
-            height: 4vh;
-            top: 46%;
-        }
         .inventory_button {
             position: absolute;
             bottom: 5%;
@@ -107,12 +74,7 @@
         </div>
         <div>
             <img src="Part_2_L_Dark.png" class="middle bgimg">
-            <img src="image/종이1.png" class="middle paper1" onclick="getItem()">
-            <img src="image/종이10.png" class="middle paper10" onclick="getItem()">
             <img src="image/양초.png" class="middle candle" onclick="getItem()">
-            <img src="image/책상위맨위책.png" class="middle book1" onclick="getItem()">
-            <img src="image/책상위책2.png" class="middle book23" onclick="getItem()">
-            <img src="image/책상위책3.png" class="middle book23 book3" onclick="getItem()">
             <img src="../integ/comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
         </div>
         <a href="Part_2_Ld.html" class="carousel-control-prev" data-bs-slide="prev">
