@@ -15,6 +15,7 @@
             overflow: hidden;
             font-family: 'KyoboHandwriting2023wsa', sans-serif;
             cursor: default;
+            background-color: rgba(0, 0, 0, 1); /* 바깥 배경 어둡게 설정 */
         }
         #game-container {
             position: relative;
@@ -35,11 +36,18 @@
             padding: 10px;
         }
         #prev-button {
-            left: 0;
+            position: fixed;
+            left: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             font-family: 'KyoboHandwriting2023wsa';
         }
+
         #next-button {
-            right: 0;
+            position: fixed;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
             font-family: 'KyoboHandwriting2023wsa';
         }
         #back-button {
@@ -50,12 +58,12 @@
             display: none;
         }
         #settings-button {
-        position: absolute;
-        top: 18px;
-        right: 25px;
-        background: transparent;
-        border: none;
-        cursor: pointer;
+            position: absolute;
+            top: 18px;
+            right: 25px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
         }
         #settings-button img {
             width: 50px;
@@ -129,7 +137,7 @@
             fill: '#000000'
         }).setAlpha(0).setOrigin(0.5).setScrollFactor(0);
         modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
-        };
+    };
 
     // 소지품 칸에 아이템을 추가하는 함수
         const addItemToInventory = (item, imageKey) => {
