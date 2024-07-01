@@ -2,21 +2,27 @@
 .useritem_modal-content {
     display: flex;
     flex-direction: column;
-    top: 0;
-    width: 100%;
+    width: 10rem;
     height: auto;
     pointer-events: auto;
-    flex-wrap: wrap;
+    flex-wrap: wrap; 
     align-content: space-around;
     border: none;
 }
-
 .useritem_modal-body {
     position: fixed;
     right: 0;
-    background-image: url(../사용자아이템창/아이템창우주최종2.jpg);
-    background-size: cover; /* 이미지를 커버 모드로 설정 */
+    height: auto;
+    /* background-color: rgba(116, 66, 33, 0.877); */
+    background-image: url(../사용자아이템창/아이템창.jpg);
 }
+/* .useritem_modal-body {
+    position: fixed;
+    top: 35%;
+    right: 0;
+    transform: translateY(-50%);
+    background-image: url(../사용자아이템창/아이템창우주최종2.jpg);
+} */
 
 /* 버튼 위치 */
 #button-item {
@@ -43,13 +49,13 @@
     --bs-btn-active-border-color: rgb(116, 66, 33);
     --bs-btn-active-shadow: inset 0 3px 5px rgba(0, 0, 0, 0.125);
     --bs-btn-disabled-color: #fff;
-    --bs-btn-disabled-bg: rgba(116, 66, 33, 0.877);
+    --bs-btn-disabled-bg: rgba(116, 66, 33, 0.877);;
     --bs-btn-disabled-border-color: rgba(116, 66, 33, 0.877);
     background-color: rgba(116, 66, 33, 0.877); /* 기본 배경 색상 설정 */
 }
 
 /* 모달 창 오른쪽 정렬 */
-.modal-dialog-right {
+/* .modal-dialog-right {
     position: fixed;
     top: 0;
     right: 0;
@@ -58,14 +64,14 @@
     display: flex;
     align-items: center;
     justify-content: flex-end;
-}
+} */
 
         /*-----------------------*/
         /*    아이템 매핑 box     */
         /*-----------------------*/
         .box1-item {
-            width: 8rem;
-            height: 8rem;
+            width: 10rem;
+            height: 10rem;
             border-radius: 10%;
             margin-bottom: 10px;
             background-repeat : no-repeat;
@@ -80,39 +86,70 @@
 
         .box2-item {
             text-align: center;
-            width: 8rem;
-            height: 8rem;
+            width: 10rem;
+            height: 10rem;
             border-radius: 10%;
             margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
         }
 
         .box3-item {
             text-align: center;
-            width: 8rem;
-            height: 8rem;
+            width: 10rem;
+            height: 10rem;
             border-radius: 10%;
             margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
         }
 
         .box4-item {
             text-align: center;
-            width: 8rem;
-            height: 8rem;
+            width: 10rem;
+            height: 10rem;
             border-radius: 10%;
             margin-bottom: 10px;
             background-repeat : no-repeat;
             background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
         }
 
         .box5-item {
             text-align: center;
-            width: 8rem;
-            height: 8rem;
+            width: 10rem;
+            height: 10rem;
             border-radius: 10%;
             background-repeat : no-repeat;
             background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
         }
+        .box6-item {
+            text-align: center;
+            width: 10rem;
+            height: 10rem;
+            border-radius: 10%;
+            margin-bottom: 10px;
+            background-repeat : no-repeat;
+            background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
+        }
+
+        .box7-item {
+            text-align: center;
+            width: 10rem;
+            height: 10rem;
+            border-radius: 10%;
+            background-repeat : no-repeat;
+            background-position: center;
+            /* background-image: url(../사용자아이템창/쟁미.png); */
+            cursor:pointer;
+        }
+        
