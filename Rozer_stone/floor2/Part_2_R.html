@@ -52,6 +52,32 @@
             right: 53%;
             top: 31%;
         }
+        .seklHand5 {
+            position: absolute;
+            z-index: 1;
+            width: 2vw;
+            height: 7vh;
+            right: 44.5%;
+            top: 34%;
+            rotate: 180deg;
+        }
+        .seklHand4 {
+            position: absolute;
+            z-index: 1;
+            width: 3vw;
+            height: 9vh;
+            right: 40.3%;
+            top: 32.5%;
+            rotate: 180deg;
+        }
+        .chess {
+            position: absolute;
+            z-index: 1;
+            width: 11vw;
+            height: 14vh;
+            right: 36%;
+            top: 47%;
+        }
         .inventory_button {
             position: absolute;
             bottom: 5%;
@@ -74,7 +100,10 @@
         </div>
         <div>
             <img src="Part_2_R.png" class="middle bgimg">
-            <img src="image/아이언메이든.png" class="ironmaiden">
+            <img src="image/아이언메이든.png" class="ironmaiden" onclick="clkironmaiden()">
+            <img src="image/해골5.png" class="seklHand5" onclick="getMessaggeSkel()">
+            <img src="image/해골4.png" class="seklHand4" onclick="getMessaggeSkel()">
+            <img src="image/체스판.png" class="chess" onclick="clickChess()">
             <img src="comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
         </div>
         <a href="Part_2_C.html" class="carousel-control-prev" data-bs-slide="prev">
@@ -115,16 +144,16 @@
             }
         }
 
-        function getMessaggeshelf3() {
-            alert("선반을 조사했습니다.");
+        function clickChess() {
+            alert("체스화면 긁어올예정.");
         }
 
-        function getMessaggechest() {
-            alert("상자를 조사했습니다.");
+        function getMessaggeSkel() {
+            alert("앙상한 뼈.");
         }
 
-        function playmusic() {
-            alert("음악을 재생합니다.");
+        function clkironmaiden() {
+            alert("아이언메이든 이벤트.");
         }
 
         function goToInventory() {
