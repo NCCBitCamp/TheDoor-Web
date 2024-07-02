@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>5층 배경</title>
+  <title>5F</title>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
   <style>
     body {
@@ -109,6 +109,9 @@
     var dialogText;
     var teacherImage;
     var noteImage;
+    var clickAreas = []; // 클릭 가능한 영역을 저장하는 배열
+    var isDialogActive = false; // 다이얼로그 진행 중 여부를 나타내는 변수
+
     const texts0 = [
       "???: 아니 이게 왜 안되지?",
       "문을 여니 컴퓨터 키보드를 두드리는 소리와 함께 익숙한 목소리가 들려온다.",
@@ -130,6 +133,7 @@
     const texts6 = ["엘리베이터다! 내려갈 수 있을까?", "...라는 희망에 버튼을 눌러보았지만 버튼은 눌리지 않았다.", "아무래도 이곳에서 나가는 건 불가능해 보인다."];
     const texts7 = ["음, 분명 매니저님들이 열쇠를 관리하셨었죠.", "비상구 열쇠도 아마 한곳에 있을 거예요."];
     const texts8 = ["[비상구 열쇠]를 획득했다.", "이제 비상구 문을 열 수 있을 거예요.", "7층으로 올라가보세요. 분명 도움이 될 겁니다."];
+
     const choices = [
       {
         text: "1. 왼쪽 책상을 둘러본다.",
@@ -190,27 +194,22 @@
     };
 
     const addItemToInventory = (item, imageKey) => {
-  if (!inventory.some(inventoryItem => inventoryItem.name === item)) {
-    inventory.push({ name: item, key: imageKey });
-    inventoryImages.push({ key: imageKey, name: item });
-    updateInventoryDisplay();
-    if (hasBothMemos()) {
-      showAlertIcon(); // 메모3과 메모4를 동시에 얻으면 alert.png 다시 보이기
-      secondDialogTriggered = true;
-    }
-    if (item === '비상구 열쇠') {
-      showDialog(texts8, true); // 비상구 열쇠를 얻으면 texts8을 출력
-      thirdDialogTriggered = true;
-    }
-  } else {
-    console.log('아이템이 이미 소지품에 있습니다.');
-  }
-};
-
-
-
-
-
+      if (!inventory.some(inventoryItem => inventoryItem.name === item)) {
+        inventory.push({ name: item, key: imageKey });
+        inventoryImages.push({ key: imageKey, name: item });
+        updateInventoryDisplay();
+        if (hasBothMemos()) {
+          showAlertIcon(); // 메모3과 메모4를 동시에 얻으면 alert.png 다시 보이기
+          secondDialogTriggered = true;
+        }
+        if (item === '비상구 열쇠') {
+          showDialog(texts8, true); // 비상구 열쇠를 얻으면 texts8을 출력
+          thirdDialogTriggered = true;
+        }
+      } else {
+        console.log('아이템이 이미 소지품에 있습니다.');
+      }
+    };
 
     const updateInventoryDisplay = () => {
       if (inventoryText) {
@@ -255,63 +254,63 @@
     };
 
     const hasBothMemos = () => {
-  return inventory.some(item => item.name === '메모3') && inventory.some(item => item.name === '메모4');
-};
+      return inventory.some(item => item.name === '메모3') && inventory.some(item => item.name === '메모4');
+    };
 
+    function showNewChoices(newChoices) {
+    isChoicesVisible = true;
+    setClickableAreasActive(false); // Disable other interactive elements
 
-    const showNewChoices = (newChoices) => {
-  isChoicesVisible = true;
-  gamePhase = 'newChoices';
-  newChoices.forEach((choice, index) => {
-    // 3. 비밀번호를 입력한다. 선택지가 hasBothMemos() 조건을 만족하는 경우에만 추가됩니다.
-    if (choice.text === "3. 비밀번호를 입력한다." && !hasBothMemos()) {
-      return;
-    }
-    const buttonY = 400 + index * 60;
-    const button = game.scene.scenes[0].add.text(camera.scrollX + config.width / 2 + 200, buttonY, choice.text, {
-      fontFamily: 'KyoboHandwriting2023wsa',
-      fontSize: '24px',
-      color: '#000',
-      backgroundColor: '#fff',
-      padding: { x: 20, y: 10 },
-      fixedWidth: 300
-    }).setInteractive();
+    newChoices.forEach((choice, index) => {
+        if (choice.text === "3. 비밀번호를 입력한다." && !hasBothMemos()) {
+            return;
+        }
+        const buttonY = 400 + index * 60;
+        const button = game.scene.scenes[0].add.text(camera.scrollX + config.width / 2 + 200, buttonY, choice.text, {
+            fontFamily: 'KyoboHandwriting2023wsa',
+            fontSize: '24px',
+            color: '#000',
+            backgroundColor: '#fff',
+            padding: { x: 20, y: 10 },
+            fixedWidth: 300
+        }).setInteractive();
 
-    button.on('pointerover', () => {
-      document.body.style.cursor = 'pointer';
+        button.on('pointerover', () => {
+            document.body.style.cursor = 'pointer';
+        });
+
+        button.on('pointerout', () => {
+            document.body.style.cursor = 'default';
+        });
+
+        button.on('pointerdown', () => {
+            dialogBox.setVisible(true);
+            isChoicesVisible = false;
+            setClickableAreasActive(true); // Re-enable other interactive elements
+
+            newChoices.forEach((choice, idx) => {
+                const btn = game.scene.scenes[0].children.getByName(`newChoiceButton${idx}`);
+                if (btn) btn.destroy();
+            });
+            document.body.style.cursor = 'default';
+
+            if (choice.nextTexts) {
+                currentTexts = choice.nextTexts;
+                currentTextIndex = 0;
+                gamePhase = 'nextTexts';
+                advanceNextTexts(); // 다이얼로그를 진행하는 함수 호출
+            }
+
+            if (choice.text === "3. 비밀번호를 입력한다.") {
+                showPasswordPrompt();
+            }
+
+            if (choice.onSelect) {
+                choice.onSelect();
+            }
+        }).setName(`newChoiceButton${index}`);
     });
-
-    button.on('pointerout', () => {
-      document.body.style.cursor = 'default';
-    });
-
-    button.on('pointerdown', () => {
-      console.log(choice.text + ' 선택됨');
-      dialogBox.setVisible(true);
-      isChoicesVisible = false;
-      newChoices.forEach((choice, idx) => {
-        const btn = game.scene.scenes[0].children.getByName(`newChoiceButton${idx}`);
-        if (btn) btn.destroy();
-      });
-      document.body.style.cursor = 'default';
-
-      if (choice.nextTexts) {
-        currentTexts = choice.nextTexts;
-        currentTextIndex = 0;
-        gamePhase = 'nextTexts';
-        advanceNextTexts(); // 다이얼로그를 진행하는 함수 호출
-      }
-
-      if (choice.text === "3. 비밀번호를 입력한다.") {
-        showPasswordPrompt();
-      }
-
-      if (choice.onSelect) {
-        choice.onSelect();
-      }
-    }).setName(`newChoiceButton${index}`);
-  });
-};
+}
 
     const createInventory = (scene) => {
       inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
@@ -358,9 +357,9 @@
       currentTextIndex = 0;
       advanceDialogue();
       initialDialogClick = false;
+      isDialogActive = true; // 다이얼로그 활성화 상태로 설정
+      setClickableAreasActive(false); // 클릭 영역 비활성화
     }
-
-
 
     const showItemDetails = (scene, itemKey) => {
       let enlargedImageKey;
@@ -408,104 +407,106 @@
     }
 
     function handleAlertClick() {
-  if (!alertIconClicked) {
-    showDialog(texts0, true);
-    alertIconClicked = true;
-  } else if (secondDialogTriggered) {
-    showDialog(texts7, true);
-    secondDialogTriggered = false;
-  } else if (thirdDialogTriggered) {
-    showDialog(texts8, true); // 비상구 열쇠를 얻으면 texts8을 출력
-    thirdDialogTriggered = false;
-  }
-}
-
+      if (!alertIconClicked) {
+        showDialog(texts0, true);
+        alertIconClicked = true;
+      } else if (secondDialogTriggered) {
+        showDialog(texts7, true);
+        secondDialogTriggered = false;
+      } else if (thirdDialogTriggered) {
+        showDialog(texts8, true); // 비상구 열쇠를 얻으면 texts8을 출력
+        thirdDialogTriggered = false;
+      }
+    }
 
     function create() {
-      bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+    bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-      var scaleX = config.width / bgImage.width;
-      var scaleY = config.height / bgImage.height;
-      var scale = Math.max(scaleX, scaleY);
+    var scaleX = config.width / bgImage.width;
+    var scaleY = config.height / bgImage.height;
+    var scale = Math.max(scaleX, scaleY);
 
-      bgImage.setScale(scale).setOrigin(0, 0);
+    bgImage.setScale(scale).setOrigin(0, 0);
 
-      camera = this.cameras.main;
-      camera.setViewport(0, 0, config.width, config.height);
+    camera = this.cameras.main;
+    camera.setViewport(0, 0, config.width, config.height);
 
-      sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+    sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
 
-      alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
-      alertIcon.setScale(0.5);
-      alertIcon.on('pointerdown', handleAlertClick);
+    alertIcon = this.add.image(1000, 200, 'alert').setInteractive();
+    alertIcon.setScale(0.5);
+    alertIcon.on('pointerdown', handleAlertClick);
 
-      teacherImage = this.add.image(920, 400, 'teacher');
-      teacherImage.setScale(0.25);
-      teacherImage.setVisible(false);
+    teacherImage = this.add.image(920, 400, 'teacher');
+    teacherImage.setScale(0.25);
+    teacherImage.setVisible(false);
 
-      dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
-      dialogBox.setVisible(false);
+    dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
+    dialogBox.setVisible(false);
 
-      dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+    dialogText = this.add.text(config.width / 2, config.height - 70, '', {
         fontFamily: 'KyoboHandwriting2023wsa',
         fontSize: '35px',
         fill: '#000000',
         wordWrap: { width: 1000, useAdvancedWrap: true }
-      }).setOrigin(0.5).setAlign('center');
-      dialogText.setVisible(false);
+    }).setOrigin(0.5).setAlign('center');
+    dialogText.setVisible(false);
 
-      createInventory(this);
+    createInventory(this);
 
-      createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
-      createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
-      createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
-      createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
-      createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
-      createClickableArea(this, 1760, 215, 125, 200, texts5, true); // 비상구
-      createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
+    createClickableArea(this, 1055, 180, 425, 140, showClickDialog);
+    createClickableArea(this, 20, 175, 460, 240, texts1); // 상담실
+    createClickableArea(this, 510, 310, 90, 100, texts2); // 북트럭
+    createClickableArea(this, 610, 215, 125, 200, texts3); // 501호
+    createClickableArea(this, 760, 215, 125, 200, texts4); // 502호
+    createClickableArea(this, 1760, 215, 125, 200, texts5, true); // 비상구
+    createClickableArea(this, 2030, 215, 125, 200, texts6); // 엘레베이터
 
-      this.input.on('pointerdown', (pointer) => {
-        if (isChoicesVisible) return;
+    this.input.on('pointerdown', (pointer) => {
+        if (isChoicesVisible || isDialogActive) return;
 
         if (gamePhase === 'dialogue') {
-          if (currentIndex < currentTexts.length) {
-            dialogText.setText(currentTexts[currentIndex]);
-            currentIndex++;
-          }
-        } else if (gamePhase == 'nextTexts') {
-          if (currentIndex < currentTexts.length) {
-            dialogText.setText(currentTexts[currentIndex]);
-            if (currentTexts[currentIndex] === "[메모3]을 획득했다.") {
-              console.log('메모3 조건 충족');
-              showItemImage('memo3');
-              addItemToInventory('메모3', 'memo3');
-            }
-            if (currentTexts[currentIndex] === "[메모4]을 획득했다.") {
-              console.log('메모4 조건 충족');
-              showItemImage('memo4');
-              addItemToInventory('메모4', 'memo4');
-            }
-            currentIndex++;
             if (currentIndex < currentTexts.length) {
-              dialogText.setText(currentTexts[currentIndex]);
-            } else {
-              dialogBox.setVisible(false);
-              dialogText.setVisible(false);
-              initialDialogClick = true;
+                dialogText.setText(currentTexts[currentIndex]);
+                currentIndex++;
             }
-          }
+        } else if (gamePhase == 'nextTexts') {
+            if (currentIndex < currentTexts.length) {
+                dialogText.setText(currentTexts[currentIndex]);
+                if (currentTexts[currentIndex] === "[메모3]을 획득했다.") {
+                  console.log('메모3 조건 충족');
+                  showItemImage('memo3');
+                  addItemToInventory('메모3', 'memo3');
+                }
+                if (currentTexts[currentIndex] === "[메모4]을 획득했다.") {
+                  console.log('메모4 조건 충족');
+                  showItemImage('memo4');
+                  addItemToInventory('메모4', 'memo4');
+                }
+                currentIndex++;
+                if (currentIndex < currentTexts.length) {
+                    dialogText.setText(currentTexts[currentIndex]);
+                } else {
+                    dialogBox.setVisible(false);
+                    dialogText.setVisible(false);
+                    initialDialogClick = true;
+                    isDialogActive = false; // 다이얼로그 비활성화 상태로 설정
+                    setClickableAreasActive(true); // 클릭 영역 활성화
+                }
+            }
         }
-      });
+    });
 
-      dialogBox.on('pointerdown', () => {
-        if (gamePhase === 'nextTexts') {
-          advanceNextTexts();
-        } else {
-          advanceDialogue();
+    dialogBox.on('pointerdown', () => {
+        if (!isChoicesVisible) { // 선택지가 없을 때만 클릭 가능
+            if (gamePhase === 'nextTexts') {
+                advanceNextTexts();
+            } else {
+                advanceDialogue();
+            }
         }
-      });
-    }
-
+    });
+}
     function createClickableArea(scene, x, y, width, height, callbackOrTexts, isEmergencyExit = false) {
       const clickArea = scene.add.zone(x, y, width, height).setOrigin(0).setInteractive();
       if (isEmergencyExit) {
@@ -523,6 +524,7 @@
           clickArea.on('pointerdown', () => showDialog(callbackOrTexts));
         }
       }
+      clickAreas.push(clickArea); // 클릭 가능한 영역을 배열에 추가
     }
 
     function update() {
@@ -569,6 +571,8 @@
       currentTextIndex = 0;
       advanceDialogue();
       initialDialogClick = false;
+      isDialogActive = true; // 다이얼로그 활성화 상태로 설정
+      setClickableAreasActive(false); // 클릭 영역 비활성화
     }
 
     function advanceDialogue() {
@@ -585,6 +589,8 @@
         dialogText.setVisible(false);
         teacherImage.setVisible(false);
         initialDialogClick = true;
+        isDialogActive = false; // 다이얼로그 비활성화 상태로 설정
+        setClickableAreasActive(true); // 클릭 영역 활성화
         if (currentTexts === texts0 || currentTexts === texts7 || currentTexts === texts8) {
           hideAlertIcon();
         }
@@ -592,33 +598,34 @@
     }
 
     function advanceNextTexts() {
-  if (currentTextIndex < currentTexts.length) {
-    dialogText.setText(currentTexts[currentTextIndex]);
-    if (currentTexts[currentTextIndex] === "[메모3]을 획득했다.") {
-      showItemImage('memo3');
-      addItemToInventory('메모3', 'memo3');
+      if (currentTextIndex < currentTexts.length) {
+        dialogText.setText(currentTexts[currentTextIndex]);
+        if (currentTexts[currentTextIndex] === "[메모3]을 획득했다.") {
+          showItemImage('memo3');
+          addItemToInventory('메모3', 'memo3');
+        }
+        if (currentTexts[currentTextIndex] === "[메모4]을 획득했다.") {
+          showItemImage('memo4');
+          addItemToInventory('메모4', 'memo4');
+        }
+        if (currentTexts[currentTextIndex] === "[비상구 열쇠]를 획득했다.") {
+          addItemToInventory('비상구 열쇠', 'key');
+          thirdDialogTriggered = true; // 비상구 열쇠를 얻었을 때 상태 업데이트
+        }
+        currentTextIndex++;
+      } else {
+        dialogBox.setVisible(false);
+        dialogText.setVisible(false);
+        teacherImage.setVisible(false);
+        initialDialogClick = true;
+        isDialogActive = false; // 다이얼로그 비활성화 상태로 설정
+        setClickableAreasActive(true); // 클릭 영역 활성화
+        // 다이얼로그가 끝난 후 alertIcon을 숨기도록 설정
+        if (currentTexts === texts0 || currentTexts === texts7 || currentTexts === texts8) {
+          hideAlertIcon();
+        }
+      }
     }
-    if (currentTexts[currentTextIndex] === "[메모4]을 획득했다.") {
-      showItemImage('memo4');
-      addItemToInventory('메모4', 'memo4');
-    }
-    if (currentTexts[currentTextIndex] === "[비상구 열쇠]를 획득했다.") {
-      addItemToInventory('비상구 열쇠', 'key');
-      thirdDialogTriggered = true; // 비상구 열쇠를 얻었을 때 상태 업데이트
-    }
-    currentTextIndex++;
-  } else {
-    dialogBox.setVisible(false);
-    dialogText.setVisible(false);
-    teacherImage.setVisible(false);
-    initialDialogClick = true;
-    // 다이얼로그가 끝난 후 alertIcon을 숨기도록 설정
-    if (currentTexts === texts0 || currentTexts === texts7 || currentTexts === texts8) {
-      hideAlertIcon();
-    }
-  }
-}
-
 
     function showClickDialog() {
       dialogBox.setVisible(true);
@@ -633,131 +640,140 @@
     }
 
     function showChoices() {
-      isChoicesVisible = true;
-      choices.forEach((choice, index) => {
+    isChoicesVisible = true;
+    setClickableAreasActive(false); // Disable other interactive elements
+
+    choices.forEach((choice, index) => {
         const buttonY = 400 + index * 60;
         const button = game.scene.scenes[0].add.text(camera.scrollX + config.width / 2 + 200, buttonY, choice.text, {
-          fontFamily: 'KyoboHandwriting2023wsa',
-          fontSize: '24px',
-          color: '#000',
-          backgroundColor: '#fff',
-          padding: { x: 20, y: 10 },
-          fixedWidth: 250
+            fontFamily: 'KyoboHandwriting2023wsa',
+            fontSize: '24px',
+            color: '#000',
+            backgroundColor: '#fff',
+            padding: { x: 20, y: 10 },
+            fixedWidth: 250
         }).setInteractive();
 
         button.on('pointerover', () => {
-          document.body.style.cursor = 'pointer';
+            document.body.style.cursor = 'pointer';
         });
 
         button.on('pointerout', () => {
-          document.body.style.cursor = 'default';
+            document.body.style.cursor = 'default';
         });
 
         button.on('pointerdown', () => {
-          dialogBox.setVisible(true);
-          if (choice.response) {
-            dialogText.setText(choice.response);
-          }
-          isChoicesVisible = false;
-          choices.forEach((choice, idx) => {
-            const btn = game.scene.scenes[0].children.getByName(`choiceButton${idx}`);
-            if (btn) btn.destroy();
-          });
-          document.body.style.cursor = 'default';
+            dialogBox.setVisible(true);
+            if (choice.response) {
+                dialogText.setText(choice.response);
+            }
+            isChoicesVisible = false;
+            setClickableAreasActive(true); // Re-enable other interactive elements
 
-          if (choice.nextTexts) {
-            currentTexts = choice.nextTexts;
-            currentTextIndex = 0;
-            gamePhase = 'nextTexts';
-            advanceNextTexts(); // 다이얼로그를 진행하는 함수 호출
-          }
-
-          if (choice.newChoices) {
-            game.scene.scenes[0].time.delayedCall(500, () => {
-              showNewChoices(choice.newChoices);
+            choices.forEach((choice, idx) => {
+                const btn = game.scene.scenes[0].children.getByName(`choiceButton${idx}`);
+                if (btn) btn.destroy();
             });
-          }
+            document.body.style.cursor = 'default';
+
+            if (choice.nextTexts) {
+                currentTexts = choice.nextTexts;
+                currentTextIndex = 0;
+                gamePhase = 'nextTexts';
+                advanceNextTexts(); // 다이얼로그를 진행하는 함수 호출
+            }
+
+            if (choice.newChoices) {
+                game.scene.scenes[0].time.delayedCall(500, () => {
+                    showNewChoices(choice.newChoices);
+                });
+            }
         }).setName(`choiceButton${index}`);
-      });
-    }
-
-    function showPasswordPrompt() {
-  const promptContainer = document.createElement('div');
-  promptContainer.style.position = 'fixed';
-  promptContainer.style.top = '50%';
-  promptContainer.style.left = '50%';
-  promptContainer.style.transform = 'translate(-50%, -50%)';
-  promptContainer.style.padding = '20px';
-  promptContainer.style.backgroundColor = 'white';
-  promptContainer.style.border = '2px solid black';
-  promptContainer.style.zIndex = '1000';
-
-  const promptLabel = document.createElement('label');
-  promptLabel.innerText = '비밀번호를 입력하세요: ';
-  promptLabel.style.fontFamily = 'KyoboHandwriting2023wsa';
-  promptLabel.style.fontSize = '24px';
-
-  const promptInput = document.createElement('input');
-  promptInput.type = 'text';
-  promptInput.maxLength = '4';
-  promptInput.style.fontFamily = 'KyoboHandwriting2023wsa';
-  promptInput.style.fontSize = '24px';
-  promptInput.style.marginLeft = '10px';
-
-  const promptButton = document.createElement('button');
-  promptButton.innerText = '확인';
-  promptButton.style.fontFamily = 'KyoboHandwriting2023wsa';
-  promptButton.style.fontSize = '24px';
-  promptButton.style.marginLeft = '10px';
-  promptButton.onclick = () => {
-    const password = promptInput.value;
-    if (password === '1003') {
-      dialogText.setText('철컥!하는 소리와 잠금이 풀렸다.\n[열쇠]를 획득했다.');
-      addItemToInventory('열쇠', 'key');
-      updateChoices();
-      hideAlertIcon(); // 비밀번호 입력 후 열쇠를 얻으면 alertIcon을 숨기도록 설정
-    } else {
-      dialogText.setText('삐삑! 비밀번호가 틀린 것 같다.');
-    }
-    document.body.removeChild(promptContainer);
-  };
-
-  promptContainer.appendChild(promptLabel);
-  promptContainer.appendChild(promptInput);
-  promptContainer.appendChild(promptButton);
-  document.body.appendChild(promptContainer);
+    });
 }
 
-function updateChoices() {
-  choices.forEach(choice => {
-    if (choice.text === "2. 오른쪽 책상을 둘러본다.") {
-      choice.newChoices.forEach(newChoice => {
-        if (newChoice.text === "3. 서랍을 조사한다.") {
-          newChoice.text = "3. 열쇠로 서랍을 연다.";
-          newChoice.nextTexts = ["서랍이 열렸다.", "[비상구 열쇠]를 획득했다."];
-          newChoice.response = "[비상구 열쇠]를 획득했다.";
-          newChoice.onSelect = () => {
-            showDialog(newChoice.nextTexts, true); // 다이얼로그 출력 추가
-            addItemToInventory('비상구 열쇠', 'key');
-            removeItemFromInventory('열쇠');
-            // 비상구 열쇠를 얻는 다이얼로그가 끝난 후 alertIcon을 숨기도록 설정
-            if (!thirdDialogTriggered) {
-              hideAlertIcon();
+    function showPasswordPrompt() {
+      const promptContainer = document.createElement('div');
+      promptContainer.style.position = 'fixed';
+      promptContainer.style.top = '50%';
+      promptContainer.style.left = '50%';
+      promptContainer.style.transform = 'translate(-50%, -50%)';
+      promptContainer.style.padding = '20px';
+      promptContainer.style.backgroundColor = 'white';
+      promptContainer.style.border = '2px solid black';
+      promptContainer.style.zIndex = '1000';
+
+      const promptLabel = document.createElement('label');
+      promptLabel.innerText = '비밀번호를 입력하세요: ';
+      promptLabel.style.fontFamily = 'KyoboHandwriting2023wsa';
+      promptLabel.style.fontSize = '24px';
+
+      const promptInput = document.createElement('input');
+      promptInput.type = 'text';
+      promptInput.maxLength = '4';
+      promptInput.style.fontFamily = 'KyoboHandwriting2023wsa';
+      promptInput.style.fontSize = '24px';
+      promptInput.style.marginLeft = '10px';
+
+      const promptButton = document.createElement('button');
+      promptButton.innerText = '확인';
+      promptButton.style.fontFamily = 'KyoboHandwriting2023wsa';
+      promptButton.style.fontSize = '24px';
+      promptButton.style.marginLeft = '10px';
+      promptButton.onclick = () => {
+        const password = promptInput.value;
+        if (password === '1003') {
+          dialogText.setText('철컥!하는 소리와 잠금이 풀렸다.\n[열쇠]를 획득했다.');
+          addItemToInventory('열쇠', 'key');
+          updateChoices();
+          hideAlertIcon(); // 비밀번호 입력 후 열쇠를 얻으면 alertIcon을 숨기도록 설정
+        } else {
+          dialogText.setText('삐삑! 비밀번호가 틀린 것 같다.');
+        }
+        document.body.removeChild(promptContainer);
+      };
+
+      promptContainer.appendChild(promptLabel);
+      promptContainer.appendChild(promptInput);
+      promptContainer.appendChild(promptButton);
+      document.body.appendChild(promptContainer);
+    }
+
+    function updateChoices() {
+      choices.forEach(choice => {
+        if (choice.text === "2. 오른쪽 책상을 둘러본다.") {
+          choice.newChoices.forEach(newChoice => {
+            if (newChoice.text === "3. 서랍을 조사한다.") {
+              newChoice.text = "3. 열쇠로 서랍을 연다.";
+              newChoice.nextTexts = ["서랍이 열렸다.", "[비상구 열쇠]를 획득했다."];
+              newChoice.response = "[비상구 열쇠]를 획득했다.";
+              newChoice.onSelect = () => {
+                showDialog(newChoice.nextTexts, true); // 다이얼로그 출력 추가
+                addItemToInventory('비상구 열쇠', 'key');
+                removeItemFromInventory('열쇠');
+                // 비상구 열쇠를 얻는 다이얼로그가 끝난 후 alertIcon을 숨기도록 설정
+                if (!thirdDialogTriggered) {
+                  hideAlertIcon();
+                }
+              };
             }
-          };
+          });
         }
       });
     }
-  });
-}
-
-
 
     const removeItemFromInventory = (itemName) => {
       inventory = inventory.filter(item => item.name !== itemName);
       inventoryImages = inventoryImages.filter(image => image.name !== itemName);
       updateInventoryDisplay();
     };
+
+    function setClickableAreasActive(active) {
+        clickAreas.forEach(area => {
+            area.input.enabled = active;
+        });
+        alertIcon.input.enabled = active;
+    }
   </script>
 </body>
 

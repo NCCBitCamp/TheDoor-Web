@@ -94,6 +94,20 @@
         <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg" alt="Settings"></button>
     </div>
     <script>
+        window.addEventListener('load', function () {
+            history.pushState(null, '', location.href);
+
+            window.addEventListener('popstate', function (event) {
+                history.pushState(null, '', location.href);
+                alert('도망칠 수 없습니다');
+            });
+
+            window.addEventListener('beforeunload', function (event) {
+                history.pushState(null, '', location.href);
+                alert('도망칠 수 없습니다');
+            });
+        });
+
         const config = {
             type: Phaser.AUTO,
             width: 1280,
@@ -189,7 +203,6 @@
                 duration: 500
             });
 
-            // 클릭 이벤트를 추가하여 이미지를 클릭하면 페이드 아웃하고 제거
             fullscreenImage.on('pointerdown', () => {
                 scene.tweens.add({
                     targets: fullscreenImage,
@@ -201,7 +214,8 @@
                 });
             });
         };
-        
+
+
         const useYuriRoomKey = (scene) => {
             inventory = inventory.filter(item => item !== '유리실 열쇠');
             inventoryImages = inventoryImages.filter(imageObj => imageObj.name !== '유리실 열쇠');
@@ -238,6 +252,10 @@
                         });
                     }
                 });
+
+                clickArea1.disableInteractive();
+                clickArea2.disableInteractive();
+                clickArea3.disableInteractive();
             } else {
                 modal.setAlpha(0);
                 modalBackground.setAlpha(0);
@@ -245,9 +263,12 @@
 
                 modalItems.forEach(item => item.destroy());
                 modalItems = [];
+
+                clickArea1.setInteractive();
+                clickArea2.setInteractive();
+                clickArea3.setInteractive();
             }
         };
-
         function showDialogue(texts) {
             let currentTextIndex = 0;
 
@@ -299,20 +320,20 @@
             createInventory(this);
             hideNavButtons();
 
-            timerText = this.add.text(50, 25, '02:00', {
+            timerText = this.add.text(50, 25, '0:00', {
                 fontFamily: 'KyoboHandwriting2023wsa',
                 fontSize: '40px',
                 fill: '#ff0000'
             }).setScrollFactor(0);
 
-            startTimer(this, 120);
+            startTimer(this, 300);
 
-            const clickArea1 = this.add.zone(650, 95, 650, 190).setOrigin(0.5).setInteractive();
+            clickArea1 = this.add.zone(650, 95, 650, 190).setOrigin(0.5).setInteractive();
             clickArea1.on('pointerdown', () => {
                 window.location.href = 'game.html';
             });
 
-            const clickArea2 = this.add.zone(130, 590, 100, 90).setOrigin(0.5).setInteractive();
+            clickArea2 = this.add.zone(130, 590, 100, 90).setOrigin(0.5).setInteractive();
             if (localStorage.getItem('returnedFromGame') === 'true') {
                 clickArea2.on('pointerdown', () => {
                     showDialogue(["[유리실 열쇠]를 획득했다."]);
@@ -322,7 +343,7 @@
                 localStorage.removeItem('returnedFromGame');
             }
 
-            const clickArea3 = this.add.zone(140, 680, 100, 70).setOrigin(0.5).setInteractive();
+            clickArea3 = this.add.zone(140, 680, 100, 70).setOrigin(0.5).setInteractive();
             clickArea3.on('pointerdown', () => {
                 showDialogue(["[비상구 열쇠]를 획득했다."]);
                 showItemImage('key');
@@ -364,7 +385,6 @@
                 hideConfirmationDialog();
             });
         }
-
         function showConfirmationDialog(scene, itemName) {
             confirmBox.setAlpha(1);
             confirmText.setAlpha(1).setText(`${itemName}를 사용하시겠습니까?`);
@@ -395,6 +415,8 @@
 
                 timerText.setText(`${minutes}:${seconds}`);
                 timer--;
+
+                localStorage.setItem('remainingTime', timer);
 
                 if (timer < 0) {
                     clearInterval(timerInterval);

@@ -176,11 +176,18 @@
             memo2Clicked = true; // memo2가 클릭되었음을 기록
           }
           itemImage.setInteractive();
-          itemImage.on('pointerdown', () => {
-            showItemDetails(scene, imageObj.key);
+                itemImage.on('pointerdown', () => {
+                    showItemDetails(scene, imageObj.key);
+                });
+          // 마우스 커서를 올렸을 때 손모양 커서로, 빠져나가면 원래 커서로 변경
+          itemImage.on('pointerover', () => {
+                    document.body.style.cursor = 'pointer';
           });
-        }
-      });
+                itemImage.on('pointerout', () => {
+                    document.body.style.cursor = 'default';
+                });
+            }
+        });
     } else {
       // 모달을 숨김
       modal.setAlpha(0);
