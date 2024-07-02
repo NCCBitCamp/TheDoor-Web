@@ -166,7 +166,7 @@
             <img src="image/책장2.png" class="middle bookshelf2" onclick="deadByShelf()">
             <img src="image/보따리.png" class="middle bag" data-bs-toggle="modal" data-bs-target="#bagModal">
             <img src="image/목잘린성모상몸통.png" class="middle statusBody" onclick="holymaria()">
-            <img src="image/정체불명의 뼈.png" class="middle rib" onclick="bones()">
+            <img src="image/정체불명의 뼈.png" class="middle rib" id="trickybones" onclick="bones()">
             <img src="image/피묻은성경책.png" class="middle bloodBible" onclick="bible2()">
             <img src="image/성경책.png" class="middle bible" onclick="bible1()">
             <img src="image/종이4.png" class="middle papaer4" onclick="paper()">
@@ -351,6 +351,7 @@
             } else if (choice === '깨부숴본다') {
                 const imageSrc = "보따리에서나온열쇠.png";
                 getItem(imageSrc);
+                document.getElementById('trickybones').style.display = 'none';
             }
         }
 
@@ -381,10 +382,6 @@
     <div class="modal fade" id="bonesModal" tabindex="-1" aria-labelledby="bonesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content" style="background-color: #222; color: white;">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="bonesModalLabel">이상한 뼈다... 갈비뼈인가?</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
                 <div class="modal-body" id="bonesModalContent">
                     <button class="btn btn-danger" onclick="handleChoice('들어올려본다')">들어올려본다</button>
                     <button class="btn btn-warning" onclick="handleChoice('깨부숴본다')">깨부숴본다</button>
