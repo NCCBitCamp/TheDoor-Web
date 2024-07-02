@@ -69,7 +69,7 @@ const patternbox = document.querySelector(".patternbox");
                 clearbtn.classList.remove("active");
             }, 150);
 
-            if (cnt1 === 1 && cnt2 === 2 && cnt3 === 3 && cnt4 === 0) {
+            if (cnt1 === 3 && cnt2 === 2 && cnt3 === 1 && cnt4 === 0) {
                 alert("올ㅋ 열림!");
             }
         });
