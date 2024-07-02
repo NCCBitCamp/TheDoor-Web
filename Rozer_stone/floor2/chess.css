@@ -1,0 +1,16 @@
+td {
+    width: 100px;
+    height: 100px;
+    box-sizing: border-box;
+    border-collapse: collapse;
+  }
+  
+  .black {
+    background-color: rgba(16, 6, 6, 0.95);
+    border-collapse: collapse;
+  }
+  
+  .white {
+    background-color: rgba(69, 69, 69, 0.95);
+    border-collapse: collapse;
+  }

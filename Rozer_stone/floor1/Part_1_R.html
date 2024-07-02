@@ -254,7 +254,7 @@
             
             // 모달 창에서 아이템을 클릭하면 인벤토리에 추가하고, 모달을 닫는다.
             document.getElementById('modalItem').onclick = function() {
-                getItem('image/장신구.png');
+                getItem('장신구.png');
                 jewchestModal.hide();
                 document.getElementById('jewchest').style.display = 'none'; // 보물함 이미지를 숨긴다
             }
@@ -283,7 +283,7 @@
                     break;
                 case 2:
                     // 보따리에서나온열쇠.png를 인벤토리에 추가
-                    getItem('image/보따리에서나온열쇠.png');
+                    getItem('보따리에서나온열쇠.png');
                     alert("무언가를 얻었습니다.");
                     break;
                 case 3:
@@ -303,7 +303,7 @@
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             
             // 보따리에서나온열쇠.png 아이템이 인벤토리에 있는지 확인한다.
-            let hasKey = inventory.includes('image/보따리에서나온열쇠.png');
+            let hasKey = inventory.includes('보따리에서나온열쇠.png');
 
             if (!hasKey) {
                 // 보따리에서나온열쇠.png가 없는 경우
@@ -350,12 +350,12 @@
                 spookyModal.show();
 
                 document.getElementById('pistol').onclick = function() {
-                    getItem('image/단발권총.png');
+                    getItem('단발권총.png');
                     document.getElementById('pistol').style.display = 'none';
                 }
 
                 document.getElementById('matchbox').onclick = function() {
-                    getItem('image/성냥갑.png');
+                    getItem('성냥갑.png');
                     document.getElementById('matchbox').style.display = 'none';
                 }
             }

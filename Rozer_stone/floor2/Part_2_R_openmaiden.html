@@ -27,7 +27,6 @@
             z-index: 2; /* 텍스트를 이미지 위에 표시하기 위해 z-index 설정 */
             font-size: large;
             left: 38%;
-
         }
         .comment_area {
             position: absolute;
@@ -50,42 +49,47 @@
         img:hover{
             pointer-events: visiblePainted;
         }
-        .lever {
+        .ironmaiden {
             position: absolute;
             z-index: 1;
-            width: 1.5vw;
-            height: 14vh;
-            right: 56.3%;
-            top: 40%;
-            rotate: -50deg;
-            transform-origin: bottom center;
-            transition: transform 0.5s ease;
-         }
-        .leverBody {
+            width: 10vw;
+            height: 30vh;
+            right: 53%;
+            top: 31%;
+        }
+        .key {
             position: absolute;
             z-index: 2;
-            width: 10vw;
-            height: 10vh;
-            right: 52%;
-            top: 48%;
+            width: 0.9vw;
+            height: 1.9vh;
+            right: 59.7%;
+            top: 52.8%;
         }
-        .tortureTable {
+        .seklHand5 {
             position: absolute;
-            z-index: 3;
-            width: 18vw;
-            height: 15vh;
-            right: 37%;
-            top: 46%;
+            z-index: 1;
+            width: 2vw;
+            height: 7vh;
+            right: 44.5%;
+            top: 34%;
+            rotate: 180deg;
         }
-        .skel2{
-            z-index: 4;
+        .seklHand4 {
             position: absolute;
-            width: 9vw;
-            height: 13vh;
-            right: 42%;
-            top: 43%;
-            transform: scaleX(-1);
-            rotate: 190deg;
+            z-index: 1;
+            width: 3vw;
+            height: 9vh;
+            right: 40.3%;
+            top: 32.5%;
+            rotate: 180deg;
+        }
+        .chess {
+            position: absolute;
+            z-index: 1;
+            width: 11vw;
+            height: 14vh;
+            right: 36%;
+            top: 47%;
         }
         .inventory_button {
             position: absolute;
@@ -108,25 +112,25 @@
             <span class="text"></span>
         </div>
         <div>
-            <img src="Part_2_C.png" class="middle bgimg">
-            <img src="image/고문대.png" class="tortureTable" onclick="enjoyTorture()">
-            <img src="image/레버.png" class="lever" onclick="movelever()">
-            <img src="image/레버받침대.png" class="leverBody">
-            <img src="image/해골2.png" class="skel2">
-            <img src="../integ/comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
-            <!-- <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()"> -->
+            <img src="Part_2_R.png" class="middle bgimg">
+            <img src="image/뚜껑열린가시메이든.png" class="ironmaiden" onclick="clkironmaiden()">
+            <img src="image/가시6.png" class="key" onclick="clkironmaidenkey()">
+            <img src="image/해골5.png" class="seklHand5" onclick="getMessaggeSkel()">
+            <img src="image/해골4.png" class="seklHand4" onclick="getMessaggeSkel()">
+            <img src="image/체스판.png" class="chess" onclick="clickChess()">
+            <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
         </div>
-        <a href="Part_2_L.html" class="carousel-control-prev" data-bs-slide="prev">
+        <a href="Part_2_C.html" class="carousel-control-prev" data-bs-slide="prev">
             <span class="carousel-control-prev-icon"></span>
         </a>
-        <a href="Part_2_R.html" class="carousel-control-next" data-bs-slide="next">
+        <a href="Part_2_B.html" class="carousel-control-next" data-bs-slide="next">
             <span class="carousel-control-next-icon"></span>
         </a>
         <button class="inventory_button" onclick="goToInventory()">인벤토리</button>
     </div>
     </span>
     <script>
-        const content = "정면이다";
+        const content = "아이언 메이든 무섭다..";
         const text = document.querySelector(".text");
         let i = 0;
 
@@ -137,7 +141,7 @@
                 i++;
             }
         }
-        setInterval(typing, 100);
+        setInterval(typing, 50);
 
         // function redirectToNaver() {
         //     window.location.href = "Part_1_R.html";
@@ -154,53 +158,37 @@
             }
         }
 
-        function movelever() {
-            alert("레버를 움직입니다.");
-            // 레버 돌아가는소리 추가하기
-            // 비명소리 추가하기
-            const lever = document.querySelector('.lever');
-            lever.style.transform = 'rotate(70deg)';
-            lever.style.transition = 'transform 2s ease';
+        function clickChess() {
+            alert("체스화면 긁어올예정.");
+            // 체스판 모달하기
+        }
+
+        function getMessaggeSkel() {
+
+            alert("앙상한 뼈.");
+        }
+
+        function clkironmaiden() {
+            const die = confirm("체험 해 볼까?");
             
-            if(enjoytorture == 1){
-                alert('다리뽑기');
-                // 다리 뽑히는 간단한 화면을 거쳐 Part_2_blindC로 이동
-                window.location.href = "https://www.naver.com";
+            if(die){
+                window.location.href = "../integ/Dead_stampede.html";
             }
-            else{
-                alert('고문대가 움직입니다');
-                const skel = document.querySelector('.skel2');
-                skel.style.transform = 'translateY(120px)';
-                skel.style.transition = 'transform 0.5s ease';
-                setTimeout(() => {
-                    skel.style.transform = 'translateY(0)';
-                    skel.style.transition = 'transform 2s ease';
-                }, 500);
-            }
-            setTimeout(() => {
-                    lever.style.transform = 'rotate(0deg)';
-                }, 1000);
+            alert("아니다..그러지말자..");
         }
-
-        var enjoytorture = 0;
-        function enjoyTorture() {
-            if(enjoytorture == 0){
-                alert("고문대에 올라갔습니다.");
-                // 해골이 나를 덮쳤다 -> 천장화면으로 전환??
-                enjoytorture = 1;
+        
+        function clkironmaidenkey() {
+            const take = confirm("가시를 가져가겠습니까?")
+            
+            if(take){
+                const key = document.querySelector(".key");
+                key.style.display="none";
+                getItem();
             }
-            else {
-                alert('고문대에서 내려갑니다');
-                enjoytorture = 0;
-            }
-        }
-
-        function playmusic() {
-            alert("음악을 재생합니다.");
         }
 
         function goToInventory() {
-            window.location.href = "Inventory_temp.html";
+            window.location.href = "../integ/Inventory_temp.html";
         }
     </script>
 </body>

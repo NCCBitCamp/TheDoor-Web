@@ -263,7 +263,7 @@
         }
     
         function handleItemClick(imgElement) {
-            const imageSrc = imgElement.getAttribute('src');
+            const imageSrc = imgElement.getAttribute('src').replace('image/', '');
             getItem(imageSrc);
             imgElement.style.display = 'none';
         }
@@ -313,7 +313,7 @@
     
         function bible2() {
             const parchment = document.createElement('img');
-            parchment.src = "image/양피지3.png";
+            parchment.src = "양피지3.png";
             parchment.classList.add('middle');
             parchment.style.zIndex = 4;
             parchment.style.width = '30vw';
@@ -349,14 +349,14 @@
             if (choice === '들어올려본다') {
                 window.location.href = "Dead_stampede.html";
             } else if (choice === '깨부숴본다') {
-                const imageSrc = "image/보따리에서나온열쇠.png";
+                const imageSrc = "보따리에서나온열쇠.png";
                 getItem(imageSrc);
             }
         }
 
         function paper() {
             const parchment = document.createElement('img');
-            parchment.src = "image/양피지4.png";
+            parchment.src = "양피지4.png";
             parchment.classList.add('middle');
             parchment.style.zIndex = 4;
             parchment.style.width = '30vw';
