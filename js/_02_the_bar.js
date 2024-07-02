@@ -95,7 +95,7 @@ function addLiquorAreas() {
 
 // 클릭 가능한 영역을 제거하는 함수
 function removeClickableAreas() {
-    const overlays = document.querySelectorAll('.clickable-area, .liquor-area, .paper-area');
+    const overlays = document.querySelectorAll('.clickable-area, .liquor-area, .paper-area, .final-area');
     overlays.forEach(overlay => {
         overlay.remove();
     });
@@ -139,7 +139,7 @@ function handleOverlayClick(event, area) {
     // 남자친구 영역 클릭 시 동작 //
     //--------------------------//
     if (area.id === 'boyfriend-area' && checkAreaClick(area) && !buttonDisplayed) {
-        imageElement.src = '../image/images/barpage/내버려둬.PNG';
+        imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
         otherAreaClicked = true; 
         addCloseButton();
         removeClickableAreas(); // 영역 제거
@@ -257,6 +257,56 @@ function addWordleArea() {
     });
 }
 
+// 잔완성 이미지에 클릭 영역 추가 함수
+function addFinalClickArea() {
+    const finalArea = { x: 748, y: 546, width: 75, height: 100 };
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('final-area');
+    overlay.style.position = 'absolute'; // 오버레이를 절대 위치로 설정
+    overlay.style.left = finalArea.x + 'px';
+    overlay.style.top = finalArea.y + 'px';
+    overlay.style.width = finalArea.width + 'px';
+    overlay.style.height = finalArea.height + 'px';
+    overlay.style.backgroundColor = 'transparent'; // 영역이 보이지 않도록 투명하게 설정
+    overlay.style.pointerEvents = 'auto'; // 오버레이가 클릭 이벤트를 받도록 설정
+
+    document.getElementById('game-container').appendChild(overlay);
+
+    // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
+    overlay.addEventListener('mouseenter', function() {
+        document.body.style.cursor = 'pointer';
+    });
+    overlay.addEventListener('mouseleave', function() {
+        document.body.style.cursor = 'default';
+    });
+
+    // 클릭 이벤트 리스너 추가
+    overlay.addEventListener('click', function(event) {
+        event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+        handleFinalClick();
+    });
+}
+
+// 잔완성 이미지 클릭 시 동작
+function handleFinalClick() {
+    imageElement.src = '../image/images/barpage/칵테일잔x.png'; // 변경할 이미지로 대체
+
+    // inventory.html에 칵테일 잔 이미지를 추가
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    
+    // 이미 아이템이 존재하는지 확인
+    const itemExists = inventory.includes('../image/images/useritem/칵테일잔.PNG');
+    if (itemExists) {
+        alert("이미 같은 아이템이 인벤토리에 있습니다.");
+        return;
+    }
+
+    inventory.push('../image/images/useritem/칵테일잔.PNG');
+    localStorage.setItem('inventory', JSON.stringify(inventory));
+
+    // 필요에 따라 추가 동작을 정의할 수 있음
+}
 
 // 클릭 횟수를 확인하는 함수
 function checkLiquorClickCombination() {
@@ -272,6 +322,7 @@ function checkLiquorClickCombination() {
                 imageElement.src = '../image/images/barpage/잔완성.png';
                 thirdImageDisplayed = false;
                 document.getElementById('close-button').style.display = 'block';
+                addFinalClickArea(); // 잔완성 이미지에 클릭 영역 추가
             }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
         }, 500);
         return true;
