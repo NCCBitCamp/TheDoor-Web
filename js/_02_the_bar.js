@@ -3,6 +3,8 @@ let buttonDisplayed = false;
 let secondImageDisplayed = false;
 let thirdImageDisplayed = false;
 let otherAreaClicked = false;
+let boyfriendAreaClicked = false; // 남자친구 영역 클릭 여부 추적 변수
+let itemSelected = null; // 선택된 아이템 추적 변수
 
 const liquorClickCounts = {
     '봄베이따르기': 0,
@@ -144,11 +146,12 @@ function handleOverlayClick(event, area) {
     // 남자친구 영역 클릭 시 동작 //
     //--------------------------//
     if (area.id === 'boyfriend-area' && checkAreaClick(area) && !buttonDisplayed) {
-        imageElement.src = '../image/images/barpage/내버려둬.PNG';
+        imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
         otherAreaClicked = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
+        boyfriendAreaClicked = true; // 남자친구 영역 클릭으로 설정
     }
     // 웨이터 영역 클릭 시 동작
     else if (area.id === 'waiter-area' && checkAreaClick(area) && !buttonDisplayed) {
@@ -164,6 +167,12 @@ function handleOverlayClick(event, area) {
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addLiquorAreas(); // 두 번째 이미지 클릭 시 주류 영역 추가
+    } else {
+        // 갈색 술 아이템이 선택된 상태에서 잘못된 영역 클릭 시
+        if (itemSelected === '갈색술' && !checkAreaClick(area)) {
+            alert('사용할 수 없습니다.');
+            itemSelected = null; // 선택된 아이템 초기화
+        }
     }
 }
 
@@ -300,22 +309,71 @@ function handleFinalClick() {
     let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
     
     // 이미 아이템이 존재하는지 확인
-    const itemExists = inventory.includes('../image/images/useritem/칵테일잔.PNG');
+    const itemExists = inventory.includes('../image/images/useritem/갈색술.png');
     if (itemExists) {
         alert("이미 같은 아이템이 인벤토리에 있습니다.");
         return;
     }
 
-    inventory.push('../image/images/useritem/칵테일잔.PNG');
+    inventory.push('../image/images/useritem/갈색술.png');
     localStorage.setItem('inventory', JSON.stringify(inventory));
 
     // 필요에 따라 추가 동작을 정의할 수 있음
 }
 
-// ---------------------------------- //
-//       클릭 횟수를 확인하는 함수      //
-// ---------------------------------- //
-// 레시피 1
+// 인벤토리 아이템 클릭 이벤트 처리 조건 추가
+document.addEventListener('DOMContentLoaded', (event) => {
+    // 로컬 스토리지에서 인벤토리 데이터를 가져옴
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    
+    // 인벤토리 데이터를 순회하며 박스에 아이템 이미지를 추가
+    inventory.forEach((item, index) => {
+        if (index < 7) {
+            const box = document.getElementById(`box${index + 1}`);
+            const img = document.createElement('img');
+            img.src = item;
+            img.className = 'item';
+            img.oncontextmenu = (e) => onContextMenu(e, index);
+            img.onclick = () => handleItemClick(item);
+            box.appendChild(img);
+        }
+    });
+});
+
+// 아이템 클릭 이벤트 처리 함수
+function handleItemClick(item) {
+    // 남자친구 영역이 클릭된 후에만 잔 이미지 클릭 시 메시지 표시
+    if (boyfriendAreaClicked && item === '../image/images/useritem/갈색술.png') {
+        displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
+    } else if (item === '../image/images/useritem/갈색술.png') {
+        itemSelected = '갈색술'; // 갈색 술 아이템 선택 상태로 설정
+        alert('갈색 술이 선택되었습니다.');
+    }
+}
+
+// 메시지를 화면 가운데에 표시하는 함수
+function displayMessage(message) {
+    const messageBox = document.createElement('div');
+    messageBox.textContent = message;
+    messageBox.style.position = 'fixed';
+    messageBox.style.top = '50%';
+    messageBox.style.left = '50%';
+    messageBox.style.transform = 'translate(-50%, -50%)';
+    messageBox.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    messageBox.style.color = 'white';
+    messageBox.style.padding = '20px';
+    messageBox.style.borderRadius = '10px';
+    messageBox.style.zIndex = '1000';
+    document.body.appendChild(messageBox);
+
+    // 2초 후 메시지를 제거하고 alert 표시
+    setTimeout(() => {
+        document.body.removeChild(messageBox);
+        alert('레시피를 찾아보자');
+    }, 2000);
+}
+
+// 클릭 횟수를 확인하는 함수
 function checkLiquorClickCombination() {
     if (liquorClickCounts['레몬주스따르기'] === 1 &&
         liquorClickCounts['스미노프따르기'] === 1 &&
@@ -337,34 +395,57 @@ function checkLiquorClickCombination() {
     return false;
 }
 
-// 레시피 2
-// function checkLiquorClickCombination() {
-//     if (liquorClickCounts['레몬주스따르기'] === 0 &&
-//         liquorClickCounts['스미노프따르기'] === 0 &&
-//         liquorClickCounts['오렌지주스따르기'] === 0 &&
-//         liquorClickCounts['봄베이따르기'] === 0 &&
-//         liquorClickCounts['럼따르기'] === 0 &&
-//         liquorClickCounts['달모어따르기'] === 0) {
-//         setTimeout(function() {
-//             imageElement.src = '../image/images/barpage/잔을채우다1.png';
-//             setTimeout(function() {
-//                 imageElement.src = '../image/images/barpage/잔완성.png';
-//                 thirdImageDisplayed = false;
-//                 document.getElementById('close-button').style.display = 'block';
-//                 addFinalClickArea(); // 잔완성 이미지에 클릭 영역 추가
-//             }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
-//         }, 500);
-//         return true;
-//     }
-//     return false;
-// }
-
 // 클릭 횟수를 초기화하는 함수
 function resetLiquorClickCounts() {
     for (let key in liquorClickCounts) {
         liquorClickCounts[key] = 0;
     }
 }
+
 // 초기 영역 추가
 addClickableAreas();
 
+// 인벤토리 관련 함수들
+
+function getItem(imageSrc) {
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    
+    // 이미 아이템이 존재하는지 확인
+    const itemExists = inventory.includes(imageSrc);
+    if (itemExists) {
+        alert("이미 같은 아이템이 인벤토리에 있습니다.");
+        return;
+    }
+
+    if (inventory.length < 7) { // 인벤토리에 아이템이 7개 이하인 경우만 추가
+        inventory.push(imageSrc);
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        alert("아이템이 추가되었습니다.");
+    } else {
+        alert("인벤토리가 가득 찼습니다.");
+    }
+}
+
+function goToInventory() {
+    window.location.href = "../HTML/inventory.html";
+}
+
+// 우클릭 시 호출되는 함수
+function onContextMenu(event, index) {
+    event.preventDefault(); // 우클릭 메뉴가 뜨는 것을 방지
+    removeItem(index); // 아이템 제거 함수 호출
+}
+
+// 아이템을 제거하는 함수
+function removeItem(index) {
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || []; // 로컬 스토리지에서 인벤토리 데이터를 가져옴
+    inventory.splice(index, 1); // 지정된 인덱스의 아이템을 제거
+    localStorage.setItem('inventory', JSON.stringify(inventory)); // 변경된 인벤토리 데이터를 로컬 스토리지에 저장
+    location.reload(); // 페이지를 새로고침하여 변경사항을 반영
+}
+
+// 인벤 돌아가기 버튼 선택
+function getBack(){    
+    // 뒤로 가기 기능 구현
+    window.history.back();
+}
