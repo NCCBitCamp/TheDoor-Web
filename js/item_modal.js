@@ -1,3 +1,5 @@
+window.onload = function() {
+    console.log(document.getElementById('button-item'));
 document.getElementById('button-item').addEventListener('click', function() {
     document.getElementById('intro').style.display = 'block';
 });
@@ -37,3 +39,4 @@ window.addEventListener('load', () => {
         }
     }
 });
+};

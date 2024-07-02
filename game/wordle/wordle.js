@@ -116,23 +116,28 @@ function checkGuess() {
   if (guessString === rightGuessString) {
     toastr.success("collect!! you won!!");
     console.log("showPicture2");
+    setTimeout(() => {
+
+      window.location.href = "../../HTML/_02_the_bar.html";
+      
+    }, 2000);
 
     // 정답 이미지 표시
-    const barImage = document.getElementById("bar-image");
-    barImage.onload = function() {
-        console.log("Image loaded successfully");
-        barImage.style.display = "block"; // 이미지가 로드된 후 보이게 설정
-    };
-    barImage.onerror = function() {
-        console.error("Failed to load image");
-    };
-    barImage.src = "../../image/images/barpage/사진건내는남자.PNG";
+    // const barImage = document.getElementById("bar-image");
+    // barImage.onload = function() {
+    //     console.log("Image loaded successfully");
+    //     barImage.style.display = "block"; // 이미지가 로드된 후 보이게 설정
+    // };
+    // barImage.onerror = function() {
+    //     console.error("Failed to load image");
+    // };
+    // barImage.src = "../../image/images/barpage/사진건내는남자.PNG";
 
-    // 인벤토리에서 아이템 상자 표시
-    localStorage.setItem('showPicture2', 'true');
-    showItemBox('picture2');
-    // 시도 횟수 초기화
-    guessesRemaining = 0;
+    // // 인벤토리에서 아이템 상자 표시
+    // localStorage.setItem('showPicture2', 'true');
+    // showItemBox('picture2');
+    // // 시도 횟수 초기화
+    // guessesRemaining = 0;
     return;
   } else {
     // 정답이 아닌 경우 시도 횟수 감소 및 초기화
