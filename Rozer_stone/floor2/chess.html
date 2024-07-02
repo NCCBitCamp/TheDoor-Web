@@ -4,44 +4,32 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>RozerStone</title>
+  <link rel="icon" href="../favicon-16x16.png">
   <link rel="stylesheet" href="chess.css">
-    <style>
-        body {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            margin: 0 auto;
-        }
-        table {
-            border-collapse: collapse;
-            border: 1px solid brown;
-        }
-    </style>
 </head>
 <body style="background-image: url(image/체스테이블.jpg);">
   <div>
     <table>
       <tr>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
+        <td class="white"><div class="black-rook"></div></td>
+        <td class="black"><div class="black-knight"></div></td>
+        <td class="white"><div class="black-bishop"></div></td>
+        <td class="black"><div class="black-queen"></div></td>
+        <td class="white"><div class="black-back" onclick = "back()"></div></td>
+        <td class="black"><div class="black-bishop"></div></td>
+        <td class="white"><div class="black-knight"></div></td>
+        <td class="black"><div class="black-rook"></div></td>
       </tr>
       <tr>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
-        <td class="black"></td>
-        <td class="white"></td>
+        <td class="black"><div class="black-pawn"></div></td>
+        <td class="white"><div class="black-pawn"></div></td>
+        <td class="black"><div class="black-pawn"></div></td>
+        <td class="white"><div class="black-pawn"></div></td>
+        <td class="black"><div class="black-pawn"></div></td>
+        <td class="white"><div class="black-pawn"></div></td>
+        <td class="black"><div class="black-pawn"></div></td>
+        <td class="white"><div class="black-pawn"></div></td>
       </tr>
       <tr>
         <td class="white"></td>
@@ -105,5 +93,14 @@
       </tr>
     </table>
   </div>
+
+  <script>
+    function back(){
+        window.location.href = "Part_2_R.html";
+    }
+
+
+
+  </script>
 </body>
 </html>
