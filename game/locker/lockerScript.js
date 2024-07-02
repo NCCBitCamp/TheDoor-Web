@@ -76,4 +76,4 @@ const patternbox = document.querySelector(".patternbox");
 
         document.getElementById('back-button').addEventListener('click', function() {
             window.location.href = '../../HTML/_03_right_wall.html'; // 돌아갈 페이지로 이동
-          });
+        });

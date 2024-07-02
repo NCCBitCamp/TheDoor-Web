@@ -247,7 +247,6 @@ function addWordleArea() {
 
     otherAreaClicked = true; 
     imageElement.src = '../image/images/barpage/신문.png';
-    addCloseButton();
     removeClickableAreas(); // 영역 제거
 
     // 클릭 이벤트 리스너 추가
