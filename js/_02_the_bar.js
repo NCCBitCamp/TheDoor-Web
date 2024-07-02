@@ -307,7 +307,10 @@ function handleFinalClick() {
     // 필요에 따라 추가 동작을 정의할 수 있음
 }
 
-// 클릭 횟수를 확인하는 함수
+// ---------------------------------- //
+//       클릭 횟수를 확인하는 함수      //
+// ---------------------------------- //
+// 레시피 1
 function checkLiquorClickCombination() {
     if (liquorClickCounts['레몬주스따르기'] === 1 &&
         liquorClickCounts['스미노프따르기'] === 1 &&
@@ -328,6 +331,28 @@ function checkLiquorClickCombination() {
     }
     return false;
 }
+
+// 레시피 2
+// function checkLiquorClickCombination() {
+//     if (liquorClickCounts['레몬주스따르기'] === 0 &&
+//         liquorClickCounts['스미노프따르기'] === 0 &&
+//         liquorClickCounts['오렌지주스따르기'] === 0 &&
+//         liquorClickCounts['봄베이따르기'] === 0 &&
+//         liquorClickCounts['럼따르기'] === 0 &&
+//         liquorClickCounts['달모어따르기'] === 0) {
+//         setTimeout(function() {
+//             imageElement.src = '../image/images/barpage/잔을채우다1.png';
+//             setTimeout(function() {
+//                 imageElement.src = '../image/images/barpage/잔완성.png';
+//                 thirdImageDisplayed = false;
+//                 document.getElementById('close-button').style.display = 'block';
+//                 addFinalClickArea(); // 잔완성 이미지에 클릭 영역 추가
+//             }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
+//         }, 500);
+//         return true;
+//     }
+//     return false;
+// }
 
 // 클릭 횟수를 초기화하는 함수
 function resetLiquorClickCounts() {
