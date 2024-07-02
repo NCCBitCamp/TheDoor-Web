@@ -28,7 +28,8 @@ function addClickableAreas() {
         { id: 'television', x: 75, y: 342, width: 170, height: 160, image: '../image/images/leftwall/티비_1.PNG' },
         { id: 'green_drawer', x: 67, y: 537, width: 370, height: 220, image: '../image/images/leftwall/왼쪽벽열린선반_수정.PNG' },
         { id: 'chest', x: 298, y: 417, width: 100, height: 100, image: '../image/images/leftwall/열린상자_빈.PNG' },
-        { id: 'grandfather_clock', x: 983, y: 147, width: 230, height: 590, image: '../image/images/leftwall/괘종시계.PNG' }
+        { id: 'grandfather_clock', x: 1010, y: 141, width: 126, height: 419, href: '../game/clock/index.html' },
+        { id: 'grandfather_drawer', x: 971, y: 633, width: 212, height: 95, image: '../image/images/leftwall/괘종시계.PNG' }
     ];
 
     clickableAreas.forEach(area => {
