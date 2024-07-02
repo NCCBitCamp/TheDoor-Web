@@ -54,7 +54,7 @@
             z-index: 1;
             width: 7vw;
             height: 18vh;
-            right: 53.3%;
+            right: 53.95%;
             top: 29%;
         }
         .rib {
@@ -120,35 +120,53 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        .red-overlay {
+            display: none; /* 초기에는 오버레이를 숨깁니다. */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgb(51, 12, 12);
+            opacity: 0;
+            z-index: 4; /* 오버레이가 텍스트 박스, 버튼 위에 표시 */
+            transition: opacity 4s ease-out; /* 4초 동안 천천히 나타나게 설정 */
+        }
+        .fade-in-red {
+            display: block;
+            opacity: 0.5; /* 붉은 오버레이의 불투명도 */
+        }
     </style>
 </head>
 <body>
     <span>
-        <div class="text_box" data-trigger>
-            <span class="text"></span>
+        <div class="content">
+            <div class="text_box" data-trigger>
+                <span class="text"></span>
+            </div>
+            <div>
+                <img src="Part_2_L.png" class="middle bgimg">
+                <img src="image/초상화1-1.PNG" class="pic" onclick="showqueen()">
+                <img src="image/해골8.png" class="rib" onclick="getItem()">
+                <img src="image/해골1.png" class="sekl1" onclick="getItem()">
+                <img src="image/벌레.png" class="bug" onclick="insect()">
+                <img src="image/화로.png" class="bornfire" onclick="gethwaro()">
+                <img src="image/쇠사슬4.png" class="chain" onclick="getItem()">
+                <img src="image/해골6.png" class="sekl_Head" onclick="getItem()">
+                <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
+            </div>
+            <a href="Part_2_B.html" class="carousel-control-prev" data-bs-slide="prev">
+                <span class="carousel-control-prev-icon"></span>
+            </a>
+            <a href="Part_2_C.html" class="carousel-control-next" data-bs-slide="next">
+                <span class="carousel-control-next-icon"></span>
+            </a>
+            <button class="inventory_button" onclick="goToInventory()">인벤토리</button>
         </div>
-        <div>
-            <img src="Part_2_L.png" class="middle bgimg">
-            <img src="image/초상화1.PNG" class="pic" onclick="getItem()">
-            <img src="image/해골8.png" class="rib" onclick="getItem()">
-            <img src="image/해골1.png" class="sekl1" onclick="getItem()">
-            <img src="image/벌레.png" class="bug" onclick="getItem()">
-            <img src="image/화로.png" class="bornfire" onclick="getItem()">
-            <img src="image/쇠사슬4.png" class="chain" onclick="getItem()">
-            <img src="image/해골6.png" class="sekl_Head" onclick="getItem()">
-            <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
-        </div>
-        <a href="Part_2_B.html" class="carousel-control-prev" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon"></span>
-        </a>
-        <a href="Part_2_C.html" class="carousel-control-next" data-bs-slide="next">
-            <span class="carousel-control-next-icon"></span>
-        </a>
-        <button class="inventory_button" onclick="goToInventory()">인벤토리</button>
-    </div>
+        <div class="red-overlay" id="redOverlay"></div>
     </span>
     <script>
-        const content = "엘리자베스 여왕의 초상화가 걸려있다";
+        const content = "무슨 끔찍한 일이 일어난 것일까...?";
         const text = document.querySelector(".text");
         let i = 0;
 
@@ -176,6 +194,77 @@
             }
         }
 
+        function showqueen() {
+            const pic = document.querySelector('.pic');
+            const redOverlay = document.getElementById('redOverlay');
+
+            // 붉은 오버레이 표시
+            redOverlay.style.display = 'block';
+            redOverlay.classList.add('fade-in-red');
+
+            setTimeout(() => {
+                redOverlay.classList.remove('fade-in-red');
+                setTimeout(() => {
+                    redOverlay.style.display = 'none';
+                }, 2000); // 페이드 아웃이 끝난 후 오버레이 숨기기
+            }, 2000);
+
+            // 초상화 클로즈업
+            pic.style.transition = 'transform 2s';
+            pic.style.transform = 'scale(2)';
+            
+            // 2초 후에 초상화 이미지 변경 및 애니메이션 시작
+            setTimeout(() => {
+                pic.src = 'image/초상화2-1.PNG';
+                changeImageSequence();
+            }, 3000);
+        }
+
+        function changeImageSequence() {
+            const pic = document.querySelector('.pic');
+            const images = ['image/초상화3-1.PNG', 'image/초상화4-1.PNG'];
+            let index = 0;
+
+            function toggleImages() {
+                setTimeout(() => {
+                    pic.src = images[index % 2];
+                    index++;
+                    if (index < 100) {
+                        toggleImages();
+                    } else {
+                        resetImage();
+                    }
+                }, 50);
+            }
+
+            toggleImages();
+        }
+
+        function resetImage() {
+            const pic = document.querySelector('.pic');
+            const redOverlay = document.getElementById('redOverlay');
+
+            // 0.5초 후에 원래 이미지로 복원
+            setTimeout(() => {
+                pic.src = 'image/초상화1-1.PNG';
+                pic.style.transition = 'transform 2s';
+                pic.style.transform = 'scale(1)';
+
+                // 붉은 오버레이 숨기기
+                redOverlay.classList.remove('fade-in-red');
+                setTimeout(() => {
+                    redOverlay.style.display = 'none';
+                }, 4000); // 페이드 아웃이 끝난 후 오버레이 숨기기
+            }, 500);
+        }
+
+        function gethwaro(){
+            
+        }
+
+        function insect(){
+
+        }
 
         function goToInventory() {
             window.location.href = "../integ/Inventory_temp.html";
