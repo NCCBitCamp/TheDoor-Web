@@ -82,15 +82,6 @@
     background-size: 50%;
     cursor:pointer;
 }
-.box1-1-item {
-    width: 10rem;
-    height: 9.5rem;
-    border-radius: 10%;
-    background-repeat : no-repeat;
-    background-position: center;
-    background-image: url(../사용자아이템창/칵테일잔.PNG);
-    cursor:pointer;
-}
 
 .box2-item {
     text-align: center;
@@ -176,12 +167,13 @@
 }
 
 /* 아이템 박스 숨기기 */
-.box1-item,
+/* .box1-item,
 .box2-item,
 .box3-item,
 .box4-item,
 .box5-item,
 .box6-item,
 .box7-item {
-    visibility: hidden; /* 처음에 아이템 박스를 숨깁니다 */
-}      
+    visibility: hidden;
+}
+처음에 아이템 박스를 숨깁니다 */
