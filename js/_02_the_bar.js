@@ -1,8 +1,8 @@
 // 클릭 이벤트 관련 변수 초기화
-let buttonDisplayed = false; 
-let secondImageDisplayed = false; 
+let buttonDisplayed = false;
+let secondImageDisplayed = false;
 let thirdImageDisplayed = false;
-let otherAreaClicked = false; 
+let otherAreaClicked = false;
 
 const liquorClickCounts = {
     '봄베이따르기': 0,
@@ -47,17 +47,19 @@ function addClickableAreas() {
         document.getElementById('game-container').appendChild(overlay);
 
         // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
-        overlay.addEventListener('mouseenter', function() {
+        overlay.addEventListener('mouseenter', function () {
             document.body.style.cursor = 'pointer';
         });
-        overlay.addEventListener('mouseleave', function() {
+        overlay.addEventListener('mouseleave', function () {
             document.body.style.cursor = 'default';
         });
 
         // 클릭 이벤트 리스너 추가
-        overlay.addEventListener('click', function(event) {
+        overlay.addEventListener('click', function (event) {
             event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
             handleOverlayClick(event, area);
+            document.getElementById("left-button").style.display = "none";
+            document.getElementById("right-button").style.display = "none";
         });
     });
 }
@@ -78,15 +80,15 @@ function addLiquorAreas() {
         document.getElementById('game-container').appendChild(overlay);
 
         // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
-        overlay.addEventListener('mouseenter', function() {
+        overlay.addEventListener('mouseenter', function () {
             document.body.style.cursor = 'pointer';
         });
-        overlay.addEventListener('mouseleave', function() {
+        overlay.addEventListener('mouseleave', function () {
             document.body.style.cursor = 'default';
         });
 
         // 클릭 이벤트 리스너 추가
-        overlay.addEventListener('click', function(event) {
+        overlay.addEventListener('click', function (event) {
             event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
             handleLiquorClick(event, area);
         });
@@ -110,18 +112,21 @@ function addCloseButton() {
     closeButton.className = "close-button";
     document.getElementById('game-container').appendChild(closeButton);
 
-    buttonDisplayed = true; 
+    buttonDisplayed = true;
 
-    closeButton.addEventListener('click', function() {
+    closeButton.addEventListener('click', function () {
         imageElement.src = '../image/images/barpage/더호스텔바.PNG';
         closeButton.remove();
         buttonDisplayed = false;
-        otherAreaClicked = false; 
+        otherAreaClicked = false;
         secondImageDisplayed = false;
         thirdImageDisplayed = false;
         resetLiquorClickCounts();
         removeClickableAreas(); // 클릭 가능한 모든 영역 제거
         addClickableAreas(); // 닫기 버튼 클릭 시 영역 다시 추가
+        document.getElementById("left-button").style.display = ""; // 왼쪽오른쪽 버튼숨기기
+        document.getElementById("right-button").style.display = "";
+
     });
 }
 
@@ -132,30 +137,30 @@ function handleOverlayClick(event, area) {
 
     function checkAreaClick(area) {
         return clickX >= area.x && clickX <= (area.x + area.width) &&
-               clickY >= area.y && clickY <= (area.y + area.height);
+            clickY >= area.y && clickY <= (area.y + area.height);
     }
-    
+
     //--------------------------//
     // 남자친구 영역 클릭 시 동작 //
     //--------------------------//
     if (area.id === 'boyfriend-area' && checkAreaClick(area) && !buttonDisplayed) {
-        imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
-        otherAreaClicked = true; 
+        imageElement.src = '../image/images/barpage/내버려둬.PNG';
+        otherAreaClicked = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
-    } 
+    }
     // 웨이터 영역 클릭 시 동작
     else if (area.id === 'waiter-area' && checkAreaClick(area) && !buttonDisplayed) {
         imageElement.src = '../image/images/barpage/말하는웨이터_수정.PNG';
-        otherAreaClicked = true; 
+        otherAreaClicked = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
-    } 
+    }
     // 술장 영역 클릭 시 동작
     else if (area.id === 'liquor-area' && checkAreaClick(area) && !secondImageDisplayed && !otherAreaClicked) {
         imageElement.src = '../image/images/barpage/술있는곳확대.png';
-        secondImageDisplayed = true; 
+        secondImageDisplayed = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addLiquorAreas(); // 두 번째 이미지 클릭 시 주류 영역 추가
@@ -169,20 +174,20 @@ function handleLiquorClick(event, area) {
 
     function checkAreaClick(area) {
         return clickX >= area.x && clickX <= (area.x + area.width) &&
-               clickY >= area.y && clickY <= (area.y + area.height);
+            clickY >= area.y && clickY <= (area.y + area.height);
     }
 
     if (secondImageDisplayed && !thirdImageDisplayed && checkAreaClick(area)) {
         imageElement.src = area.image;
         liquorClickCounts[area.key] += 1;
-        thirdImageDisplayed = true; 
+        thirdImageDisplayed = true;
         document.getElementById('close-button').style.display = 'none';
 
         // 1초 후에 두 번째 이미지로 돌아가기
-        setTimeout(function() {
+        setTimeout(function () {
             checkLiquorClickCombination();
             imageElement.src = '../image/images/barpage/술있는곳확대.png';
-            thirdImageDisplayed = false; 
+            thirdImageDisplayed = false;
             document.getElementById('close-button').style.display = 'block';
         }, 1000);
     }
@@ -207,15 +212,15 @@ function addPaperArea() {
     document.getElementById('game-container').appendChild(overlay);
 
     // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
-    overlay.addEventListener('mouseenter', function() {
+    overlay.addEventListener('mouseenter', function () {
         document.body.style.cursor = 'pointer';
     });
-    overlay.addEventListener('mouseleave', function() {
+    overlay.addEventListener('mouseleave', function () {
         document.body.style.cursor = 'default';
     });
 
     // 클릭 이벤트 리스너 추가
-    overlay.addEventListener('click', function(event) {
+    overlay.addEventListener('click', function (event) {
         event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
         addWordleArea();
     });
@@ -224,7 +229,7 @@ function addPaperArea() {
 // 월들 영역 클릭 이벤트를 처리하는 함수 //
 // ---------------------------------- //
 function addWordleArea() {
-    const wordleArea = { x: 608 , y: 334, width: 231, height: 248, href: '../game/wordle/wordle.html'};
+    const wordleArea = { x: 608, y: 334, width: 231, height: 248, href: '../game/wordle/wordle.html' };
 
     const overlay = document.createElement('div');
     overlay.classList.add('wordle-area');
@@ -238,19 +243,19 @@ function addWordleArea() {
 
     document.getElementById('game-container').appendChild(overlay);
 
-    overlay.addEventListener('mouseenter', function() {
+    overlay.addEventListener('mouseenter', function () {
         document.body.style.cursor = 'pointer';
     });
-    overlay.addEventListener('mouseleave', function() {
+    overlay.addEventListener('mouseleave', function () {
         document.body.style.cursor = 'default';
     });
 
-    otherAreaClicked = true; 
+    otherAreaClicked = true;
     imageElement.src = '../image/images/barpage/신문.png';
     removeClickableAreas(); // 영역 제거
 
     // 클릭 이벤트 리스너 추가
-    overlay.addEventListener('click', function(event) {
+    overlay.addEventListener('click', function (event) {
         event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
         window.location.href = '../game/wordle/wordle.html';
     });
@@ -318,9 +323,9 @@ function checkLiquorClickCombination() {
         liquorClickCounts['봄베이따르기'] === 0 &&
         liquorClickCounts['럼따르기'] === 0 &&
         liquorClickCounts['달모어따르기'] === 0) {
-        setTimeout(function() {
+        setTimeout(function () {
             imageElement.src = '../image/images/barpage/잔을채우다1.png';
-            setTimeout(function() {
+            setTimeout(function () {
                 imageElement.src = '../image/images/barpage/잔완성.png';
                 thirdImageDisplayed = false;
                 document.getElementById('close-button').style.display = 'block';
