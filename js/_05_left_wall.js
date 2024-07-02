@@ -22,12 +22,12 @@ const rightButton = document.getElementById('right-button');
  */
 function addClickableAreas() {
     const clickableAreas = [
-         {id: 'menu', x: 203, y: 142, width: 120, height: 160, image: '../image/images/leftwall/메뉴판.PNG'},
+         {id: 'menu', x: 203, y: 142, width: 120, height: 160, image: '../image/images/leftwall/메뉴판_수정.PNG'},
          {id: 'pianokey', x: 399, y: 206, width: 210, height: 160, image: '../image/images/leftwall/피아노건반.PNG'},
-         {id: 'mirror', x: 712, y: 78, width: 160, height: 190, image: '../image/images/leftwall/거울.PNG'},
+         {id: 'mirror', x: 712, y: 78, width: 160, height: 190, image: '../image/images/leftwall/거울_수정.PNG'},
          {id: 'flowerpot', x: 703, y: 360, width: 130, height: 379, image: '../image/images/leftwall/꽃화분.PNG'},
          {id: 'television', x: 75, y: 342, width: 170, height: 160, image: '../image/images/leftwall/티비투명.PNG'},
-         {id: 'green_drawer', x: 67, y: 537, width: 370, height: 220, image: '../image/images/leftwall/왼쪽벽열린선반.PNG'},
+         {id: 'green_drawer', x: 67, y: 537, width: 370, height: 220, image: '../image/images/leftwall/왼쪽벽열린선반_수정.PNG'},
          {id: 'chest', x: 298, y: 417, width: 100, height: 100, image: '../image/images/leftwall/열린상자_빈.PNG'},
          {id: 'grandfather_clock', x: 983, y: 147, width: 230, height: 590, image: '../image/images/leftwall/괘종시계.PNG'}
     ];
