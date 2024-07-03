@@ -204,6 +204,8 @@
         setInterval(typing, 100);
         
         function getItem(imageSrc) {
+            const audio = new Audio('music/공통/아이템획득소리2.mp3');
+            audio.play();
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) { // 인벤토리에 아이템이 6개 이하인 경우만 추가
                 inventory.push(imageSrc);

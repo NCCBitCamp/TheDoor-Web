@@ -1,16 +1,18 @@
 function movePawn(element) {
-    alert('폰 선택');
+    const audio = new Audio('music/2층체스상호작용.mp3');
+    audio.play();
+    // alert('폰 선택');
     const pawn = element;
     const row = parseInt(pawn.dataset.row);
     const col = parseInt(pawn.dataset.col);
-    alert(pawn.dataset.row + ` = pawn.dataset.row ` + pawn.dataset.col + ` = pawn.dataset.col`);
+    // alert(pawn.dataset.row + ` = pawn.dataset.row ` + pawn.dataset.col + ` = pawn.dataset.col`);
     const nextRow1Td = document.querySelector(`div[data-row="${row + 1}"][data-col="${col-1}"]`).parentElement;
     const nextRow2Td = document.querySelector(`div[data-row="${row + 2}"][data-col="${col}"]`).parentElement;
 
-    console.log(`div[data-row="${row + 1}"][data-col="${col-1}"]`);
-    console.log(`div[data-row="${row + 2}"][data-col="${col}"]`);
-    console.log(nextRow1Td);
-    console.log(nextRow2Td);
+    // console.log(`div[data-row="${row + 1}"][data-col="${col-1}"]`);
+    // console.log(`div[data-row="${row + 2}"][data-col="${col}"]`);
+    // console.log(nextRow1Td);
+    // console.log(nextRow2Td);
 
     if (row == 1) {
         if (nextRow1Td) {
@@ -104,5 +106,10 @@ function moveBishop(element) {
 }
 
 function moveQeen(element) {
+    const audio = new Audio('../integ/짧은성가대.mp3');
+    audio.play();
+    setTimeout(() => {
+        window.location.href = "https://vignette4.wikia.nocookie.net/freddy-fazbears-pizza/images/8/85/Fnaf4_jumpscare_bonnieindoorway.gif";
+    }, 2000);
     // 박효신- 웃는남자 화면 
 }
