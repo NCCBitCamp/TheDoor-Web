@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>2층 유리실</title>
+    <title>유리실</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <style>
         body {
@@ -94,20 +94,6 @@
         <button id="settings-button" onclick="openSettings()"><img src="images/settings-icon.svg" alt="Settings"></button>
     </div>
     <script>
-        window.addEventListener('load', function () {
-            history.pushState(null, '', location.href);
-
-            window.addEventListener('popstate', function (event) {
-                history.pushState(null, '', location.href);
-                alert('도망칠 수 없습니다');
-            });
-
-            window.addEventListener('beforeunload', function (event) {
-                history.pushState(null, '', location.href);
-                alert('도망칠 수 없습니다');
-            });
-        });
-
         const config = {
             type: Phaser.AUTO,
             width: 1280,

@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Door of RogerStone</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap" rel="stylesheet">
     <style>
         body {
             margin: 0;
@@ -19,12 +22,12 @@
             width: 1280px;
             height: 720px;
         }
-        @font-face {
-            font-family: 'KyoboHandwriting2023wsa';
-            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/2404-2@1.0/KyoboHandwriting2023wsa.woff2') format('woff2');
-            font-weight: normal;
+        .black-and-white-picture-regular {
+            font-family: "Black And White Picture", system-ui;
+            font-weight: 400;
             font-style: normal;
         }
+        @import url('https://fonts.googleapis.com/css2?family=Black+And+White+Picture&display=swap');
         @font-face {
             font-family: 'GmarketSansMedium';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -62,7 +65,7 @@
             bg.setPosition((config.width - bg.displayWidth) / 2, (config.height - bg.displayHeight) / 2);
 
             const titleText = this.add.text(300, 238, "RozerStone", {
-                fontFamily: 'GmarketSansMedium',
+                fontFamily: 'Black And White Picture',
                 fontSize: '32px',
                 color: '#ffffff',
                 align: 'center',
@@ -76,8 +79,8 @@
                 }
             }).setOrigin(0.5);
 
-            const subText = this.add.text(300, 350, "익숙하고 평범한 문이다.\n이 안에는 뭐가 있을까?\n어쩌구저쩌구\n뭐라고 쓸지 모르겠네\n텍스트는 채워야 하고...\n이정도면 되겠지?", {
-                fontFamily: 'GmarketSansMedium',
+            const subText = this.add.text(300, 350, "중세시대 유적지를 탐험하다\n비밀스러운 장소를 찾아\n보물을 얻기 위해 떠나는\n흥미진진한 방탈출 모험!", {
+                fontFamily: 'Black And White Picture',
                 fontSize: '20px',
                 color: '#ffffff',
                 align: 'center',
