@@ -1,57 +1,219 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Door</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <style>
-        .container {
+        body {
+            margin: 0;
             display: flex;
             justify-content: center;
-            align-items: center; 
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+            background-color: black;
         }
-        img {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translateX(-50%) translateY(-50%);
+
+        #game-container {
+            width: 1280px;
+            height: 720px;
         }
-        .icon_setting {
-            position: absolute;
-            top: 130px;
-            left: 1600px;
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgb(0, 0, 0);
+            background-color: rgba(0, 0, 0, 0.4);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 80%;
+            max-width: 300px;
+            text-align: center;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
             cursor: pointer;
         }
-        .icon_rank {
-            position: absolute;
-            top: 190px;
-            left: 1602px;
-            cursor: pointer;
+        p {
+            font-family: GmarketSansMedium;
+        }
+        
+        @font-face {
+            font-family: 'GmarketSansMedium';
+            src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+            font-weight: normal;
+            font-style: normal;
         }
     </style>
 </head>
+
 <body>
-    <div class="container">
-        <img src="images/door.png" usemap="#image-map" alt="Image">
-        <img src="images/settings.svg" class="icon_setting" alt="setting icon" href="#">
-        <img src="images/rank.svg" class="icon_rank" alt="setting icon" href="#">
-        <map name="image-map">
-            <area shape="rect" coords="621,510,756,235" href="502Door.html" alt="502" onclick="on_click(this)">
-            <area shape="poly" coords="311,555,457,528,457,296,446,283,435,258,334,274,314,318" href="hostelDoor.html" alt="hostel" onclick="on_click(this)">
-            <area shape="poly" coords="929,311,923,529,1107,579,1120,561,1120,336,941,305" href="#" alt="roger" onclick="on_click(this)">
-        </map>
+    <div id="game-container"></div>
+
+    <!-- Modal -->
+    <div id="volumeModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <p>볼륨 조절</p>
+            <input type="range" id="volumeControl" min="0" max="1" step="0.01" value="0.5">
+        </div>
     </div>
 
     <script>
-        function on_click(area){
-            if(area.getAttribute('alt')=='roger' && document.querySelector('img').src.includes('door2.png')){
-                window.location.href = 'rogerDoor.html';
+        const config = {
+            type: Phaser.AUTO,
+            width: 1280,
+            height: 720,
+            parent: 'game-container',
+            scene: {
+                preload: preload,
+                create: create
             }
-            else if(area.getAttribute('alt')=='roger'){
-                var img = document.querySelector('img');
-                img.src = "images/door2.png";
-            }  
+        };
+
+        const game = new Phaser.Game(config);
+        let bg, bgm, scene;
+
+        function preload() {
+            this.load.image('door', 'images/door.png');
+            this.load.image('door2', 'images/door2.png');
+            this.load.image('settings', 'images/settings.svg');
+            this.load.image('rank', 'images/rank.svg');
+            this.load.audio('bgm', 'sounds/in-the-embrace-of-darkness-197925.mp3');
+        }
+
+        function create() {
+            scene = this;
+            this.cameras.main.setBackgroundColor('#000000');
+
+            bg = this.add.image(0, 0, 'door').setOrigin(0, 0);
+            const scale = Math.min(config.width / bg.width, config.height / bg.height);
+            bg.setScale(scale);
+            bg.setPosition((config.width - bg.displayWidth) / 2, (config.height - bg.displayHeight) / 2);
+
+            const settingsIcon = this.add.image(1240, 40, 'settings').setInteractive().setScale(1);
+            const rankIcon = this.add.image(1180, 40, 'rank').setInteractive().setScale(1);
+
+            bgm = this.sound.add('bgm', { loop: true });
+            bgm.play();
+
+            settingsIcon.on('pointerdown', () => {
+                showModal();
+            });
+
+            rankIcon.on('pointerdown', () => {
+                window.location.href = 'rank.html';
+            });
+
+            // 502Door 클릭 영역
+            const zone502 = this.add.zone(586, 232, 117, 244).setOrigin(0).setInteractive();
+            zone502.on('pointerdown', () => {
+                saveAudioProgress();
+                window.location.href = '502Door.html';
+            });
+            zone502.on('pointerover', () => {
+                document.body.style.cursor = 'pointer';
+            });
+            zone502.on('pointerout', () => {
+                document.body.style.cursor = 'default';
+            });
+
+            // hostelDoor 클릭 영역
+            const zoneHostel = this.add.zone(314, 256, 113, 271).setOrigin(0).setInteractive();
+            zoneHostel.on('pointerdown', () => {
+                saveAudioProgress();
+                window.location.href = 'hostelDoor.html';
+            });
+            zoneHostel.on('pointerover', () => {
+                document.body.style.cursor = 'pointer';
+            });
+            zoneHostel.on('pointerout', () => {
+                document.body.style.cursor = 'default';
+            });
+
+            // roger 클릭 영역
+            let clickedRoger = false;
+            const zoneRoger = this.add.zone(869, 292, 179, 248).setOrigin(0).setInteractive();
+            zoneRoger.on('pointerdown', () => {
+                if (!clickedRoger) {
+                    bg.setTexture('door2');
+                    clickedRoger = true;
+                } else {
+                    saveAudioProgress();
+                    window.location.href = 'rogerDoor.html';
+                }
+            });
+            zoneRoger.on('pointerover', () => {
+                document.body.style.cursor = 'pointer';
+            });
+            zoneRoger.on('pointerout', () => {
+                document.body.style.cursor = 'default';
+            });
+
+            // Modal functionality
+            const modal = document.getElementById('volumeModal');
+            const span = document.getElementsByClassName('close')[0];
+            const volumeControl = document.getElementById('volumeControl');
+
+            span.onclick = function () {
+                closeModal();
+            };
+
+            window.onclick = function (event) {
+                if (event.target === modal) {
+                    closeModal();
+                }
+            };
+
+            volumeControl.oninput = function () {
+                bgm.setVolume(this.value);
+            };
+
+            function showModal() {
+                modal.style.display = 'flex';
+                volumeControl.value = bgm.volume;
+                scene.input.enabled = false; // Disable input when the modal is shown
+            }
+
+            function closeModal() {
+                modal.style.display = 'none';
+                scene.input.enabled = true; // Enable input when the modal is closed
+            }
+        }
+
+        function saveAudioProgress() {
+            if (bgm) {
+                localStorage.setItem('bgmCurrentTime', bgm.seek);
+            }
         }
     </script>
 </body>
+
 </html>
