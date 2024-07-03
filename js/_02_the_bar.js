@@ -397,7 +397,7 @@ function checkLiquorClickCombination() {
             }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
         }, 500);
         return true;
-    }
+    } 
     return false;
 }
 

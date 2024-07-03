@@ -120,6 +120,11 @@ function checkGuess() {
         // 레시피 정보를 localStorage에 저장
         localStorage.setItem("recipeWon", "true");
 
+        // 보라술 관련 로직 추가
+        if (someConditionToCheckPurpleDrink) {
+          localStorage.setItem("purpleDrinkWon", "true");
+        }
+
         setTimeout(() => {
             window.location.href = "../../HTML/_02_the_bar.html";
         }, 2000);
@@ -216,6 +221,8 @@ document.getElementById("keyboard-cont").addEventListener("click", (e) => {
 });
 
 initBoard(); // 게임 보드 초기화
+
+
 
 // 뒤로 가기 버튼 클릭 이벤트 리스너
 document.getElementById('back-button').addEventListener('click', function () {

@@ -46,6 +46,11 @@ function handleItemClick(item) {
         const modalImg = document.getElementById('modal-img');
         modalImg.src = item;
         modal.style.display = 'block';
+    } else if (item === '../image/images/useritem/보라술.png') {
+        history.back();
+        itemSelected = '보라술';
+        localStorage.setItem("itemSelected", itemSelected);
+        alert('보라 술이 선택되었습니다.');
     }
 }
 
