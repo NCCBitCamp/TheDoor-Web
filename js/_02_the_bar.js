@@ -269,7 +269,7 @@ function addWordleArea() {
 }
 
 // 잔완성 이미지에 클릭 영역 추가 함수
-function addFinalClickArea() {
+function addFinalClickArea(drinkType) {
     const finalArea = { x: 748, y: 546, width: 75, height: 100 };
 
     const overlay = document.createElement('div');
@@ -281,43 +281,52 @@ function addFinalClickArea() {
     overlay.style.height = finalArea.height + 'px';
     overlay.style.backgroundColor = 'transparent'; // 영역이 보이지 않도록 투명하게 설정
     overlay.style.pointerEvents = 'auto'; // 오버레이가 클릭 이벤트를 받도록 설정
+    overlay.dataset.drinkType = drinkType; // drinkType 데이터를 저장
 
     document.getElementById('game-container').appendChild(overlay);
 
     // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
-    overlay.addEventListener('mouseenter', function() {
+    overlay.addEventListener('mouseenter', function () {
         document.body.style.cursor = 'pointer';
     });
-    overlay.addEventListener('mouseleave', function() {
+    overlay.addEventListener('mouseleave', function () {
         document.body.style.cursor = 'default';
     });
 
     // 클릭 이벤트 리스너 추가
-    overlay.addEventListener('click', function(event) {
+    overlay.addEventListener('click', function (event) {
         event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-        handleFinalClick();
+        handleFinalClick(event.target.dataset.drinkType);
     });
 }
 
+
 // 잔완성 이미지 클릭 시 동작
-function handleFinalClick() {
+function handleFinalClick(drinkType) {
     imageElement.src = '../image/images/barpage/칵테일잔x.png'; // 변경할 이미지로 대체
 
-    // inventory.html에 칵테일 잔 이미지를 추가
     let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-    
-    // 이미 아이템이 존재하는지 확인
-    const itemExists = inventory.includes('../image/images/useritem/갈색술.png');
+    let itemExists;
+    let itemName;
+
+    if (drinkType === "갈색술") {
+        itemExists = inventory.includes('../image/images/useritem/갈색술.png');
+        itemName = '../image/images/useritem/갈색술.png';
+    } else if (drinkType === "보라술") {
+        itemExists = inventory.includes('../image/images/useritem/보라술.png');
+        itemName = '../image/images/useritem/보라술.png';
+    }
+
     if (itemExists) {
         alert("이미 같은 아이템이 인벤토리에 있습니다.");
         return;
     }
 
-    inventory.push('../image/images/useritem/갈색술.png');
+    inventory.push(itemName);
     localStorage.setItem('inventory', JSON.stringify(inventory));
 
-    // 갈색 술을 획득하였습니다 메시지 표시
-    alert("갈색 술을 획득하였습니다.");
+    // 획득 메시지 표시
+    alert(`${drinkType}을(를) 획득하였습니다.`);
 }
 
 // 인벤토리 아이템 클릭 이벤트 처리 조건 추가
@@ -351,11 +360,16 @@ function handleItemClick(item) {
         const modalImg = document.getElementById('modal-img');
         modalImg.src = item;
         modal.style.display = 'block';
+    } else if (item === '../image/images/useritem/보라술.png') {
+        history.back();
+        itemSelected = '보라술';
+        localStorage.setItem("itemSelected", itemSelected);
+        alert('보라술이 선택되었습니다.');
     }
 }
 
 // 메시지를 화면 가운데에 표시하는 함수
-function displayMessage(message) {
+function displayMessage1(message) {
     const messageBox = document.createElement('div');
     messageBox.textContent = message;
     messageBox.style.position = 'fixed';
@@ -376,11 +390,33 @@ function displayMessage(message) {
     }, 2000);
 }
 
+function displayMessage2(message, callback) {
+    const messageBox = document.createElement('div');
+    messageBox.textContent = message;
+    messageBox.style.position = 'fixed';
+    messageBox.style.top = '50%';
+    messageBox.style.left = '50%';
+    messageBox.style.transform = 'translate(-50%, -50%)';
+    messageBox.style.backgroundColor = 'rgba(0, 0, 0, 0.7)';
+    messageBox.style.color = 'white';
+    messageBox.style.padding = '20px';
+    messageBox.style.borderRadius = '10px';
+    messageBox.style.zIndex = '1000';
+    document.body.appendChild(messageBox);
+
+    // 2초 후 메시지를 제거하고 콜백 함수 호출
+    setTimeout(() => {
+        document.body.removeChild(messageBox);
+        if (callback) callback();
+    }, 2000);
+}
+
 // 클릭 횟수를 확인하는 함수
-//---------------------------------//
-//            레시피 1번            //
-//---------------------------------//
+
 function checkLiquorClickCombination() {
+    //---------------------------------//
+    //            레시피 1번            //
+    //---------------------------------//
     if (liquorClickCounts['레몬주스따르기'] === 1 &&
         liquorClickCounts['스미노프따르기'] === 1 &&
         liquorClickCounts['오렌지주스따르기'] === 1 &&
@@ -388,18 +424,41 @@ function checkLiquorClickCombination() {
         liquorClickCounts['럼따르기'] === 0 &&
         liquorClickCounts['달모어따르기'] === 0) {
         setTimeout(function () {
-            imageElement.src = '../image/images/barpage/잔을채우다1.png';
+            imageElement.src = '../image/images/barpage/갈색잔채우다.png';
             setTimeout(function () {
-                imageElement.src = '../image/images/barpage/잔완성.png';
+                imageElement.src = '../image/images/barpage/갈색잔완성.png';
                 thirdImageDisplayed = false;
                 document.getElementById('close-button').style.display = 'block';
-                addFinalClickArea(); // 잔완성 이미지에 클릭 영역 추가
+                addFinalClickArea("갈색술"); // 기존 레시피 - 갈색술
             }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
         }, 500);
         return true;
-    } 
+    }
+
+    //---------------------------------//
+    //            레시피 2번            //
+    //---------------------------------//
+    if (liquorClickCounts['레몬주스따르기'] === 0 &&
+        liquorClickCounts['스미노프따르기'] === 0 &&
+        liquorClickCounts['오렌지주스따르기'] === 0 &&
+        liquorClickCounts['봄베이따르기'] === 2 &&
+        liquorClickCounts['럼따르기'] === 1 &&
+        liquorClickCounts['달모어따르기'] === 2) {
+        setTimeout(function () {
+            imageElement.src = '../image/images/barpage/보라잔채우다.png';
+            setTimeout(function () {
+                imageElement.src = '../image/images/barpage/보라잔완성.png';
+                thirdImageDisplayed = false;
+                document.getElementById('close-button').style.display = 'block';
+                addFinalClickArea("보라술"); // 새로운 레시피 - 보라술
+            }, 1000); // 1초 동안 특정 이미지를 표시한 후 원래 이미지로 돌아가기
+        }, 500);
+        return true;
+    }
+
     return false;
 }
+
 
 // 클릭 횟수를 초기화하는 함수
 function resetLiquorClickCounts() {
@@ -412,6 +471,7 @@ function resetLiquorClickCounts() {
 addClickableAreas();
 
 // wordle에서 돌아왔을 때 레시피를 추가
+// window.onload 이벤트 수정
 window.onload = function() {
     const selectedItem = localStorage.getItem("itemSelected");
     const boyfriendAreaClicked = localStorage.getItem("boyfriendAreaClicked") === 'true';
@@ -422,7 +482,7 @@ window.onload = function() {
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
-        displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
+        displayMessage1('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
         
         // 인벤토리에서 갈색 술 아이템 삭제
         let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
@@ -436,6 +496,32 @@ window.onload = function() {
         localStorage.removeItem("boyfriendAreaClicked");
     }
 
+    if (selectedItem && selectedItem === '보라술' && boyfriendAreaClicked) {
+        imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
+        otherAreaClicked = true;
+        addCloseButton();
+        removeClickableAreas(); // 영역 제거
+        addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
+        displayMessage2('감사합니다. 여기 사진을 드릴께요. 소중히 다뤄주세요.', function() {
+            // 인벤토리에서 보라 술 아이템 삭제
+            let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            const itemIndex = inventory.indexOf('../image/images/useritem/보라술.png');
+            if (itemIndex > -1) {
+                inventory.splice(itemIndex, 1);
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+            }
+
+            // 인벤토리에 깨진액자 추가
+            if (!inventory.includes('../image/images/useritem/깨진액자.png')) {
+                inventory.push('../image/images/useritem/깨진액자.png');
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+            }
+
+            alert('깨진액자를 획득하였습니다.');
+            localStorage.removeItem("itemSelected");
+            localStorage.removeItem("boyfriendAreaClicked");
+        });
+    }
     const recipeWon = localStorage.getItem("recipeWon");
 
     if (recipeWon === "true") {
@@ -449,6 +535,21 @@ window.onload = function() {
         }
 
         localStorage.removeItem("recipeWon");
+    }
+
+    const purpleDrinkWon = localStorage.getItem("purpleDrinkWon");
+
+    if (purpleDrinkWon === "true") {
+        // 보라술을 인벤토리에 추가
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        const itemExists = inventory.includes('../image/images/useritem/보라술.png');
+        if (!itemExists) {
+            inventory.push('../image/images/useritem/보라술.png');
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            alert('보라술을 획득하였습니다.');
+        }
+
+        localStorage.removeItem("purpleDrinkWon");
     }
 }
 
