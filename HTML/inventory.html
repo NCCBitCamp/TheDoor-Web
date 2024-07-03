@@ -69,6 +69,21 @@
             height: 120px;
             background-color: rgba(255, 255, 255, 0.5); /* 박스를 구분하기 위한 반투명 배경 */
         }
+        #recipe-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+        #modal-img {
+            width: 300px;
+            height: 400px;
+        }
     </style>
 </head>
 <body>
@@ -97,6 +112,11 @@
         <!-- 아이템을 담을 박스 7 -->
         <div class="intembox" id="box7" style="left: 85.7%; top: 11%;"></div>
     </div>
+
+    <div id="recipe-modal">
+        <img id="modal-img" src="">
+    </div>
+
     
     <!-- 인벤토리에서 돌아가는 버튼 -->
     <div>

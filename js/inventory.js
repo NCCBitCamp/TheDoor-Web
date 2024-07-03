@@ -35,6 +35,20 @@ function getItem(imageSrc) {
     }
 }
 
+function handleItemClick(item) {
+    if (item === '../image/images/useritem/갈색술.png') {
+        history.back();
+        itemSelected = '갈색술';
+        localStorage.setItem("itemSelected", itemSelected);
+        alert('갈색 술이 선택되었습니다.');
+    } else if (item === '../image/images/useritem/레시피2.png') {
+        const modal = document.getElementById('recipe-modal');
+        const modalImg = document.getElementById('modal-img');
+        modalImg.src = item;
+        modal.style.display = 'block';
+    }
+}
+
 function goToInventory() {
     window.location.href = "../HTML/inventory.html";
 }
@@ -58,3 +72,7 @@ function getBack(){
     // 뒤로 가기 기능 구현
     window.history.back();
 }
+
+document.getElementById('recipe-modal').addEventListener('click', function () {
+    this.style.display = 'none';
+});

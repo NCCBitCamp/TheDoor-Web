@@ -1,4 +1,3 @@
-
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false;
 let secondImageDisplayed = false;
@@ -6,7 +5,6 @@ let thirdImageDisplayed = false;
 let otherAreaClicked = false;
 let boyfriendAreaClicked = false; // 남자친구 영역 클릭 여부 추적 변수
 let itemSelected = null; // 선택된 아이템 추적 변수
-let boyfriendAreaAdditionalClicked = false; // 남자친구 추가 영역 클릭 여부
 
 const liquorClickCounts = {
     '봄베이따르기': 0,
@@ -154,6 +152,7 @@ function handleOverlayClick(event, area) {
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
         boyfriendAreaClicked = true; // 남자친구 영역 클릭으로 설정
+        localStorage.setItem('boyfriendAreaClicked', 'true'); // 남자친구 영역 클릭 여부를 localStorage에 저장
     }
     // 웨이터 영역 클릭 시 동작
     else if (area.id === 'waiter-area' && checkAreaClick(area) && !buttonDisplayed) {
@@ -269,8 +268,6 @@ function addWordleArea() {
     });
 }
 
-
-
 // 잔완성 이미지에 클릭 영역 추가 함수
 function addFinalClickArea() {
     const finalArea = { x: 748, y: 546, width: 75, height: 100 };
@@ -319,7 +316,8 @@ function handleFinalClick() {
     inventory.push('../image/images/useritem/갈색술.png');
     localStorage.setItem('inventory', JSON.stringify(inventory));
 
-    // 필요에 따라 추가 동작을 정의할 수 있음
+    // 갈색 술을 획득하였습니다 메시지 표시
+    alert("갈색 술을 획득하였습니다.");
 }
 
 // 인벤토리 아이템 클릭 이벤트 처리 조건 추가
@@ -345,9 +343,14 @@ document.addEventListener('DOMContentLoaded', (event) => {
 function handleItemClick(item) {
     if (item === '../image/images/useritem/갈색술.png') {
         history.back();
-        itemSelected = '갈색술'; // 갈색 술 아이템 선택 상태로 설정
+        itemSelected = '갈색술';
         localStorage.setItem("itemSelected", itemSelected);
         alert('갈색 술이 선택되었습니다.');
+    } else if (item === '../image/images/useritem/레시피2.png') {
+        const modal = document.getElementById('recipe-modal');
+        const modalImg = document.getElementById('modal-img');
+        modalImg.src = item;
+        modal.style.display = 'block';
     }
 }
 
@@ -373,9 +376,10 @@ function displayMessage(message) {
     }, 2000);
 }
 
-
-
 // 클릭 횟수를 확인하는 함수
+//---------------------------------//
+//            레시피 1번            //
+//---------------------------------//
 function checkLiquorClickCombination() {
     if (liquorClickCounts['레몬주스따르기'] === 1 &&
         liquorClickCounts['스미노프따르기'] === 1 &&
@@ -407,16 +411,17 @@ function resetLiquorClickCounts() {
 // 초기 영역 추가
 addClickableAreas();
 
+// wordle에서 돌아왔을 때 레시피를 추가
 window.onload = function() {
     const selectedItem = localStorage.getItem("itemSelected");
+    const boyfriendAreaClicked = localStorage.getItem("boyfriendAreaClicked") === 'true';
 
-    if(selectedItem && selectedItem === '갈색술') {
+    if (selectedItem && selectedItem === '갈색술' && boyfriendAreaClicked) {
         imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
         otherAreaClicked = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
-        boyfriendAreaClicked = true; // 남자친구 영역 클릭으로 설정
         displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
         
         // 인벤토리에서 갈색 술 아이템 삭제
@@ -428,6 +433,26 @@ window.onload = function() {
         }
 
         localStorage.removeItem("itemSelected");
+        localStorage.removeItem("boyfriendAreaClicked");
     }
-    
+
+    const recipeWon = localStorage.getItem("recipeWon");
+
+    if (recipeWon === "true") {
+        // 레시피2를 인벤토리에 추가
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        const itemExists = inventory.includes('../image/images/useritem/레시피2.png');
+        if (!itemExists) {
+            inventory.push('../image/images/useritem/레시피2.png');
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            alert('레시피를 획득하였습니다.');
+        }
+
+        localStorage.removeItem("recipeWon");
+    }
 }
+
+// 모달 닫기 기능 추가
+document.getElementById('recipe-modal').addEventListener('click', function() {
+    this.style.display = 'none';
+});
