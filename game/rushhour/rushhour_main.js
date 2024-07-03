@@ -1,6 +1,6 @@
 // level design from this version of the game: http://www.thinkfun.com/play-online/rush-hour/
 
-var game = new Phaser.Game(750, 750, Phaser.AUTO, '', { preload: preload, create: create, update: update, });
+var game = new Phaser.Game(500, 500, Phaser.ZOOM, '', { preload: preload, create: create, update: update, });
 
 var blocks,
     tiles,
@@ -12,44 +12,45 @@ var blocks,
     win,
     winText;
 
-function preload () {
-		game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL;
-		game.load.baseURL = 'http://192.168.0.38:5500/the_hostel/game/rushhour/';
-		game.load.crossOrigin = 'anonymous';
+function preload() {
+    // game.scale.scaleMode = Phaser.ScaleManager.SHOW_ALL; // <== 자동크기조절하는 빌런
+    // game.load.baseURL = 'http://192.168.0.38:5500/the_hostel/game/rushhour/';
+    game.load.baseURL = '';
+    game.load.crossOrigin = 'anonymous';
 
-		// Load different colored block images
-        game.load.image('redBlock', 'token1.jpg'); // Block X
-        game.load.image('orangeBlock', 'token2.jpg'); // Block  O
-        game.load.image('yellowBlock', 'token3.jpg'); // Block P
-        game.load.image('greenBlock', 'token4.jpg'); // Block A
-        game.load.image('blueBlock', 'token5.jpg'); // Block C
-        game.load.image('indigoBlock', 'token6.jpg'); // Block D
-        game.load.image('violetBlock', 'token7.jpg'); // Block E
-        game.load.image('pinkBlock', 'token8.jpg'); // Block Q
-        game.load.image('blackBlock', 'token9.jpg'); // Block F
-        game.load.image('platform', 'jeolmi.png');
+    // Load different colored block images
+    game.load.image('redBlock', 'images/1.png'); // Block X
+    game.load.image('orangeBlock', 'images/2.png'); // Block  O
+    game.load.image('yellowBlock', 'images/3.png'); // Block P
+    game.load.image('greenBlock', 'images/4.png'); // Block A
+    game.load.image('blueBlock', 'images/5.png'); // Block C
+    game.load.image('indigoBlock', 'images/6.png'); // Block D
+    game.load.image('violetBlock', 'images/7.png'); // Block E
+    game.load.image('pinkBlock', 'images/8.png'); // Block Q
+    game.load.image('blackBlock', 'images/9.png'); // Block F
+    game.load.image('platform', 'images/jeolmi.png');
 }
 
-function create () {
+function create() {
     game.grid = game.width / fieldSize;
     game.score = 0;
     game.physics.startSystem(Phaser.Physics.ARCADE);
-    game.stage.backgroundColor = '#eeeee4';
-    
+    game.stage.backgroundColor = '#343B44';
+
     tiles = game.add.physicsGroup();
     createTiles();
-    win = game.add.sprite(game.grid * 5.5, game.grid * 2.5, 'platform');
+    win = game.add.sprite(game.grid * 5.5, game.grid * 2.5, 'platform'); // 절미 위치
     game.physics.arcade.enable(win);
     win.width = game.grid * .6;
     win.height = game.grid * .6;
     win.anchor.set(.5);
-    
+
     blocks = game.add.physicsGroup();
 
     boundSprite = game.add.sprite(0, 0);
     boundSprite.width = 0;
     boundSprite.height = game.grid;
-    
+
     // Create blocks with labels and colors
     mainBlock = createBlock(0, 2, 2, 1, 'X', 'redBlock', true); // Block X (Red, main block)
     createBlock(0, 0, 3, 1, 'O', 'orangeBlock'); // Block O (Orange)
@@ -63,7 +64,7 @@ function create () {
 
     winText = game.add.text(20, 20, '', {
         font: '40px helvetica',
-        fill: '#000' 
+        fill: '#000'
     });
 }
 
@@ -104,11 +105,11 @@ function onBlockDown(block) {
 
     var row = Math.floor(tile.tileSprite.y / game.grid);
     var col = Math.floor(tile.tileSprite.x / game.grid);
-    
-    game.time.events.add(Phaser.Timer.SECOND * .05, function() {
+
+    game.time.events.add(Phaser.Timer.SECOND * .05, function () {
 
         var bounds;
-        
+
         if (block.input.allowVerticalDrag) {
             bounds = getVerticalBoundCols(row, col);
         } else {
@@ -121,7 +122,7 @@ function onBlockDown(block) {
         boundSprite.y = bounds.y;
 
         block.input.boundsSprite = boundSprite;
-        
+
     }, this);
 
 }
@@ -137,8 +138,8 @@ function getTileAtCoords(x, y) {
     return tileAt(row, col);
 }
 
-function update() {    
-    tiles.forEach(function(t){
+function update() {
+    tiles.forEach(function (t) {
         t.occupied = false;
     });
     game.physics.arcade.overlap(blocks, tiles, overlapt, null, this);
@@ -197,7 +198,7 @@ function getHorizontalBoundCols(row, col) {
     var exit = false;
     var startCol = col;
     var endCol = col;
-    
+
     for (var i = col; i < fieldSize; i++) {
         if (!exit) {
             if (!tileAt(row, i).tileSprite.occupied) {
@@ -207,7 +208,7 @@ function getHorizontalBoundCols(row, col) {
             }
         }
     }
-    
+
     exit = false;
     for (var i = col - 1; i > -1; i--) {
         if (!exit) {
@@ -218,7 +219,7 @@ function getHorizontalBoundCols(row, col) {
             }
         }
     }
-    
+
     var hBounds = {};
     hBounds.width = (endCol - startCol + 1) * game.grid;
     hBounds.height = game.grid;
@@ -233,7 +234,7 @@ function getVerticalBoundCols(row, col) {
     var exit = false;
     var startRow = row;
     var endRow = row;
-    
+
     for (var i = row; i < fieldSize; i++) {
         if (!exit) {
             if (!tileAt(i, col).tileSprite.occupied) {
@@ -243,7 +244,7 @@ function getVerticalBoundCols(row, col) {
             }
         }
     }
-    
+
     exit = false;
     for (var i = row - 1; i > -1; i--) {
         if (!exit) {
@@ -274,3 +275,8 @@ var levels = [
         'xxxxxx'
     ]
 ];
+
+
+document.getElementById('back-button').addEventListener('click', function () {
+    window.location.href = '../../HTML/_03_right_wall.html'; // 돌아갈 페이지로 이동
+});
