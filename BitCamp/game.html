@@ -212,7 +212,7 @@
             if (remainingTime !== null) {
                 startTimer(parseInt(remainingTime));
             } else {
-                startTimer(300);
+                startTimer(300); // 기본 시간 300초
             }
 
             function startTimer(duration) {
@@ -226,7 +226,7 @@
                     timerText.textContent = `${minutes}:${seconds}`;
                     timer--;
 
-                    localStorage.setItem('remainingTime', timer);
+                    localStorage.setItem('remainingTime', timer); // 타이머 값 저장
 
                     if (timer < 0) {
                         clearInterval(timerInterval);

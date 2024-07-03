@@ -326,7 +326,14 @@
                 fill: '#ff0000'
             }).setScrollFactor(0);
 
-            startTimer(this, 300);
+            let remainingTime = localStorage.getItem('remainingTime');
+            if (remainingTime !== null) {
+                startTimer(this, parseInt(remainingTime));
+            } else {
+                startTimer(this, 300); // 기본 시간 300초
+            }
+
+            // startTimer(this, 300);
 
             clickArea1 = this.add.zone(650, 95, 650, 190).setOrigin(0.5).setInteractive();
             clickArea1.on('pointerdown', () => {
@@ -416,7 +423,7 @@
                 timerText.setText(`${minutes}:${seconds}`);
                 timer--;
 
-                localStorage.setItem('remainingTime', timer);
+                localStorage.setItem('remainingTime', timer); // 타이머 값 저장
 
                 if (timer < 0) {
                     clearInterval(timerInterval);
