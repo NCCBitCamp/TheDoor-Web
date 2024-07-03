@@ -405,7 +405,7 @@ function displayMessage2(message, callback) {
 
     // 화면을 잠깐 다른 이미지로 바꾸기
     const originalSrc = imageElement.src;
-    imageElement.src = '../image/images/barpage/심장건네는남자.PNG';
+    imageElement.src = '../image/images/barpage/심장건네는남자.png';
     console.log('Image changed to 심장건네는남자.PNG');
 
     // 이미지가 바뀐 후 2초 동안 유지
@@ -529,6 +529,7 @@ window.onload = function() {
             localStorage.removeItem("boyfriendAreaClicked");
         });
     }
+
     const recipeWon = localStorage.getItem("recipeWon");
 
     if (recipeWon === "true") {
