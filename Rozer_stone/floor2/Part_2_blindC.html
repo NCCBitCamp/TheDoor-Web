@@ -158,6 +158,29 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7); /* 30% 투명도의 검정색 */
+            z-index: 9999; /* 다른 요소들 위에 올라오도록 설정 */
+            pointer-events: none; /* 클릭 등의 이벤트가 하위 요소로 전달되도록 함 */
+        }
+        .overlay-container::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 40%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 9999;
+            pointer-events: none;
+        }
+
     </style>
 </head>
 <body>
@@ -165,7 +188,7 @@
         <div class="text_box" data-trigger>
             <span class="text"></span>
         </div>
-        <div>
+        <div class="overlay-container">
             <img src="Part_2_C.png" class="middle bgimg">
             <img src="image/고문대.png" class="tortureTable" onclick="enjoyTorture()">
             <img src="image/레버.png" class="lever" onclick="movelever()">
