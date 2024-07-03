@@ -57,11 +57,13 @@
         }
 
         #back-button {
-            top: 0%;
-            left: 50%;
+            top: 8%;
+            left: 8%;
             transform: translateX(-50%);
             font-family: 'KyoboHandwriting2023wsa';
-            display: none;
+            background: transparent;
+            border: none;
+            cursor: pointer;
         }
 
         #settings-button {
@@ -225,12 +227,6 @@
                     modalItems.push(itemImage);
                     modalItems.push(itemText);
 
-                    if (imageObj.key === 'memo1' || imageObj.key === 'memo2') {
-                        itemImage.setInteractive();
-                        itemImage.on('pointerdown', () => {
-                            showItemDetails(scene, imageObj.key);
-                        });
-                    }
                 });
             } else {
                 modal.setAlpha(0);
@@ -283,6 +279,10 @@
             clickableZones = [];
         }
 
+        // 글로벌 변수로 정의
+        let cctvChecked = localStorage.getItem('cctvChecked') === 'true';
+        let elevatorRepairCompleted = localStorage.getItem('elevatorRepairCompleted') === 'true';
+
         function createClickableAreas(scene) {
             // 정문 클릭 영역
             createClickableZone(scene, 142, 310.5, 126, 201, () => {
@@ -295,10 +295,28 @@
             });
 
             // 비상계단 클릭 영역
-            createClickableZone(scene, 611.5, 281.5, 133, 253, () => showDialogue(["여기까지 왔는데 굳이 돌아갈 필요는 없어보인다.", "빠져나갈 방법을 좀 더 찾아보자."]));
+            createClickableZone(scene, 611.5, 281.5, 133, 253, () => {
+                if (localStorage.getItem('cctvChecked') === 'true') {
+                    showDialogue(["빨리 5층으로 이동해보자.", "...!", "천장에서 무너져내린 돌덩이 때문에 계단이 막혀있다.", "아무래도 아까 난 소리는 이것 때문인듯 하다.", "5층으로 올라갈 다른 방법을 찾아보자."]);
+                } else {
+                    showDialogue(["여기까지 왔는데 굳이 돌아갈 필요는 없어보인다.", "빠져나갈 방법을 좀 더 찾아보자."]);
+                }
+            });
 
             // 엘리베이터 클릭 영역
-            createClickableZone(scene, 1309.5, 261, 321, 296, () => showDialogue(["아직도 엘리베이터는 작동할 기미가 보이지 않는다.", "1층에 엘리베이터 관리하는 곳이 있었던 것 같긴 한데.."]));
+            createClickableZone(scene, 1309.5, 261, 321, 296, () => {
+                if (cctvChecked && elevatorRepairCompleted) {
+                    showDialogue(["엘리베이터는 이제 작동한다.", "5층으로 이동할 수 있다."]);
+                    localStorage.setItem('cctvChecked', 'false');
+                    localStorage.setItem('elevatorRepairCompleted', 'false');
+                } else if (localStorage.getItem('cctvChecked') === 'true') {
+                    showDialogue(["아직도 엘리베이터는 작동할 기미가 보이지 않는다.", "방재실에서 수리할 방법을 찾아봐야할 것 같다."]);
+                } else if (localStorage.getItem('cctvChecked') === 'true') {
+                    showDialogue(["굳이 엘리베이터를 탈 필요는 없어보인다.", "다른 곳을 좀 더 조사해보자."]);
+                } else {
+                    showDialogue(["아직도 엘리베이터는 작동할 기미가 보이지 않는다.", "1층에 엘리베이터 관리하는 곳이 있었던 것 같긴 한데.."]);
+                }
+            });
 
             // 화장실 클릭 영역
             createClickableZone(scene, 1816, 306.5, 400, 203, () => showDialogue(["화장실이다.", "잠겨서 들어갈 수 없지만, 다행히 볼 일이 있진 않다."]));
