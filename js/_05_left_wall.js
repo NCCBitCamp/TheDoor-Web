@@ -48,7 +48,6 @@ function addClickableAreas() {
             event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
             handleFrameClick(event, area);
         });
-
         //-----------------//
         // tv화면클릭조건문 //
         //-----------------//
@@ -58,10 +57,9 @@ function addClickableAreas() {
                 addTVArea();
             });
         }
-
-        // ------------------- //
+        // ----------------------------- //
         // 'grandfather_drawer' 클릭 조건 //
-        // ------------------- //
+        // ----------------------------- //
         if (area.id === 'grandfather_drawer') {
             overlay.addEventListener('click', function (event) {
                 event.stopPropagation();
@@ -72,6 +70,17 @@ function addClickableAreas() {
                 }
             });
         }
+        //---------------------//
+        // tv아래서랍 클릭조건문 //
+        //---------------------//
+        if (area.id === 'green_drawer') {
+            overlay.addEventListener('click', function (event) {
+                event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+                addEndingBoxArea();
+            });
+        }
+
+
     });
 }
 
@@ -178,6 +187,40 @@ function addTVArea() {
                 }
             }, 900);
         }
+    });
+}
+
+//---------------//
+// 엔딩 박스 영역 //
+//---------------//
+function addEndingBoxArea() {
+    const endingBoxArea = { x: 300, y: 696, width: 123, height: 66 };
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('paper-area');
+    overlay.style.position = 'absolute'; // 오버레이를 절대 위치로 설정
+    overlay.style.left = endingBoxArea.x + 'px';
+    overlay.style.top = endingBoxArea.y + 'px';
+    overlay.style.width = endingBoxArea.width + 'px';
+    overlay.style.height = endingBoxArea.height + 'px';
+    overlay.style.backgroundColor = 'transparent'; // 영역이 보이지 않도록 투명하게 설정
+    overlay.style.pointerEvents = 'auto'; // 오버레이가 클릭 이벤트를 받도록 설정
+
+    document.getElementById('game-container').appendChild(overlay);
+
+    // 마우스 포인터를 변경하기 위한 이벤트 리스너 추가
+    overlay.addEventListener('mouseenter', function () {
+        document.body.style.cursor = 'pointer';
+    });
+    overlay.addEventListener('mouseleave', function () {
+        document.body.style.cursor = 'default';
+    });
+    //-------------------------------------//
+    // 엔딩 박스 클릭시 발생 이벤트 작성할 곳 //
+    //-------------------------------------//
+    overlay.addEventListener('click', function (event) {
+        event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+        alert("엔딩가즈아!");
     });
 }
 
