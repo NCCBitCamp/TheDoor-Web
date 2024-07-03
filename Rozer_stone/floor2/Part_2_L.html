@@ -260,6 +260,10 @@
 
         function gethwaro(){
             alert("무딘 칼을 얻었다...!");
+            const audio = new Audio('music/치는소리6.mp3');
+            audio.play();
+            const imageSrc = "나무칼.png";
+            getItem(imageSrc);
         }
 
         function insect(){
