@@ -74,13 +74,13 @@
             top: 34%;
             rotate: 180deg;
         }
-        .seklHand4 {
+        .seklLeg4 {
             position: absolute;
-            z-index: 1;
-            width: 2vw;
-            height: 9vh;
-            right: 41%;
-            top: 32.5%;
+            z-index: 2;
+            width: 5vw;
+            height: 11vh;
+            right: 40%;
+            top: 31%;
             rotate: 180deg;
         }
         .chess {
@@ -112,11 +112,11 @@
             <span class="text"></span>
         </div>
         <div>
-            <img src="Part_2_R.png" class="middle bgimg">
+            <img src="Part_2_R_openmaiden2.png" class="middle bgimg">
             <img src="image/뚜껑열린가시메이든.png" class="ironmaiden" onclick="clkironmaiden()">
             <img src="image/가시6.png" class="key" onclick="clkironmaidenkey()">
             <img src="image/해골5.png" class="seklHand5" onclick="getMessaggeSkel()">
-            <img src="image/해골4.png" class="seklHand4" onclick="getMessaggeSkel()">
+            <img src="image/해골4.png" class="seklLeg4" onclick="getMessaggeSkel()">
             <img src="image/체스판.png" class="chess" onclick="clickChess()">
             <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
         </div>
@@ -130,7 +130,19 @@
     </div>
     </span>
     <script>
-        const content = "아이언 메이든 무섭다..";
+        document.addEventListener('DOMContentLoaded', function() {
+        // HTML 문서가 완전히 로드되고 인벤에 로저크리스탈 있으면
+        // 화면에 가시 안보이기(못뽑음) 없으면 화면에 가시 보이기(뽑을지 선택지 줌)
+            const targetItem = "../integ/RozerCrystal.png";
+            let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            if (inventory.includes(targetItem)) {
+                const key = document.querySelector(".key");
+                key.style.display="none";
+            }
+        });
+
+
+        const content = "어.. 갑자기 열린거같은데?..";
         const text = document.querySelector(".text");
         let i = 0;
 
@@ -163,8 +175,8 @@
         }
 
         function getMessaggeSkel() {
-
-            alert("앙상한 뼈.");
+            alert("짤랑.");
+            // 소리 추가하기
         }
 
         function clkironmaiden() {
@@ -177,12 +189,13 @@
         }
         
         function clkironmaidenkey() {
-            const take = confirm("가시를 가져가겠습니까?")
+            const take = confirm("가시를 뽑아보겠습니까?")
             
             if(take){
                 const key = document.querySelector(".key");
                 key.style.display="none";
-                getItem();
+                getItem("../integ/RozerCrystal.png");
+                alert("손에 구슬이 흘러들어왔다!");
             }
         }
 

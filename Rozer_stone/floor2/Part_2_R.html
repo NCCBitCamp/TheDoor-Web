@@ -66,7 +66,7 @@
             top: 34%;
             rotate: 180deg;
         }
-        .seklHand4 {
+        .seklLeg4 {
             position: absolute;
             z-index: 2;
             width: 5vw;
@@ -96,6 +96,22 @@
             cursor: pointer;
             border-radius: 5px;
         }
+        .red-overlay {
+            display: none; /* 초기에는 오버레이를 숨깁니다. */
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: darkred;
+            opacity: 0;
+            z-index: 10; /* 오버레이가 텍스트 박스, 버튼 위에 표시 */
+            transition: opacity 300ms ease-out; /* 1초 동안 천천히 나타나게 설정 */
+        }
+        .fade-in-red {
+            display: block;
+            opacity: 0.8; /* 붉은 오버레이의 불투명도 */
+        }
     </style>
 </head>
 <body>
@@ -107,7 +123,7 @@
             <img src="Part_2_R.png" class="middle bgimg">
             <img src="image/아이언메이든.png" class="ironmaiden" onclick="clkironmaiden()">
             <img src="image/해골5.png" class="seklHand5" onclick="getMessaggeSkel()">
-            <img src="image/해골4.png" class="seklHand4" onclick="getMessaggeSkel()">
+            <img src="image/해골4.png" class="seklLeg4" onclick="getMessaggeSkel()">
             <img src="image/체스판.png" class="chess" onclick="clickChess()">
             <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
         </div>
@@ -120,6 +136,7 @@
         <button class="inventory_button" onclick="goToInventory()">인벤토리</button>
     </div>
     </span>
+    <div class="red-overlay" id="redOverlay"></div>
     <script>
         const content = "아이언 메이든 무섭다..";
         const text = document.querySelector(".text");
@@ -154,15 +171,17 @@
         }
 
         function getMessaggeSkel() {
-            // 짤랑 소리 추가 하고
+            // 짤랑 소리 추가 하기!! 07/04
             
         }
 
         function clkironmaiden() {
-            // if(인벤에 가시가 없으면)->
             alert('아이언메이든에서 왠지 시선이 느껴진다..');
-            // else (가시 없으면)->
-            window.location.href = "Part_2_R_openmaiden.html";
+            const redOverlay = document.getElementById("redOverlay");
+            redOverlay.classList.add('fade-in-red');
+            setTimeout(() => {
+                window.location.href = "Part_2_R_openmaiden.html";
+            },200);
         }
 
         function goToInventory() {

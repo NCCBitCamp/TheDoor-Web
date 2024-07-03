@@ -104,5 +104,5 @@ function moveBishop(element) {
 }
 
 function moveQeen(element) {
-    // 브금 바꾸기 or 사망?
+    // 박효신- 웃는남자 화면 
 }
