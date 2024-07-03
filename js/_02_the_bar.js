@@ -128,7 +128,6 @@ function addCloseButton() {
         addClickableAreas(); // 닫기 버튼 클릭 시 영역 다시 추가
         document.getElementById("left-button").style.display = ""; // 왼쪽오른쪽 버튼숨기기
         document.getElementById("right-button").style.display = "";
-
     });
 }
 
@@ -203,7 +202,7 @@ function handleLiquorClick(event, area) {
     }
 }
 
-// 특정 영역을 클릭했을 때 종이 영역 추가되는 함수
+// 특정 영역을 클릭했을 때 종이(신문) 영역 추가되는 함수
 function addPaperArea() {
     const paperArea = { x: 495, y: 717, width: 126, height: 63 };
 
@@ -299,7 +298,7 @@ function addFinalClickArea() {
     });
 }
 
-// 잔완성 이미지 클릭 시 동작
+// 완성된 잔 이미지 클릭 시 동작
 function handleFinalClick() {
     imageElement.src = '../image/images/barpage/칵테일잔x.png'; // 변경할 이미지로 대체
 
@@ -424,7 +423,7 @@ window.onload = function() {
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
         displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
         
-        // 인벤토리에서 갈색 술 아이템 삭제
+        // 인벤토리에서 갈색 술 아이템 삭제-
         let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
         const itemIndex = inventory.indexOf('../image/images/useritem/갈색술.png');
         if (itemIndex > -1) {
