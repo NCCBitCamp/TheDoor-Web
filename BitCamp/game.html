@@ -20,6 +20,7 @@
             -moz-user-select: none;
             -ms-user-select: none;
             user-select: none;
+            background: rgb(32, 32, 32);
         }
 
         .container {
@@ -121,8 +122,9 @@
         .clueReadOnly {
             border: 0;
             outline: 0;
-            color: #303030 !important;
+            color: #ffffff !important;
             background: none;
+            font-size: 1rem;
         }
 
         @font-face {
@@ -135,6 +137,9 @@
 </head>
 
 <body>
+    <div id="dialogueBox" style="position: absolute; bottom: 100px; left: 50%; transform: translateX(-50%); background: url('images/wallpaper-torn-paper-ripped-white-paper.png'); background-size: cover; padding: 20px; font-family: 'KyoboHandwriting2023wsa'; font-size: 24px; display: none; cursor: pointer; z-index: 1000;">
+        앗, 이건 뭐지?
+    </div>    
     <div class="container">
         <button class="btn" id="btnCreate">Create</button>
         <button class="btn" id="btnPlay">Play</button>
@@ -205,65 +210,86 @@
     });
 
 
-        document.addEventListener('DOMContentLoaded', () => {
-            let remainingTime = localStorage.getItem('remainingTime');
-            let timerText = document.getElementById('timer');
+    document.addEventListener('DOMContentLoaded', () => {
+    let remainingTime = localStorage.getItem('remainingTime');
+    let timerText = document.getElementById('timer');
 
-            if (remainingTime !== null) {
-                startTimer(parseInt(remainingTime));
-            } else {
-                startTimer(300); // 기본 시간 300초
+    // Show the dialogue box on page load
+    let dialogueBox = document.getElementById('dialogueBox');
+    dialogueBox.style.display = 'block';
+
+    const dialogues = [
+        "앗, 이건 뭐지?",
+        "어쩐지 이 문제를 풀어야만 할 것 같은 기분이다.",
+        "조금 살펴볼까?"
+    ];
+
+    let currentDialogueIndex = 0;
+
+    dialogueBox.addEventListener('click', () => {
+        currentDialogueIndex++;
+        if (currentDialogueIndex < dialogues.length) {
+            dialogueBox.innerText = dialogues[currentDialogueIndex];
+        } else {
+            dialogueBox.style.display = 'none';
+        }
+    });
+
+    if (remainingTime !== null) {
+        startTimer(parseInt(remainingTime));
+    } else {
+        startTimer(300); // 기본 시간 300초
+    }
+
+    function startTimer(duration) {
+        let timer = duration;
+
+        const timerInterval = setInterval(() => {
+            let minutes = Math.floor(timer / 60);
+            let seconds = timer % 60;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerText.textContent = `${minutes}:${seconds}`;
+            timer--;
+
+            localStorage.setItem('remainingTime', timer); // 타이머 값 저장
+
+            if (timer < 0) {
+                clearInterval(timerInterval);
+                showGameOver();
             }
+        }, 1000);
+    }
 
-            function startTimer(duration) {
-                let timer = duration;
+    function showGameOver() {
+        // 게임 오버 화면을 보여주는 HTML 요소를 생성
+        let gameOverScreen = document.createElement('div');
+        gameOverScreen.style.position = 'fixed';
+        gameOverScreen.style.top = '0';
+        gameOverScreen.style.left = '0';
+        gameOverScreen.style.width = '100%';
+        gameOverScreen.style.height = '100%';
+        gameOverScreen.style.backgroundColor = 'rgba(0, 0, 0, 1)';
+        gameOverScreen.style.display = 'flex';
+        gameOverScreen.style.justifyContent = 'center';
+        gameOverScreen.style.alignItems = 'center';
+        gameOverScreen.style.zIndex = '1000';
 
-                const timerInterval = setInterval(() => {
-                    let minutes = Math.floor(timer / 60);
-                    let seconds = timer % 60;
-                    seconds = seconds < 10 ? '0' + seconds : seconds;
+        let gameOverText = document.createElement('div');
+        gameOverText.style.fontFamily = 'KyoboHandwriting2023wsa';
+        gameOverText.style.fontSize = '64px';
+        gameOverText.style.color = '#ffffff';
+        gameOverText.innerText = 'Game Over';
 
-                    timerText.textContent = `${minutes}:${seconds}`;
-                    timer--;
+        gameOverScreen.appendChild(gameOverText);
+        document.body.appendChild(gameOverScreen);
 
-                    localStorage.setItem('remainingTime', timer); // 타이머 값 저장
-
-                    if (timer < 0) {
-                        clearInterval(timerInterval);
-                        showGameOver();
-                    }
-                }, 1000);
-            }
-
-            function showGameOver() {
-                // 게임 오버 화면을 보여주는 HTML 요소를 생성
-                let gameOverScreen = document.createElement('div');
-                gameOverScreen.style.position = 'fixed';
-                gameOverScreen.style.top = '0';
-                gameOverScreen.style.left = '0';
-                gameOverScreen.style.width = '100%';
-                gameOverScreen.style.height = '100%';
-                gameOverScreen.style.backgroundColor = 'rgba(0, 0, 0, 1)';
-                gameOverScreen.style.display = 'flex';
-                gameOverScreen.style.justifyContent = 'center';
-                gameOverScreen.style.alignItems = 'center';
-                gameOverScreen.style.zIndex = '1000';
-
-                let gameOverText = document.createElement('div');
-                gameOverText.style.fontFamily = 'KyoboHandwriting2023wsa';
-                gameOverText.style.fontSize = '64px';
-                gameOverText.style.color = '#ffffff';
-                gameOverText.innerText = 'Game Over';
-
-                gameOverScreen.appendChild(gameOverText);
-                document.body.appendChild(gameOverScreen);
-
-                // 3초 후 floor2.html로 이동
-                setTimeout(() => {
-                    window.location.href = 'floor2.html';
-                }, 3000);
-            }
-        });
+        // 3초 후 floor2.html로 이동
+        setTimeout(() => {
+            window.location.href = 'floor2.html';
+        }, 3000);
+    }
+});
 
         document.getElementById('btnCreate').disabled = true;
 

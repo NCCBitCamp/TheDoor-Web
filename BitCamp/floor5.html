@@ -181,6 +181,11 @@
     const showItemImage = (imageKey) => {
       const scene = game.scene.scenes[0];
       const itemImage = scene.add.image(scene.cameras.main.scrollX + scene.cameras.main.centerX, scene.cameras.main.scrollY + scene.cameras.main.centerY, imageKey).setScale(0.5).setAlpha(0);
+
+      if (imageKey === 'memo3' || imageKey === 'memo4') {
+        scene.sound.play('paperSound'); // 사운드 재생
+      }
+
       scene.tweens.add({
         targets: itemImage,
         alpha: 1,
@@ -404,6 +409,10 @@
       this.load.image('memo4-1', 'images/memo4-1.png');
       this.load.image('key', 'images/key.png');
       this.load.image('exitkey', 'images/key.png');
+      this.load.audio('paperSound', 'sounds/종이 넘기는 소리.mp3');
+      this.load.audio('drawerSound', 'sounds/서랍 여는 소리.mp3');
+      this.load.audio('openDoorSound', 'sounds/열쇠로 문여는소리.mp3');
+      this.load.audio('stairWalkSound', 'sounds/계단 올라가는 소리.mp3');
     }
 
     function handleAlertClick() {
@@ -512,7 +521,13 @@
       if (isEmergencyExit) {
         clickArea.on('pointerdown', () => {
           if (inventory.some(item => item.name === '비상구 열쇠')) {
-            window.location.href = 'floor7.html';
+            game.scene.scenes[0].sound.play('openDoorSound');
+            game.scene.scenes[0].time.delayedCall(3000, () => {
+              game.scene.scenes[0].sound.play('stairWalkSound');
+            });
+            game.scene.scenes[0].time.delayedCall(5000, () => { 
+              window.location.href = 'floor7.html';
+          });
           } else {
             showDialog(["비상구 문은 단단히 잠겨있다. \n아무래도 열쇠가 필요할 것 같다."]);
           }
@@ -751,6 +766,7 @@
                 showDialog(newChoice.nextTexts, true); // 다이얼로그 출력 추가
                 addItemToInventory('비상구 열쇠', 'key');
                 removeItemFromInventory('열쇠');
+                game.scene.scenes[0].sound.play('drawerSound');
                 // 비상구 열쇠를 얻는 다이얼로그가 끝난 후 alertIcon을 숨기도록 설정
                 if (!thirdDialogTriggered) {
                   hideAlertIcon();

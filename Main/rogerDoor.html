@@ -51,9 +51,12 @@
         };
 
         const game = new Phaser.Game(config);
+        let bgm;
 
         function preload() {
             this.load.image('rogerDoor', 'images/rogerdoorcrop.png');
+            this.load.audio('rozerDoorOpen', 'sounds/문열기5.mp3');
+            this.load.audio('bgm', 'sounds/in-the-embrace-of-darkness-197925.mp3');
         }
 
         function create() {
@@ -136,7 +139,10 @@
 
             const zoneRoger = this.add.zone(500, 180, 330, 430).setOrigin(0).setInteractive();
             zoneRoger.on('pointerdown', () => {
-                window.location.href = '#';
+                game.scene.scenes[0].sound.play('rozerDoorOpen');
+                game.scene.scenes[0].time.delayedCall(3000, () => { 
+                    window.location.href = '#';
+                });
             });
             zoneRoger.on('pointerover', () => {
                 document.body.style.cursor = 'pointer';
@@ -144,6 +150,17 @@
             zoneRoger.on('pointerout', () => {
                 document.body.style.cursor = 'default';
             });
+
+            const bgmCurrentTime = localStorage.getItem('bgmCurrentTime');
+            bgm = this.sound.add('bgm', { loop: true });
+
+            if (bgmCurrentTime) {
+                bgm.once('play', () => {
+                    bgm.setSeek(parseFloat(bgmCurrentTime));
+                });
+            }
+
+            bgm.play();
 }
     </script>
 </body>
