@@ -319,13 +319,13 @@ const removeItemFromInventory = (item) => {
             });
             // 강의실1 클릭 영역
             createClickableZone(scene, 220, 310, 120, 200, () => showDialogue(["창문 틈으로 교실이 보인다.", "시설이 좋아보이는 강의실이다...", "...", "엄청난 컴퓨터다..."]));
-
             // 강의실2 클릭 영역
             createClickableZone(scene, 405, 310, 120, 200, () => showDialogue(["강의실 내부가 조금 보인다.", "근사해보이는 강의실...", "의자가 편해보인다.", "문이 잠겨있어 들어갈 수는 없다."]));
-
             // 강의실3 클릭 영역
-            createClickableZone(scene, 600, 310, 120, 200, () => showDialogue(["문이 잠겨있지만 창문으로 안이 보인다.", "...대단해보이는 강의실이다.", "자리가 넓어보인다.", "..."]));
-
+            createClickableZone(scene, 600, 310, 120, 200, () => {
+                game.scene.scenes[0].sound.play('doorstopSound');
+                showDialogue(["문이 잠겨있지만 창문으로 안이 보인다.", "...대단해보이는 강의실이다.", "자리가 넓어보인다.", "..."]);
+            });
             // 비상계단 클릭 영역
             createClickableZone(scene, 1565, 282.5, 130, 255, () => {
                 if (inventory.includes('비상구 열쇠')) {
@@ -360,6 +360,7 @@ const removeItemFromInventory = (item) => {
             this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
             this.load.image('bag', 'images/bag.svg');
             this.load.image('key', 'images/key.png');
+            this.load.audio('doorstopSound', 'sounds/문 덜컹덜컹.mp3');
         }
 
         function create() {

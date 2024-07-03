@@ -40,13 +40,14 @@
         };
 
         const game = new Phaser.Game(config);
-        let bg;
+        let bg, bgm;
 
         function preload() {
             this.load.image('door', 'images/door.png');
             this.load.image('door2', 'images/door2.png');
             this.load.image('settings', 'images/settings.svg');
             this.load.image('rank', 'images/rank.svg');
+            this.load.audio('bgm', 'sounds/in-the-embrace-of-darkness-197925.mp3');
         }
 
         function create() {
@@ -60,6 +61,9 @@
             const settingsIcon = this.add.image(1240, 40, 'settings').setInteractive().setScale(1);
             const rankIcon = this.add.image(1180, 40, 'rank').setInteractive().setScale(1);
 
+            bgm = this.sound.add('bgm', { loop: true });
+            bgm.play();
+
             settingsIcon.on('pointerdown', () => {
                 window.location.href = 'settings.html';
             });
@@ -71,6 +75,7 @@
             // 502Door 클릭 영역
             const zone502 = this.add.zone(586, 232, 117, 244).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
+                saveAudioProgress();
                 window.location.href = '502Door.html';
             });
             zone502.on('pointerover', () => {
@@ -83,6 +88,7 @@
             // hostelDoor 클릭 영역
             const zoneHostel = this.add.zone(314, 256, 113, 271).setOrigin(0).setInteractive();
             zoneHostel.on('pointerdown', () => {
+                saveAudioProgress();
                 window.location.href = 'hostelDoor.html';
             });
             zoneHostel.on('pointerover', () => {
@@ -100,6 +106,7 @@
                     bg.setTexture('door2');
                     clickedRoger = true;
                 } else {
+                    saveAudioProgress();
                     window.location.href = 'rogerDoor.html';
                 }
             });
@@ -109,6 +116,12 @@
             zoneRoger.on('pointerout', () => {
                 document.body.style.cursor = 'default';
             });
+        }
+
+        function saveAudioProgress() {
+            if (bgm) {
+                localStorage.setItem('bgmCurrentTime', bgm.seek);
+            }
         }
     </script>
 </body>

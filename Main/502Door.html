@@ -48,9 +48,12 @@
         };
 
         const game = new Phaser.Game(config);
+        let bgm;
 
         function preload() {
             this.load.image('door', 'images/502doorcrop.png');
+            this.load.audio('502DoorOpen', 'sounds/일반문 여는 소리.mp3');
+            this.load.audio('bgm', 'sounds/in-the-embrace-of-darkness-197925.mp3');
         }
 
         function create() {
@@ -133,7 +136,10 @@
 
             const zone502 = this.add.zone(530, 50, 270, 560).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
-                window.location.href = '../BitCamp/502Room.html';
+                game.scene.scenes[0].sound.play('502DoorOpen');
+                game.scene.scenes[0].time.delayedCall(3000, () => { 
+                    window.location.href = '../BitCamp/502Room.html';
+                });
             });
             zone502.on('pointerover', () => {
                 document.body.style.cursor = 'pointer';
@@ -141,6 +147,17 @@
             zone502.on('pointerout', () => {
                 document.body.style.cursor = 'default';
             });
+
+            const bgmCurrentTime = localStorage.getItem('bgmCurrentTime');
+            bgm = this.sound.add('bgm', { loop: true });
+
+            if (bgmCurrentTime) {
+                bgm.once('play', () => {
+                    bgm.setSeek(parseFloat(bgmCurrentTime));
+                });
+            }
+
+            bgm.play();
         }
     </script>
 </body>

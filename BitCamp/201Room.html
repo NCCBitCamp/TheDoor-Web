@@ -303,6 +303,8 @@
             this.load.image('key', 'images/key.png');
             this.load.image('exitkey', 'images/exitkey.png');
             this.load.image('confirmBox', 'images/dialogueBox.png');
+            this.load.audio('drawerSound', 'sounds/서랍 여는 소리.mp3');
+            this.load.audio('doorstopSound', 'sounds/문 덜컹덜컹.mp3');
         }
 
         function create() {
@@ -343,6 +345,7 @@
             clickArea2 = this.add.zone(130, 590, 100, 90).setOrigin(0.5).setInteractive();
             if (localStorage.getItem('returnedFromGame') === 'true') {
                 clickArea2.on('pointerdown', () => {
+                    game.scene.scenes[0].sound.play('drawerSound');
                     showDialogue(["[유리실 열쇠]를 획득했다."]);
                     showItemImage('exitkey');
                     addItemToInventory('유리실 열쇠', 'exitkey');
@@ -352,6 +355,7 @@
 
             clickArea3 = this.add.zone(140, 680, 100, 70).setOrigin(0.5).setInteractive();
             clickArea3.on('pointerdown', () => {
+                game.scene.scenes[0].sound.play('drawerSound');
                 showDialogue(["[비상구 열쇠]를 획득했다."]);
                 showItemImage('key');
                 addItemToInventory('비상구 열쇠', 'key');
@@ -391,6 +395,10 @@
             }).setInteractive().setOrigin(0.5).setAlpha(0).on('pointerdown', () => {
                 hideConfirmationDialog();
             });
+
+            game.scene.scenes[0].sound.play('doorstopSound');
+            const initialDialogue = ["?", "앗, 갇혔다!", "어떻게 나가야 하지?", "주변을 잘 살펴보자."];
+            showDialogue(initialDialogue);
         }
         function showConfirmationDialog(scene, itemName) {
             confirmBox.setAlpha(1);
@@ -444,6 +452,7 @@
             }).setOrigin(0.5).setScrollFactor(0);
 
             setTimeout(() => {
+                localStorage.setItem('remainingTime', 300); // 타이머 값 리셋
                 window.location.href = 'floor2.html';
             }, 3000);
         }
