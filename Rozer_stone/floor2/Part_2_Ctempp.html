@@ -177,7 +177,7 @@
             <img src="image/해골C5.png" class="skelC5">
             <img src="../integ/CROATOAN1.png" class="croatoan1">
             <img src="../integ/CROATOAN2.png" class="croatoan2">
-            <img src="../integ/comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
+            <img src="../integ/comment_area_bloody.png" class="comment_area">
             <!-- <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()"> -->
         </div>
         <a href="Part_2_L.html" class="carousel-control-prev" data-bs-slide="prev">
@@ -203,10 +203,6 @@
         }
         setInterval(typing, 100);
 
-        // function redirectToNaver() {
-        //     window.location.href = "Part_1_R.html";
-        // }
-        
         function getItem(imageSrc) {
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) { // 인벤토리에 아이템이 6개 이하인 경우만 추가
