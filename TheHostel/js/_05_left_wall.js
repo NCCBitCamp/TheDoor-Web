@@ -119,7 +119,7 @@ function addCloseButton() {
 
 
 function addTVArea() {
-    let i = 1;
+    let i = 0;
 
     const tvArea = { x: 437, y: 171, width: 434, height: 340 };
 
@@ -143,7 +143,7 @@ function addTVArea() {
     });
 
     otherAreaClicked = true;
-    imageElement.src = '../image/images/leftwall/티비_1.png';
+    imageElement.src = '../image/images/leftwall/티비_0.gif';
     addCloseButton();
     removeClickableAreas(); // 영역 제거
 
