@@ -175,8 +175,11 @@
         }
 
         function Story(){
-            // 이거랑 상응하는 엔딩 씬 하나 더 만들어야 함
-            window.location.href = "../floor1/Stroy_In_Dark2.html" // 일단 임시로 이거 넣음
+            alert("검은 구슬을 얻었다....!");
+            const audio = new Audio('music/치는소리6.mp3');
+            audio.play();
+            const imageSrc = "검정킹.png";
+            getItem(imageSrc);
         }
 
         function goToInventory() {
