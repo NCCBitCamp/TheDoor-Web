@@ -119,12 +119,14 @@
         function switchclick() {
             // Play the sound
             const audio = new Audio('music/돌버튼2.mp3');
+            const audio2 = new Audio('music/문열기5.mp3'); 
             audio.play();
 
             // Show the next control after 1 second
             setTimeout(() => {
+                audio2.play();
                 document.querySelector('.carousel-control-next').style.display = 'block';
-            }, 2500);
+            }, 2000);
         }
 
         function goToInventory() {
