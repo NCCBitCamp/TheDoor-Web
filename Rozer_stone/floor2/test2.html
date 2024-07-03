@@ -127,24 +127,6 @@
             transform: scaleX(-1);
             rotate: 190deg;
         }
-        .croatoan1{
-            z-index: 4;
-            position: absolute;
-            width: 5vw;
-            height: 3vh;
-            right: 44%;
-            top: 44%;
-            rotate: -36deg;
-        }
-        .croatoan2{
-            z-index: 4;
-            position: absolute;
-            width: 3vw;
-            height: 1vh;
-            right: 38%;
-            top: 38%;
-            rotate: 66deg;
-        }
         .inventory_button {
             position: absolute;
             bottom: 5%;
@@ -168,15 +150,13 @@
         <div>
             <img src="Part_2_C.png" class="middle bgimg">
             <img src="image/고문대.png" class="tortureTable" onclick="enjoyTorture()">
-            <img src="image/레버.png" class="lever" onclick="movelever()">
+            <img src="image/레버.png" class="lever" onclick="iskingtrue()">
             <img src="image/레버받침대.png" class="leverBody">
             <img src="image/해골C1.png" class="skelC1">
             <img src="image/해골C2.png" class="skelC2">
             <img src="image/해골C3.png" class="skelC3">
             <img src="image/해골C4.png" class="skelC4">
             <img src="image/해골C5.png" class="skelC5">
-            <img src="../integ/CROATOAN1.png" class="croatoan1">
-            <img src="../integ/CROATOAN2.png" class="croatoan2">
             <img src="../integ/comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
             <!-- <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()"> -->
         </div>
@@ -218,22 +198,36 @@
             }
         }
 
+        function iskingtrue() {
+            let inventory = JSON.parse(localStorage.getItem('inventory')) || []; // Get inventory from localStorage
+
+            // Check if '검정킹.png' exists in the inventory
+            const index = inventory.indexOf('검정킹.png');
+            if (index !== -1) {
+                inventory.splice(index, 1); // Remove '검정킹.png' from the inventory
+                localStorage.setItem('inventory', JSON.stringify(inventory)); // Update inventory in localStorage
+                movelever(); // Call movelever() function
+            } else {
+                alert("꿈쩍도 하지 않는다..."); // Display alert if '검정킹.png' is not found
+            }
+        }
+
+
         function movelever() {
             alert("레버를 움직입니다.");
             // 레버 돌아가는소리 추가하기
-            // 비명소리 추가하기 07/04
+            // 비명소리 추가하기
             const lever = document.querySelector('.lever');
             lever.style.transform = 'rotate(70deg)';
             lever.style.transition = 'transform 2s ease';
             
             if(enjoytorture == 1){
-                alert('어..레버가?..');
+                alert('다리뽑기');
                 // 다리 뽑히는 간단한 화면을 거쳐 Part_2_blindC로 이동
-                window.location.href = "Part_2_blindC.html";
+                window.location.href = "https://www.naver.com";
             }
             else{
                 alert('고문대가 움직입니다');
-                // 펑 소리 추가하기 07/04
                 const skel1 = document.querySelector('.skelC1');
                 const skel2 = document.querySelector('.skelC2');
                 const skel3 = document.querySelector('.skelC3');
@@ -262,9 +256,14 @@
             setTimeout(() => {
                     lever.style.transform = 'rotate(0deg)';
                 }, 1000);
+                
+            const nextButton = document.querySelector('.carousel-control-next');
+            nextButton.style.display = 'none';
+
+            const prevIcon = document.querySelector('.carousel-control-prev-icon');
+            prevIcon.parentElement.href = 'Part_2_L_UNLOCK_0.html';
         }
 
-        
         var enjoytorture = 0;
         function enjoyTorture() {
             if(enjoytorture == 0){
@@ -283,7 +282,7 @@
         }
 
         function goToInventory() {
-            window.location.href = "Inventory_temp.html";
+            window.location.href = "../integ/Inventory_temp.html";
         }
     </script>
 </body>

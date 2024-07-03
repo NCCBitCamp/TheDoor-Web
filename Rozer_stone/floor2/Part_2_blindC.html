@@ -127,6 +127,24 @@
             transform: scaleX(-1);
             rotate: 190deg;
         }
+        .croatoan1{
+            z-index: 4;
+            position: absolute;
+            width: 5vw;
+            height: 3vh;
+            right: 44%;
+            top: 44%;
+            rotate: -36deg;
+        }
+        .croatoan2{
+            z-index: 4;
+            position: absolute;
+            width: 3vw;
+            height: 1vh;
+            right: 38%;
+            top: 38%;
+            rotate: 66deg;
+        }
         .inventory_button {
             position: absolute;
             bottom: 5%;
@@ -157,7 +175,9 @@
             <img src="image/해골C3.png" class="skelC3">
             <img src="image/해골C4.png" class="skelC4">
             <img src="image/해골C5.png" class="skelC5">
-            <img src="../integ/comment_area_bloody.png" class="comment_area" onclick="redirectToNaver()">
+            <img src="../integ/CROATOAN1.png" class="croatoan1">
+            <img src="../integ/CROATOAN2.png" class="croatoan2">
+            <img src="../integ/comment_area_bloody.png" class="comment_area">
             <!-- <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()"> -->
         </div>
         <a href="Part_2_L.html" class="carousel-control-prev" data-bs-slide="prev">
@@ -183,9 +203,6 @@
         }
         setInterval(typing, 100);
 
-        // function redirectToNaver() {
-        //     window.location.href = "Part_1_R.html";
-        // }
         
         function getItem(imageSrc) {
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
@@ -199,7 +216,6 @@
         }
 
         function movelever() {
-            alert("레버를 움직입니다.");
             // 레버 돌아가는소리 추가하기
             // 비명소리 추가하기 07/04
             const lever = document.querySelector('.lever');
@@ -207,9 +223,8 @@
             lever.style.transition = 'transform 2s ease';
             
             if(enjoytorture == 1){
-                alert('다리뽑기');
-                // 다리 뽑히는 간단한 화면을 거쳐 Part_2_blindC로 이동
-                window.location.href = "https://www.naver.com";
+                alert("자살을 선택했습니다.");
+                window.open('../integ/Dead_In_Dark.html');
             }
             else{
                 alert('고문대가 움직입니다');
@@ -249,7 +264,7 @@
         function enjoyTorture() {
             if(enjoytorture == 0){
                 alert("고문대에 올라갔습니다.");
-                // 해골이 나를 덮쳤다 -> 천장화면으로 전환??
+                // 해골이 나를 덮쳤다 -> 천장화면으로 전환??ㄴㄴ
                 enjoytorture = 1;
             }
             else {
