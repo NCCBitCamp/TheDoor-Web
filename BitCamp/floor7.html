@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>7층 배경</title>
+    <title>7층</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/phaser/3.55.2/phaser.min.js"></script>
     <link rel="stylesheet" type="text/css" href="floor7.css">
 </head>
@@ -48,7 +48,7 @@
     const texts1 = ["학원의 학생들과 강사님이 사용하는 사물함이다.", "강사님의 말씀대로라면 분명 이 중 한 곳에 2층 열쇠가 있을거다.", "몇 번 사물함을 조사해볼까?", "조사할 사물함의 번호를 입력해주세요.(101 ~ 303)"];
     const texts2 = ["식사시간에 자주 이용하던 전자레인지다.", "...", "?", "전자레인지 안 쪽에 유리병 하나가 있다.", "[수상한 유리병]을 획득했다.", "대체 누가 이런 곳에 둔걸까?"];
     const texts3_1 = ["깨끗이 정돈된 테이블이다.", "딱히 눈에 띄는 점은 없어보인다."];
-    const texts3_2 = ["조금 더럽고 낡은 테이블이다.", "잘 보니 테이블 구석에 누군가 낙서를 해둔 게 보인다.", "\"301번 사물함 비번 개어렵다 ㄹㅇ\"", "\"디지털 숫자인 이유가 있을 것 같은데.. 숫자를 하나씩 옮겨본다던가?\"", "\"그것보다 숨겨진 사물함 얘긴 들어봤어?? 강의실 번호랑 같은 사물함이 섞여있다는 소문 말이야\"", "...", "이런저런 소문에 대한 얘"];
+    const texts3_2 = ["조금 더럽고 낡은 테이블이다.", "잘 보니 테이블 구석에 누군가 낙서를 해둔 게 보인다.", "\"301번 사물함 비번 개어렵다 ㄹㅇ\"", "\"디지털 숫자인 이유가 있을 것 같은데.. 숫자를 하나씩 옮겨본다던가?\"", "\"그것보다 숨겨진 사물함 얘긴 들어봤어?? 강의실 번호랑 같은 사물함이 섞여있다는 소문 말이야\"", "...", "이런저런 소문에 대한 얘기가 젹혀있다."];
     const texts3_3 = ["?", "7층에 이런 게시판이 있었던가?", "뭐라고 써있는지 살펴볼까?"];
     const texts4 = ["아직 2층 열쇠를 얻지 못했다. 좀 더 조사해보자."];
     const texts5 = ["엘리베이터는 아직도 작동할 기미가 보이지 않는다.", "언제쯤 여기서 빠져나갈 수 있을까.."];
@@ -135,13 +135,13 @@
         let dialogTexts = null; // 대사 텍스트를 저장할 변수
 
         if (itemKey === 'photo') { // photo 클릭 시 보여줄 이미지 및 대사
-            enlargedImageKey = 'photo';
+            enlargedImageKey = 'photo_enlarge';
             dialogTexts = ["유리병을 폭발시켜 얻은 사진이다.", "사진에는 젊은 강사님과 누군가가 어깨동무를 하고 있다.", "굉장히 큰 대회에서 우승한 사진인 것 같은데.. 강사님과 같이 있는 이 사람은 누굴까?"];
         } else if (itemKey === 'letter') { // letter 클릭 시 보여줄 이미지
             enlargedImageKey = 'letterOpen';
             dialogTexts = ["곳곳이 지워져서 잘 알아볼 수 없는 쪽지다.", "자세힌 모르겠지만 전자레인지를 사용할 때는 조심해야할 것 같다."];
         } else if (itemKey === 'newspaper') {
-            enlargedImageKey = 'newspaperOpen';
+            enlargedImageKey = 'newspaper_enlarge';
             dialogTexts = ["날짜를 보니 20년 전 신문기사인 듯 하다.", "전국 개발대회에서 1등했던 학생 2명... 불운한 사고... 한 명은 의식불명...", "과거에 있던 안타까운 사고에 대한 이야기인 것 같다.", "그런데 이런 게 왜 여기있는거지?"];
         }
 
@@ -696,9 +696,15 @@
             hideNavButtons(); // 좌우 버튼 숨기기
             showBackButton(); // 뒤로 가기 버튼 보이기
             createLockerClickableArea(scene); // 내부영역 생성
+            
         });
 
+        // 전자레인지 클릭 영역
         createClickableZone(scene, 573, 339.5, 236, 141, () => {
+            if (currentSection === 1) {
+                currentSection = 0;
+                camera.scrollX = sectionWidth * currentSection;
+            }
             changeBackground(scene, 'microwave'); // 배경 이미지 변경
             hideNavButtons(); // 좌우 버튼 숨기기
             showBackButton(); // 뒤로 가기 버튼 보이기
@@ -843,8 +849,9 @@
         this.load.image('letterOpen', 'images/letterOpen.png');
         this.load.image('glass', 'images/glassBottle.png');
         this.load.image('photo', 'images/photo.png');
+        this.load.image('photo_enlarge', 'images/photograph.png');
         this.load.image('newspaper', 'images/newspaper.png');
-        this.load.image('newspaperOpen', 'images/newspaperOpen.png');
+        this.load.image('newspaper_enlarge', 'images/newspaper_enlarge.png');
         this.load.image('key', 'images/key.png');
         this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
         this.load.image('bag', 'images/bag.svg');
