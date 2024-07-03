@@ -1,14 +1,3 @@
-// document.getElementById('game-container').addEventListener('mousemove', function(event) {
-//     const gameContainer = document.getElementById('game-container');
-//     const rect = gameContainer.getBoundingClientRect();
-
-//     const x = event.clientX - rect.left;
-//     const y = event.clientY - rect.top;
-
-//     console.log(`Mouse position relative to game-container: X=${x}, Y=${y}`);
-// });
-
-
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false;
 
@@ -28,8 +17,8 @@ function addClickableAreas() {
         { id: 'television', x: 75, y: 342, width: 170, height: 160, image: '../image/images/leftwall/티비_1.PNG' },
         { id: 'green_drawer', x: 67, y: 537, width: 370, height: 220, image: '../image/images/leftwall/왼쪽벽열린선반_수정.PNG' },
         { id: 'chest', x: 298, y: 417, width: 100, height: 100, image: '../image/images/leftwall/열린상자_빈.PNG' },
-        { id: 'grandfather_clock', x: 1010, y: 141, width: 126, height: 419, href: '../game/clock/index.html' },
-        { id: 'grandfather_drawer', x: 971, y: 633, width: 212, height: 95, image: '../image/images/leftwall/괘종시계.PNG' }
+        { id: 'grandfather_clock', x: 1010, y: 141, width: 126, height: 419, href: '../game/clock/clock.html' },
+        { id: 'grandfather_drawer', x: 971, y: 633, width: 212, height: 95, image: '../image/images/leftwall/서랍속반지.PNG' }
     ];
 
     clickableAreas.forEach(area => {
@@ -67,6 +56,20 @@ function addClickableAreas() {
             overlay.addEventListener('click', function (event) {
                 event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
                 addTVArea();
+            });
+        }
+
+        // ------------------- //
+        // 'grandfather_drawer' 클릭 조건 //
+        // ------------------- //
+        if (area.id === 'grandfather_drawer') {
+            overlay.addEventListener('click', function (event) {
+                event.stopPropagation();
+                if (!localStorage.getItem('clockSolved')) {
+                    alert('아직 문을 열 수 없습니다.');
+                } else {
+                    handleFrameClick(event, area);
+                }
             });
         }
     });
@@ -115,8 +118,6 @@ function addCloseButton() {
         clearInterval(interval);
     });
 }
-
-
 
 function addTVArea() {
     let i = 0;
@@ -179,7 +180,6 @@ function addTVArea() {
         }
     });
 }
-
 
 // 초기 영역 추가
 addClickableAreas();
