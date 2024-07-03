@@ -1,3 +1,21 @@
+document.addEventListener('DOMContentLoaded', (event) => {
+    // 로컬 스토리지에서 인벤토리 데이터를 가져옴
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    
+    // 인벤토리 데이터를 순회하며 박스에 아이템 이미지를 추가
+    inventory.forEach((item, index) => {
+        if (index < 7) {
+            const box = document.getElementById(`box${index + 1}`);
+            const img = document.createElement('img');
+            img.src = item;
+            img.className = 'item';
+            img.oncontextmenu = (e) => onContextMenu(e, index);
+            img.onclick = () => handleItemClick(item);
+            box.appendChild(img);
+        }
+    });
+});
+
 function getItem(imageSrc) {
     let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
     
@@ -20,23 +38,6 @@ function getItem(imageSrc) {
 function goToInventory() {
     window.location.href = "../HTML/inventory.html";
 }
-
-document.addEventListener('DOMContentLoaded', (event) => {
-    // 로컬 스토리지에서 인벤토리 데이터를 가져옴
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
-    
-    // 인벤토리 데이터를 순회하며 박스에 아이템 이미지를 추가
-    inventory.forEach((item, index) => {
-        if (index < 7) { // 박스가 7개인 경우에 대해서만 처리
-            const box = document.getElementById(`box${index + 1}`); // 박스 요소 선택
-            const img = document.createElement('img'); // 이미지 요소 생성
-            img.src = item; // 이미지 소스를 설정
-            img.className = 'item'; // CSS 클래스 설정
-            img.oncontextmenu = (e) => onContextMenu(e, index); // 우클릭 시 이벤트 처리
-            box.appendChild(img); // 박스에 이미지 요소 추가
-        }
-    });
-});
 
 // 우클릭 시 호출되는 함수
 function onContextMenu(event, index) {

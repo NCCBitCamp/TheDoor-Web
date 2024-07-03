@@ -1,3 +1,4 @@
+
 // 클릭 이벤트 관련 변수 초기화
 let buttonDisplayed = false;
 let secondImageDisplayed = false;
@@ -5,6 +6,7 @@ let thirdImageDisplayed = false;
 let otherAreaClicked = false;
 let boyfriendAreaClicked = false; // 남자친구 영역 클릭 여부 추적 변수
 let itemSelected = null; // 선택된 아이템 추적 변수
+let boyfriendAreaAdditionalClicked = false; // 남자친구 추가 영역 클릭 여부
 
 const liquorClickCounts = {
     '봄베이따르기': 0,
@@ -202,9 +204,7 @@ function handleLiquorClick(event, area) {
     }
 }
 
-// ------------------------------------------- //
-// 특정 영역을 클릭했을 때 종이 영역 추가되는 함수 // 
-// ------------------------------------------- //
+// 특정 영역을 클릭했을 때 종이 영역 추가되는 함수
 function addPaperArea() {
     const paperArea = { x: 495, y: 717, width: 126, height: 63 };
 
@@ -234,9 +234,8 @@ function addPaperArea() {
         addWordleArea();
     });
 }
-// ---------------------------------- //
-// 월들 영역 클릭 이벤트를 처리하는 함수 //
-// ---------------------------------- //
+
+// 월들 영역 클릭 이벤트를 처리하는 함수
 function addWordleArea() {
     const wordleArea = { x: 608, y: 334, width: 231, height: 248, href: '../game/wordle/wordle.html' };
 
@@ -269,6 +268,8 @@ function addWordleArea() {
         window.location.href = '../game/wordle/wordle.html';
     });
 }
+
+
 
 // 잔완성 이미지에 클릭 영역 추가 함수
 function addFinalClickArea() {
@@ -342,11 +343,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
 // 아이템 클릭 이벤트 처리 함수
 function handleItemClick(item) {
-    // 남자친구 영역이 클릭된 후에만 잔 이미지 클릭 시 메시지 표시
-    if (boyfriendAreaClicked && item === '../image/images/useritem/갈색술.png') {
-        displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
-    } else if (item === '../image/images/useritem/갈색술.png') {
+    if (item === '../image/images/useritem/갈색술.png') {
+        history.back();
         itemSelected = '갈색술'; // 갈색 술 아이템 선택 상태로 설정
+        localStorage.setItem("itemSelected", itemSelected);
         alert('갈색 술이 선택되었습니다.');
     }
 }
@@ -372,6 +372,8 @@ function displayMessage(message) {
         alert('레시피를 찾아보자');
     }, 2000);
 }
+
+
 
 // 클릭 횟수를 확인하는 함수
 function checkLiquorClickCombination() {
@@ -405,47 +407,27 @@ function resetLiquorClickCounts() {
 // 초기 영역 추가
 addClickableAreas();
 
-// 인벤토리 관련 함수들
+window.onload = function() {
+    const selectedItem = localStorage.getItem("itemSelected");
 
-function getItem(imageSrc) {
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    if(selectedItem && selectedItem === '갈색술') {
+        imageElement.src = '../image/images/barpage/내버려둬(잔x).png';
+        otherAreaClicked = true;
+        addCloseButton();
+        removeClickableAreas(); // 영역 제거
+        addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
+        boyfriendAreaClicked = true; // 남자친구 영역 클릭으로 설정
+        displayMessage('아, 술이 부족하군요. 신문을 한번 보시고 다른 레시피를 찾아 술을 더 마련해주시면 감사하겠습니다.');
+        
+        // 인벤토리에서 갈색 술 아이템 삭제
+        let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        const itemIndex = inventory.indexOf('../image/images/useritem/갈색술.png');
+        if (itemIndex > -1) {
+            inventory.splice(itemIndex, 1);
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+        }
+
+        localStorage.removeItem("itemSelected");
+    }
     
-    // 이미 아이템이 존재하는지 확인
-    const itemExists = inventory.includes(imageSrc);
-    if (itemExists) {
-        alert("이미 같은 아이템이 인벤토리에 있습니다.");
-        return;
-    }
-
-    if (inventory.length < 7) { // 인벤토리에 아이템이 7개 이하인 경우만 추가
-        inventory.push(imageSrc);
-        localStorage.setItem('inventory', JSON.stringify(inventory));
-        alert("아이템이 추가되었습니다.");
-    } else {
-        alert("인벤토리가 가득 찼습니다.");
-    }
-}
-
-function goToInventory() {
-    window.location.href = "../HTML/inventory.html";
-}
-
-// 우클릭 시 호출되는 함수
-function onContextMenu(event, index) {
-    event.preventDefault(); // 우클릭 메뉴가 뜨는 것을 방지
-    removeItem(index); // 아이템 제거 함수 호출
-}
-
-// 아이템을 제거하는 함수
-function removeItem(index) {
-    let inventory = JSON.parse(localStorage.getItem('inventory')) || []; // 로컬 스토리지에서 인벤토리 데이터를 가져옴
-    inventory.splice(index, 1); // 지정된 인덱스의 아이템을 제거
-    localStorage.setItem('inventory', JSON.stringify(inventory)); // 변경된 인벤토리 데이터를 로컬 스토리지에 저장
-    location.reload(); // 페이지를 새로고침하여 변경사항을 반영
-}
-
-// 인벤 돌아가기 버튼 선택
-function getBack(){    
-    // 뒤로 가기 기능 구현
-    window.history.back();
 }
