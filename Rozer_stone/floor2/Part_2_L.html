@@ -82,7 +82,7 @@
             right: 56%;
             top: 54%;
         }
-        .bornfire {
+        .hwaroblock {
             position: absolute;
             z-index: 2;
             width: 11vw;
@@ -150,7 +150,7 @@
                 <img src="image/해골8.png" class="rib" onclick="bonessound()">
                 <img src="image/해골1.png" class="sekl1" onclick="bonessound()">
                 <img src="image/벌레.png" class="bug" onclick="insect()">
-                <img src="image/화로.png" class="bornfire" onclick="gethwaro()">
+                <img src="image/화로.png" class="hwaroblock" onclick="gethwaro()">
                 <img src="image/쇠사슬4.png" class="chain" onclick="chainsound()">
                 <img src="image/해골6.png" class="sekl_Head" onclick="bonessound()">
                 <img src="comment_area_bloody2.png" class="comment_area" onclick="redirectToNaver()">
@@ -264,6 +264,10 @@
             audio.play();
             const imageSrc = "나무칼.png";
             getItem(imageSrc);
+            
+            // 화로 이미지 클릭 비활성화
+            const bornfire = document.querySelector('.hwaroblock');
+            bornfire.onclick = null;
         }
 
         function insect(){
