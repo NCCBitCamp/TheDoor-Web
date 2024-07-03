@@ -166,6 +166,7 @@
                 inventory.push(item);
                 inventoryImages.push({ key: imageKey, name: item }); // 소지품 이미지와 이름을 저장
                 updateInventoryDisplay();
+                saveInventoryToLocalStorage(); // Save to local storage
             } else {
                 console.log('아이템이 이미 소지품에 있습니다.');
             }
@@ -283,6 +284,34 @@
             clickableZones = [];
         }
 
+
+
+const removeItemFromInventory = (item) => {
+    const itemIndex = inventory.indexOf(item);
+    if (itemIndex !== -1) {
+        inventory.splice(itemIndex, 1);
+        inventoryImages = inventoryImages.filter(imageObj => imageObj.name !== item);
+        updateInventoryDisplay();
+        saveInventoryToLocalStorage(); // Save to local storage
+    } else {
+        console.log('아이템이 인벤토리에 없습니다.');
+    }
+};
+
+        const saveInventoryToLocalStorage = () => {
+            localStorage.setItem('inventory', JSON.stringify(inventory));
+            localStorage.setItem('inventoryImages', JSON.stringify(inventoryImages));
+        };
+
+        const useEmergencyExitKey = () => {
+            if (inventory.includes('비상구 열쇠')) {
+                removeItemFromInventory('비상구 열쇠');
+                window.location.href = 'floor1.html';
+            } else {
+                showDialogue(["비상계단의 문이 굳게 닫혀있다.", "이전처럼 문을 열 수 있는 방법이 없을까?"]);
+            }
+        };
+
         function createClickableAreas(scene) {
             // 유리실 클릭 영역
             createClickableZone(scene, 1080, 255, 470, 310, () => {
@@ -300,7 +329,7 @@
             // 비상계단 클릭 영역
             createClickableZone(scene, 1565, 282.5, 130, 255, () => {
                 if (inventory.includes('비상구 열쇠')) {
-                    window.location.href = 'floor1.html';
+                    useEmergencyExitKey();
                 } else {
                     showDialogue(["비상계단의 문이 굳게 닫혀있다.", "이전처럼 문을 열 수 있는 방법이 없을까?"]);
                 }
