@@ -101,6 +101,9 @@
             document.body.style.cursor = 'default';
         });
 
+        overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
+        overlay.setAlpha(0);
+
         // 모달 창 생성
         modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0);
         modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
@@ -186,6 +189,7 @@
             modal.setAlpha(1);
             modalBackground.setAlpha(0.8);
             modalText.setAlpha(1);
+            overlay.setAlpha(0.5); // Show overlay
             
             // 클릭 가능한 영역 비활성화
             disableClickableZones();
@@ -222,6 +226,7 @@
             modal.setAlpha(0);
             modalBackground.setAlpha(0);
             modalText.setAlpha(0);
+            overlay.setAlpha(0); // Hide overlay
 
             // 모달에 추가된 소지품 이미지를 제거
             modalItems.forEach(item => item.destroy());
