@@ -79,17 +79,11 @@ body {
 }
 
 #left-button {
-    left: 1px;
-    background-image: url(../image/images/background/왼쪽.png);
-    background-repeat: no-repeat;
-    background-color: transparent;
+    left: 10px;
 }
 
 #right-button {
-    right: 1px;
-    background-image: url(../image/images/background/오른쪽.png);
-    background-repeat: no-repeat;
-    background-color: transparent;
+    right: 10px;
 }
 /* ---------------------------------------------------------------------- */
 
@@ -99,7 +93,7 @@ body {
     transform: translateY(-50%);
     background: rgba(255, 255, 255, 0.8);
     border: none;
-    /* padding: 10px; */
+    padding: 10px;
     font-size: 2rem;
     cursor: pointer;
     font-family: "Homemade Apple", 'yleeMortalHeartImmortalMemory', cursive;

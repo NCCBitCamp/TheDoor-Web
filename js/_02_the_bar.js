@@ -347,26 +347,25 @@ document.addEventListener('DOMContentLoaded', (event) => {
     });
 });
 
-// 검토 후 삭제
-// // 아이템 클릭 이벤트 처리 함수
-// function handleItemClick(item) {
-//     if (item === '../image/images/useritem/갈색술.png') {
-//         history.back();
-//         itemSelected = '갈색술';
-//         localStorage.setItem("itemSelected", itemSelected);
-//         alert('갈색 술이 선택되었습니다.');
-//     } else if (item === '../image/images/useritem/레시피2.png') {
-//         const modal = document.getElementById('recipe-modal');
-//         const modalImg = document.getElementById('modal-img');
-//         modalImg.src = item;
-//         modal.style.display = 'block';
-//     } else if (item === '../image/images/useritem/보라술.png') {
-//         history.back();
-//         itemSelected = '보라술';
-//         localStorage.setItem("itemSelected", itemSelected);
-//         alert('보라술이 선택되었습니다.');
-//     }
-// }
+// 아이템 클릭 이벤트 처리 함수
+function handleItemClick(item) {
+    if (item === '../image/images/useritem/갈색술.png') {
+        history.back();
+        itemSelected = '갈색술';
+        localStorage.setItem("itemSelected", itemSelected);
+        alert('갈색 술이 선택되었습니다.');
+    } else if (item === '../image/images/useritem/레시피2.png') {
+        const modal = document.getElementById('recipe-modal');
+        const modalImg = document.getElementById('modal-img');
+        modalImg.src = item;
+        modal.style.display = 'block';
+    } else if (item === '../image/images/useritem/보라술.png') {
+        history.back();
+        itemSelected = '보라술';
+        localStorage.setItem("itemSelected", itemSelected);
+        alert('보라술이 선택되었습니다.');
+    }
+}
 
 // 메시지를 화면 가운데에 표시하는 함수
 function displayMessage1(message) {
@@ -467,6 +466,7 @@ function checkLiquorClickCombination() {
     return false;
 }
 
+
 // 클릭 횟수를 초기화하는 함수
 function resetLiquorClickCounts() {
     for (let key in liquorClickCounts) {
@@ -479,7 +479,7 @@ addClickableAreas();
 
 // wordle에서 돌아왔을 때 레시피를 추가
 // window.onload 이벤트 수정
-window.onload = function () {
+window.onload = function() {
     const selectedItem = localStorage.getItem("itemSelected");
     const boyfriendAreaClicked = localStorage.getItem("boyfriendAreaClicked") === 'true';
 
@@ -509,7 +509,7 @@ window.onload = function () {
         addCloseButton();
         removeClickableAreas(); // 영역 제거
         addPaperArea(); // 남자친구 클릭 시 추가 영역 생성
-        displayMessage2('감사합니다. 여기 제 심장을 드릴께요. 소중히 다뤄주세요.', function () {
+        displayMessage2('감사합니다. 여기 제 심장을 드릴께요. 소중히 다뤄주세요.', function() {
             // 인벤토리에서 보라 술 아이템 삭제
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             const itemIndex = inventory.indexOf('../image/images/useritem/보라술.png');
@@ -517,6 +517,7 @@ window.onload = function () {
                 inventory.splice(itemIndex, 1);
                 localStorage.setItem('inventory', JSON.stringify(inventory));
             }
+            
 
             // 인벤토리에 심장 추가
             if (!inventory.includes('../image/images/useritem/심장.PNG')) {
@@ -560,8 +561,8 @@ window.onload = function () {
         localStorage.removeItem("purpleDrinkWon");
     }
 }
-// 검토 후 삭제
-// // 모달 닫기 기능 추가
-// document.getElementById('recipe-modal').addEventListener('click', function() {
-//     this.style.display = 'none';
-// });
+
+// 모달 닫기 기능 추가
+document.getElementById('recipe-modal').addEventListener('click', function() {
+    this.style.display = 'none';
+});

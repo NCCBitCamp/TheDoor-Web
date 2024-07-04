@@ -35,9 +35,6 @@ function getItem(imageSrc) {
     }
 }
 
-//----------------------------//
-//   모달 클릭으로 열기 단계    //
-//----------------------------//
 function handleItemClick(item) {
     if (item === '../image/images/useritem/갈색술.png') {
         history.back();
@@ -51,41 +48,14 @@ function handleItemClick(item) {
         modal.style.display = 'block';
     } else if (item === '../image/images/useritem/보라술.png') {
         // const modal = document.getElementById('purple-modal');
-        // const modalImg = document.getElementById('purple-img'); <== 검토 후 삭제 결정
+        // const modalImg = document.getElementById('purple-img');
         history.back();
         itemSelected = '보라술';
         localStorage.setItem("itemSelected", itemSelected);
         alert('보라 술이 선택되었습니다.');
-
-    } else if (item === '../image/images/useritem/동전.png') {
+    }else if (item === '../image/images/useritem/동전.png') {
         handleCoinClick(item);
-
-    // 모달 추가 ---------------------------------------------------
-    } else if (item === '../image/images/useritem/심장.PNG') {
-        let modal = document.getElementById('heart-modal');
-        let modalImg = document.getElementById('heart-img');
-        modalImg.src = item;
-        modal.style.display = 'block';
-
-    } else if (item === '../image/images/useritem/깨진액자.png') {
-        let modal = document.getElementById('photo-modal');
-        let modalImg = document.getElementById('photo-img');
-        modalImg.src = item;
-        modal.style.display = 'block';
-
-    } else if (item === '../image/images/useritem/쟁미.png') {
-        let modal = document.getElementById('rose-modal');
-        let modalImg = document.getElementById('rose-img');
-        modalImg.src = item;
-        modal.style.display = 'block';
-
-    } else if (item === '../image/images/useritem/손목시계.PNG') {
-        let modal = document.getElementById('watch-modal');
-        let modalImg = document.getElementById('watch-img');
-        modalImg.src = item;
-        modal.style.display = 'block';
     }
-    // 모달 추가 ---------------------------------------------------
 }
 
 // 동전 아이템 클릭 이벤트 처리 함수
@@ -128,31 +98,7 @@ function removeItem(index) {
 }
 
 // 인벤 돌아가기 버튼 선택
-function getBack() {
+function getBack(){    
     // 뒤로 가기 기능 구현
     window.history.back();
 }
-//----------------------------//
-//----------------------------//
-//      모달 창 닫는 기능      //
-//----------------------------//
-//----------------------------//
-document.getElementById('recipe-modal').addEventListener('click', function () {
-    this.style.display = 'none';
-});
-
-document.getElementById('rose-modal').addEventListener('click', function () {
-    this.style.display = 'none';
-});
-
-document.getElementById('watch-modal').addEventListener('click', function () {
-    this.style.display = 'none';
-});
-
-document.getElementById('photo-modal').addEventListener('click', function () {
-    this.style.display = 'none';
-});
-
-document.getElementById('heart-modal').addEventListener('click', function () {
-    this.style.display = 'none';
-});
