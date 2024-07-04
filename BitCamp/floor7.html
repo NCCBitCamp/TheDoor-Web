@@ -101,6 +101,9 @@
             document.body.style.cursor = 'default';
         });
 
+        overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
+        overlay.setAlpha(0);
+
         // 모달 창 생성
         modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0);
         modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
@@ -179,11 +182,14 @@
 
     // 인벤토리 모달 창을 토글하는 함수
     const toggleInventoryModal = (scene) => {
+        scene.sound.play('bagSound'); // 가방 소리 재생
+
         if (modal.alpha === 0) {
             // 모달을 보이게 설정
             modal.setAlpha(1);
             modalBackground.setAlpha(0.8);
             modalText.setAlpha(1);
+            overlay.setAlpha(0.5); // Show overlay
             
             // 클릭 가능한 영역 비활성화
             disableClickableZones();
@@ -220,6 +226,7 @@
             modal.setAlpha(0);
             modalBackground.setAlpha(0);
             modalText.setAlpha(0);
+            overlay.setAlpha(0); // Hide overlay
 
             // 모달에 추가된 소지품 이미지를 제거
             modalItems.forEach(item => item.destroy());
@@ -334,17 +341,17 @@
         const choices = [
             {
                 text: "빨간 전자레인지",
-                nextTexts: ["...", "펑!!!!!!!!!!!!", "엄청난 폭발과 함께 사망하셨습니다. 굿바이", "폭사엔딩 -완-"],
+                nextTexts: ["펑!!!!!!!!!!!!", "엄청난 폭발과 함께 사망하셨습니다. 굿바이", "폭사엔딩 -완-"],
                 gameOver: true // 게임 오버 상태 플래그
             },
             {
                 text: "흰색 전자레인지",
-                nextTexts: ["...", "펑!!!!!!!!!!!!", "...", "힌트를 제대로 보지 않은 플레이어는 끔찍한 결말을 맞이하고 말았다.", "폭사엔딩 -완-"],
+                nextTexts: ["펑!!!!!!!!!!!!", "...", "힌트를 제대로 보지 않은 플레이어는 끔찍한 결말을 맞이하고 말았다.", "폭사엔딩 -완-"],
                 gameOver: true // 게임 오버 상태 플래그
             },
             {
                 text: "검정 전자레인지",
-                nextTexts: ["...", "펑!!!!!!!!!!", "굉장한 폭음이 들렸지만, 전자레인지를 열어보니 유리병의 내용물만 온전히 남아있다.", "[누군가의 옛날 사진]을 획득했다."]
+                nextTexts: ["펑!!!!!!!!!!", "굉장한 폭음이 들렸지만, 전자레인지를 열어보니 유리병의 내용물만 온전히 남아있다.", "[누군가의 옛날 사진]을 획득했다."]
             },
             {
                 text: "돌리지 않는다.",
@@ -438,6 +445,10 @@
                 });
                 document.body.style.cursor = 'default';
 
+                if (choice.text == "빨간 전자레인지" || choice.text == "흰색 전자레인지" || choice.text == "검정 전자레인지") { // "돌리지 않는다"를 제외한 선택지
+                    scene.sound.play('explosionSound'); // 폭발 소리 재생
+                }
+
                 if (choice.gameOver) {
                     showDialog(scene, choice.nextTexts, () => showGameOver(scene));
                 } else {
@@ -451,6 +462,9 @@
     const showItemImage = (imageKey) => {
         const scene = game.scene.scenes[0];
         const itemImage = scene.add.image(config.width / 2, config.height / 2, imageKey).setScale(0.5).setAlpha(0);
+        
+        scene.sound.play('itemSound'); // 아이템 획득 효과음
+
         scene.tweens.add({
             targets: itemImage,
             alpha: 1,
@@ -502,6 +516,11 @@
             handleItemAcquisition(currentTexts[currentTextIndex]);
         } else {
             if (currentTexts.includes("엄청난 폭발과 함께 사망하셨습니다. 굿바이")) {
+                dialogBox.off('pointerdown');
+                dialogBox.setVisible(false);
+                dialogText.setVisible(false);
+                showGameOver(game.scene.scenes[0]);
+            } else if (currentTexts.includes("힌트를 제대로 보지 않은 플레이어는 끔찍한 결말을 맞이하고 말았다.")) {
                 dialogBox.off('pointerdown');
                 dialogBox.setVisible(false);
                 dialogText.setVisible(false);
@@ -856,6 +875,9 @@
         this.load.image('key', 'images/key.png');
         this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
         this.load.image('bag', 'images/bag.svg');
+        this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
+        this.load.audio('itemSound', 'sounds/아이템 획득 소리.mp3');
+        this.load.audio('explosionSound', 'sounds/폭발음.mp3');
     }
 
     function create() {

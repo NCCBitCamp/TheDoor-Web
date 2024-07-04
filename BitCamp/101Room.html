@@ -120,6 +120,7 @@
 
         const game = new Phaser.Game(config);
 
+        let bgImage;
         let inventory = [];
         let inventoryImages = [];
         let inventoryText, inventoryBag, modal, modalBackground, modalText;
@@ -154,6 +155,9 @@
             inventoryBag.on('pointerout', () => {
                 document.body.style.cursor = 'default';
             });
+
+            overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
+            overlay.setAlpha(0);
 
             modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0); // 배경색 변경 예시
             modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
@@ -214,10 +218,13 @@
         };
 
         const toggleInventoryModal = (scene) => {
+            scene.sound.play('bagSound'); // 가방 소리 재생
+            
             if (modal.alpha === 0) {
                 modal.setAlpha(1);
                 modalBackground.setAlpha(0.8);
                 modalText.setAlpha(1);
+                overlay.setAlpha(0.5); // Show overlay
 
                 inventoryImages.forEach((imageObj, index) => {
                     const itemImage = scene.add.image(scene.cameras.main.centerX - 300 + (index % 4) * 200, scene.cameras.main.centerY - 190 + Math.floor(index / 4) * 140, imageObj.key).setScale(0.3).setScrollFactor(0);
@@ -239,6 +246,7 @@
                 modal.setAlpha(0);
                 modalBackground.setAlpha(0);
                 modalText.setAlpha(0);
+                overlay.setAlpha(0); // Hide overlay
 
                 modalItems.forEach(item => item.destroy());
                 modalItems = [];
@@ -282,10 +290,12 @@
             this.load.image('key', 'images/key.png');
             this.load.image('exitkey', 'images/exitkey.png');
             this.load.image('confirmBox', 'images/dialogueBox.png');
+            this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
+            this.load.audio('itemSound', 'sounds/아이템 획득 소리.mp3');
         }
 
         function create() {
-            const bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+            bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
             const scaleX = this.cameras.main.width / bgImage.width;
             const scaleY = this.cameras.main.height / bgImage.height;

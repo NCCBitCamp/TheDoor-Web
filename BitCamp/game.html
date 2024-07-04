@@ -694,13 +694,18 @@
             }
 
             if (correct) {
-                alert("정답입니다. 이전 페이지로 돌아갑니다.");
+                alert("정답입니다. 이전 위치로 돌아갑니다.");
                 localStorage.setItem('returnedFromGame', 'true');
+                localStorage.setItem('nya', 'true');
                 window.location.href = "201Room.html";
             } else {
                 alert("오답입니다. 다시 시도해주세요.");
+                localStorage.setItem('returnedFromGame', 'true');
+                localStorage.setItem('nya', 'true');
+                window.location.href = "201Room.html";
             }
         }
+
 
 
     </script>
