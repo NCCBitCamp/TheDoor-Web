@@ -228,6 +228,8 @@
             let index = 0;
 
             function toggleImages() {
+                const audio1 = new Audio('music/여왕목소리.mp3');
+                audio1.play();
                 setTimeout(() => {
                     pic.src = images[index % 2];
                     index++;
