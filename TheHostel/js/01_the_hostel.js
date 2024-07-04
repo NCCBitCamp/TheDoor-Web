@@ -80,6 +80,6 @@ function addEnterButton() {
     
     // 버튼 클릭 이벤트 추가
     button.addEventListener('click', function() {
-        window.location.href = '_02_the_bar.html'; // 다음 페이지로 이동
+        window.location.href = '02_the_bar.html'; // 다음 페이지로 이동
     });
 }
