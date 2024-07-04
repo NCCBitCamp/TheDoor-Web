@@ -34,64 +34,60 @@
     <div class="text_box" data-trigger>
         <span class="text" style="color: brown;"></span>
     </div>
-    <audio id="audio"></audio>
+    <audio id="audio" autoplay></audio>
     <script>
         const content = [
-            { text: " Rozer Stone ", audio: "Nar_2_1.mp3" },
-            { text: "1584년 월터 롤리 경은 로어노크 섬을 발견한다.", audio: "Nar_2_1.mp3" },
-            { text: "하지만 본국과의 보급이 어려워 원주민들을 이겨내지 못하고 전멸하고 만다.", audio: "Nar_2_1.mp3" },
-            { text: "1587년 존 화이트가 이끄는 2차 식민지 원정대는 1차 원정대의 실패요인을 원주민과의 관계 악화가 원인이라고 판단했다.", audio: "Nar_2_1.mp3" },
-            { text: "2차 식민지 원정대는 원인을 분석해 그들과의 관계 개선을 시도하여 성공한다.", audio: "Nar_2_1.mp3" },
-            { text: "하지만 . . .", audio: "Nar_2_1.mp3" },
-            { text: "존 화이트가 본국인 영국에 보고하러간 사이 영국은 에스파냐와 100년 전쟁을 시작한다.", audio: "Nar_2_1.mp3" },
-            { text: "로어노크 식민지는 고립되었다.   >skip", audio: "Nar_2_1.mp3" }
+            { text: " Rozer Stone " },
+            { text: "1584년 월터 롤리 경은 로어노크 섬을 발견한다.", audio: "music/Nar_1_1.mp3" },
+            { text: "1587년 존 화이트가 이끄는 2차 식민지 원정대는 1차 원정대의 실패요인을 원주민과의 관계 악화가 원인이라고 판단했다.", audio: "music/Nar_1_3.mp3" },
+            { text: "2차 식민지 원정대는 원인을 분석해 그들과의 관계 개선을 시도하여 성공한다.", audio: "music/드르륵1.mp3" },
+            { text: "하지만 . . .", audio: "music/Nar_1_4.mp3" },
+            { text: "존 화이트가 본국인 영국에 보고하러간 사이 영국은 에스파냐와 100년 전쟁을 시작한다.", audio: "music/Nar_1_5.mp3" },
+            { text: "로어노크 식민지는 고립되었다.", audio: "music/Nar_1_6.mp3" },
+            { text: "화이트가 다시 왔을 땐 정적과 고요로 가득찼다. 모두 어디론가 증발했다.   >skip", audio: "music/Nar_1_6_2.mp3" }
         ];
         const textElement = document.querySelector(".text");
         const audioElement = document.getElementById("audio");
 
         let index = 0;
         let charIndex = 0;
-        let isDeleting = false;
         let typingInterval;
 
         function typing() {
-            if (index < content.length) {
-                if (!isDeleting && charIndex < content[index].text.length) {
-                    textElement.innerHTML += content[index].text.charAt(charIndex);
-                    charIndex++;
-                } else if (isDeleting && charIndex > 0) {
-                    textElement.innerHTML = content[index].text.substring(0, charIndex - 1);
-                    charIndex--;
-                } else if (!isDeleting && charIndex === content[index].text.length) {
-                    playAudio(content[index].audio);
-                    isDeleting = true;
-                    setTimeout(typing, 3000); // 잠시 멈춤 후 지우기 시작
-                    return;
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false;
-                    index++;
-                    if (index < content.length) {
-                        textElement.innerHTML += '<br>'; // 줄 바꿈 추가
-                    }
-                }
+            if (charIndex < content[index].text.length) {
+                textElement.innerHTML += content[index].text.charAt(charIndex);
+                charIndex++;
+                setTimeout(typing, 100); // 타이핑 속도 설정
             } else {
-                clearInterval(typingInterval);
+                document.body.addEventListener('click', handleClick);
             }
-            setTimeout(typing, isDeleting ? 10 : 100); // 타이핑 속도와 지우기 속도 설정
+        }
+
+        function handleClick() {
+            document.body.removeEventListener('click', handleClick);
+            if (index < content.length - 1) {
+                charIndex = 0;
+                textElement.innerHTML = "";
+                index++;
+                playAudio(content[index].audio); // 오디오 재생
+                typing(); // 다음 대사 타이핑 시작
+            } else {
+                location.href = 'Nar_2.html'; // 마지막 대사 이후 페이지 이동
+            }
         }
 
         function playAudio(audioSrc) {
-            audioElement.src = audioSrc;
-            audioElement.play();
+            if (audioSrc) {
+                audioElement.src = audioSrc;
+                audioElement.load(); // 오디오 파일을 로드
+                audioElement.play(); // 오디오 재생
+            }
         }
 
-        document.body.addEventListener('click', () => {
-            if (index === content.length && !isDeleting && charIndex === 0) {
-                location.href = 'Nar_2.html';
-            }
-        });
-
-        typing(); // 글자 타이핑 시작
+        // 첫 번째 대사 및 오디오 재생 시작
+        playAudio(content[index].audio);
+        typing();
     </script>
 </body>
 </html>
+
