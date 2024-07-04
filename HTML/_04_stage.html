@@ -81,9 +81,6 @@
   <div id="overlay-top"></div>
     <div id="game-container">
         <img id="stage-image" src="../image/images/stage/무대배경.JPG" alt="Stage" style="width: 100%; height: 100%;">
-        <button id="left-button" class="nav-button" onclick="location.href='_03_right_wall.html'">&lt;</button>
-        <button id="right-button" class="nav-button" onclick="location.href='_05_left_wall.html'">&gt;</button>
-
         <div class="itemzone-container" id="item-zone">
             <!-- 드래그 가능한 아이템들 -->
             <div id="draggable1" class="draggable" draggable="true" data-id="1">Item 1</div>
@@ -91,7 +88,7 @@
             <div id="draggable3" class="draggable" draggable="true" data-id="3">Item 3</div>
             <div id="draggable4" class="draggable" draggable="true" data-id="4">Item 4</div>
         </div>
-
+        
         <div class="dropzone-container" id="dropzone-container">
             <!-- 드롭 가능한 영역들 -->
             <div id="dropzone1" class="dropzone" data-id="4"></div>
@@ -99,11 +96,14 @@
             <div id="dropzone3" class="dropzone" data-id="1"></div>
             <div id="dropzone4" class="dropzone" data-id="2"></div>
         </div>
-
+        
+        <button id="left-button" class="nav-button" onclick="location.href='_03_right_wall.html'" style="top: 51.30%;">　</button>
+        <button id="right-button" class="nav-button" onclick="location.href='_05_left_wall.html'" style="top: 51.30%;">　</button>
         <!-- 아이템 버튼 추가 -->
         <button type="button" class="btn btn-primary-item" id="button-item" onclick="goToInventory()">💼</button>
+        <br>
     </div>
-    <div id="overlay-bottom"></div>
+        <div id="overlay-bottom"></div>
     <div class="shadow-overlay"></div>
 
     <!-- 편지봉투 이미지 -->
