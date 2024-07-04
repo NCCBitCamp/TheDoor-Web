@@ -14,6 +14,7 @@ function movePawn(element) {
     // console.log(nextRow1Td);
     // console.log(nextRow2Td);
 
+
     if (row == 1) {
         if (nextRow1Td) {
             nextRow1Td.classList.add('possible-move');
@@ -91,23 +92,42 @@ function movePawn(element) {
 // }
 
 
+var audio = new Audio('music/체스판bg.mp3');
 
+const audioFiles = [
+    'music/체스판 룩.mp3',
+    'music/체스판 나이트.mp3',
+    'music/체스판 비숍.mp3'
+];
 
-function moveRook(element) {
-    // 브금 바꾸기
+var audioFlag = 0;
+function flag(){
+    audioFlag = 1;
+    if(audioFlag == 1)
+        audio.play();
+    else
+        audio.play();
 }
 
-function moveKnight(element) {
-    // 브금 바꾸기
+function moveRook() {
+    audio.src = audioFiles[0];
+    audio.play();
 }
 
-function moveBishop(element) {
-    // 브금 바꾸기
+function moveKnight() {
+    audio.src = audioFiles[1];
+    audio.play();
 }
+
+function moveBishop() {
+    audio.src = audioFiles[2];
+    audio.play();
+}
+
 
 function moveQeen(element) {
-    const audio = new Audio('../integ/짧은성가대.mp3');
-    audio.play();
+    const audioQ = new Audio('../integ/짧은성가대.mp3');
+    audioQ.play();
     setTimeout(() => {
         window.location.href = "https://vignette4.wikia.nocookie.net/freddy-fazbears-pizza/images/8/85/Fnaf4_jumpscare_bonnieindoorway.gif";
     }, 2000);
