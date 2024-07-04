@@ -26,8 +26,8 @@ for (let i = 0; i < 6; i++) {
   num_container.classList.add('num-container');
   num_container.style.transform = `rotate(${30 * i}deg)`;
   num_container.innerHTML = `
-    <div class="num ${(i === 0 || i === 3) && 'highlight'}" style="transform: rotate(-${30 * i}deg)">${left > 12 ? left - 12 : left}</div>
-    <div class="num ${(i === 0 || i === 3) && 'highlight'}" style="transform: rotate(-${30 * i}deg)">${right}</div>
+    <div class="num ${(i === 0 || i === 3) ? 'highlight' : ''}" style="transform: rotate(-${30 * i}deg)">${left > 12 ? left - 12 : left}</div>
+    <div class="num ${(i === 0 || i === 3) ? 'highlight' : ''}" style="transform: rotate(-${30 * i}deg)">${right}</div>
   `;
   circle_3.appendChild(num_container);
   right++;
@@ -43,21 +43,21 @@ setHour.setHours(0, 0);
 let hourVal = 0;
 let minuteVal = 0;
 
-const hourPlusBnt = document.querySelector("#hour-plus-btn");
+const hourPlusBtn = document.querySelector("#hour-plus-btn");
 const clearBtn = document.querySelector("#clearBtn");
 const minPlusBtn = document.querySelector("#minute-plus-btn");
 
 let hourDeg;
 let minuteDeg = 5;
 
-hourPlusBnt.addEventListener("click", function(e) {
+hourPlusBtn.addEventListener("click", function(e) {
   hourVal++;
   setHour.setHours(hourVal, minuteVal);
 
   //---------------//
   // 시침 각도 계산 //
   //---------------//
-  hourDeg = (360 * (setHour.getHours() / 12))  + (30 * (minuteDeg / 360));;
+  hourDeg = (360 * (setHour.getHours() / 12))  + (30 * (minuteDeg / 360));
   hour.style.transform = "rotate(" + hourDeg + "deg)";
   if(hourVal == 12) hourVal = 0;
 
@@ -71,7 +71,7 @@ minPlusBtn.addEventListener("click", function(e) {
   //---------------//
   // 분침 각도 계산 //
   //---------------//
-  minuteDeg = (360 * (setHour.getMinutes() / 60))
+  minuteDeg = (360 * (setHour.getMinutes() / 60));
   minute.style.transform = "rotate(" + minuteDeg + "deg)";
   if(minuteVal == 60) minuteVal = 0;
  
@@ -86,9 +86,12 @@ clearBtn.addEventListener('click', (e) => {
   if (hourVal === 10 && minuteVal === 25) {
     alert('닫혔던 서랍이 열렸다.');
     localStorage.setItem('drawerUnlocked', 'true');
+    localStorage.setItem('clockSolved', 'true');
     setTimeout(function() {
       window.location.href = '../../HTML/_05_left_wall.html'; // left_wall.html로 이동
     }, 500);
+  } else {
+    alert('시간이 맞지 않습니다. 다시 시도하세요.');
   }
 });
 

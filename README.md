@@ -8,18 +8,18 @@
   <h2>Project Info</h2>
   <h4>팀명: 12기 2조</h4>
   <h4>수행기간: 2024.06.25 - 2024.07.04</h4>
-  </br>
+  <br/>
   <h2>배포 주소</h2>
   <p>https://nccbitcamp.github.io/TheDoor-Web/Main/</p>
-  </br>
+  <br/>
   <h2>팀원</h2>
-  <a href="https://github.com/Rurouni98" target="_blank">김병주</a> - 웹 프론트 </br>
-  <a href="https://github.com/dodotlm" target="_blank">마태림</a> - 웹 프론트 </br>
-  <a href="https://github.com/soojeongmin" target="_blank">민수정</a> - 웹 프론트 </br>
-  <a href="https://github.com/dydhyun" target="_blank">안용현</a> - 웹 프론트 </br>
-  <a href="https://github.com/csm0062" target="_blank">최수민</a> - 웹 프론트 </br>
-  <a href="https://github.com/Hardy0070" target="_blank">홍우빈</a> - 웹 프론트 </br></br>
-</br>
+  <a href="https://github.com/Rurouni98" target="_blank">김병주</a> - 웹 프론트 <br/>
+  <a href="https://github.com/dodotlm" target="_blank">마태림</a> - 웹 프론트 <br/>
+  <a href="https://github.com/soojeongmin" target="_blank">민수정</a> - 웹 프론트 <br/>
+  <a href="https://github.com/dydhyun" target="_blank">안용현</a> - 웹 프론트 <br/>
+  <a href="https://github.com/csm0062" target="_blank">최수민</a> - 웹 프론트 <br/>
+  <a href="https://github.com/Hardy0070" target="_blank">홍우빈</a> - 웹 프론트 <br/><br/>
+  <br/>
   <h2>About</h2>
   <h4>웹 기반 방탈출 게임 서비스</h4>
   <p>더 도어란 세 개의 문(스토리)가 하나의 게임으로 묶여 있다는 의미를 가지는 서비스 이름입니다.<br>
@@ -32,6 +32,8 @@
 
   <h4>로저스톤</h4>
   <p>중세시대 유적지를 탐험하다 비밀스러운 장소를 찾아 보물을 얻기 위해 떠나는 흥미진진한 방탈출 모험!</p>
+  
+  <p>예상 플레이타임 : <b>3분!!</b> ~ 30분 </p>
   
   <h4>The Hostel</h4>
   <p>형사 모티브가 실종된 여자의 사건을 해결하기 위해 바에서 조사를 시작한다! 단서를 얻고 사건의 진실을 밝혀보자.</p>
