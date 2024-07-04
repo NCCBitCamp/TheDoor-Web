@@ -6,6 +6,21 @@ const leftButton = document.getElementById('left-button');
 const rightButton = document.getElementById('right-button');
 let interval; // <= 티비 화면 전환을 위한 변수
 
+// 서랍 열림 상태 확인
+const drawerUnlocked = localStorage.getItem('drawerUnlocked') === 'true';
+
+window.onload = function() {
+    const coinClick = localStorage.getItem("coinClick") === 'true';
+
+    if(coinClick) {
+        imageElement.src = '../image/images/leftwall/동전올려진상자_배경.PNG';
+        setTimeout(() => {
+            imageElement.src = '../image/images/leftwall/최종열린상자_배경.PNG';
+            
+        }, 2000);
+    }
+}
+
 // 클릭 가능한 영역을 추가하는 함수
 function addClickableAreas() {
     const clickableAreas = [
@@ -17,19 +32,19 @@ function addClickableAreas() {
         { id: 'green_drawer', x: 67, y: 537, width: 370, height: 220, image: '../image/images/leftwall/왼쪽벽열린선반_수정.PNG' },
         { id: 'chest', x: 298, y: 417, width: 100, height: 100, image: '../image/images/leftwall/열린상자_빈.PNG' },
         { id: 'grandfather_clock', x: 1010, y: 141, width: 126, height: 419, href: '../game/clock/clock.html' },
-        { id: 'grandfather_drawer', x: 971, y: 633, width: 212, height: 95, image: '../image/images/leftwall/서랍속반지.PNG' }
+        { id: 'grandfather_drawer', x: 971, y: 633, width: 212, height: 95, image: drawerUnlocked ? '../image/images/leftwall/서랍속반지.PNG' : '' }
     ];
 
     clickableAreas.forEach(area => {
         const overlay = document.createElement('div');
         overlay.classList.add('clickable-area');
-        overlay.style.position = 'absolute';
+        overlay.style.position = 'absolute'; // 오버레이를 절대 위치로 설정
         overlay.style.left = area.x + 'px';
         overlay.style.top = area.y + 'px';
         overlay.style.width = area.width + 'px';
         overlay.style.height = area.height + 'px';
-        overlay.style.backgroundColor = 'transparent';
-        overlay.style.pointerEvents = 'auto';
+        overlay.style.backgroundColor = 'transparent'; // 영역이 보이지 않도록 투명하게 설정
+        overlay.style.pointerEvents = 'auto'; // 오버레이가 클릭 이벤트를 받도록 설정
         overlay.id = area.id;
 
         document.getElementById('game-container').appendChild(overlay);
@@ -42,16 +57,37 @@ function addClickableAreas() {
             document.body.style.cursor = 'default';
         });
 
-        // 클릭 이벤트 리스너 추가
+        // green_drawer 클릭조건문
         overlay.addEventListener('click', function (event) {
-            event.stopPropagation();
-            handleAreaClick(event, area);
+            event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+            handleFrameClick(event, area);
         });
+
+        // tv화면클릭조건문
+        if (area.id === 'television') {
+            overlay.addEventListener('click', function (event) {
+                event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+                addTVArea();
+            });
+        }
+
+        // green_drawer 클릭조건문
+        if (area.id === 'green_drawer') {
+            overlay.addEventListener('click', function (event) {
+                event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+                handleGreenDrawerClick();
+            });
+        }
     });
+
+    // 서랍이 열렸을 때 반지를 클릭할 수 있는 영역 추가
+    if (drawerUnlocked) {
+        addRingArea();
+    }
 }
 
-// 클릭 가능한 영역 클릭 이벤트 처리 함수
-function handleAreaClick(event, area) {
+// 서랍과 액자 클릭 이벤트를 처리하는 함수
+function handleFrameClick(event, area) {
     if (area.id === 'grandfather_drawer' && localStorage.getItem('clockSolved') !== 'true') {
         alert('아직 문을 열 수 없습니다.');
         return; // 이미지를 변경하지 않음
@@ -66,17 +102,15 @@ function handleAreaClick(event, area) {
         leftButton.style.display = 'none';
         rightButton.style.display = 'none';
 
-        if (area.id === 'grandfather_drawer') {
+        if (area.id === 'grandfather_drawer' && drawerUnlocked) {
             addRingArea(); // 서랍이 열리면 반지 영역 추가
-        } else if (area.id === 'green_drawer') {
-            addEndingBoxArea(); // 엔딩 박스 영역 추가
         }
     }
 }
 
 // 클릭 가능한 영역을 제거하는 함수
 function removeClickableAreas() {
-    const overlays = document.querySelectorAll('.clickable-area, .ring-area, .paper-area');
+    const overlays = document.querySelectorAll('.clickable-area, .ring-area, .coin-area');
     overlays.forEach(overlay => {
         overlay.remove();
     });
@@ -205,17 +239,24 @@ function addTVArea() {
     });
 }
 
-// 엔딩 박스 영역 추가 함수
-function addEndingBoxArea() {
-    const endingBoxArea = { x: 300, y: 696, width: 123, height: 66 };
 
+// green_drawer 클릭 이벤트 처리 함수
+function handleGreenDrawerClick() {
+    // 기존 클릭 가능한 영역 제거
+    removeClickableAreas();
+
+    // 현재 이미지 유지
+    addCloseButton(); // 'Back' 버튼 추가
+
+    // 새로운 클릭 가능한 영역 추가
+    const coinBoxArea = { x: 300, y: 696, width: 300, height: 300 }; // 실제 동전 상자 위치로 조정
     const overlay = document.createElement('div');
-    overlay.classList.add('paper-area');
+    overlay.classList.add('coin-area');
     overlay.style.position = 'absolute';
-    overlay.style.left = endingBoxArea.x + 'px';
-    overlay.style.top = endingBoxArea.y + 'px';
-    overlay.style.width = endingBoxArea.width + 'px';
-    overlay.style.height = endingBoxArea.height + 'px';
+    overlay.style.left = coinBoxArea.x + 'px';
+    overlay.style.top = coinBoxArea.y + 'px';
+    overlay.style.width = coinBoxArea.width + 'px';
+    overlay.style.height = coinBoxArea.height + 'px';
     overlay.style.backgroundColor = 'transparent';
     overlay.style.pointerEvents = 'auto';
 
@@ -228,11 +269,15 @@ function addEndingBoxArea() {
         document.body.style.cursor = 'default';
     });
 
-    // 클릭 이벤트 리스너 추가
     overlay.addEventListener('click', function (event) {
         event.stopPropagation();
-        alert("엔딩가즈아!");
+        showCoinBox()
     });
+}
+
+// 동전 상자 이미지 표시 함수
+function showCoinBox() {
+    imageElement.src = '../image/images/leftwall/동전상자_배경.PNG';
 }
 
 // 초기 영역 추가
