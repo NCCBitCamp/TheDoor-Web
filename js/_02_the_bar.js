@@ -480,6 +480,8 @@ addClickableAreas();
 // wordle에서 돌아왔을 때 레시피를 추가
 // window.onload 이벤트 수정
 window.onload = function() {
+    localStorage.removeItem("drawerUnlocked");
+    localStorage.removeItem("clockSolved");
     const selectedItem = localStorage.getItem("itemSelected");
     const boyfriendAreaClicked = localStorage.getItem("boyfriendAreaClicked") === 'true';
 

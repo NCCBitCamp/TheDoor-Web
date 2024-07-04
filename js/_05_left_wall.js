@@ -63,8 +63,10 @@ function addClickableAreas() {
         if (area.id === 'grandfather_drawer') {
             overlay.addEventListener('click', function (event) {
                 event.stopPropagation();
-                if (!localStorage.getItem('clockSolved')) {
+                const clockSolved = localStorage.getItem('clockSolved') === 'true';
+                if (!clockSolved) {
                     alert('아직 문을 열 수 없습니다.');
+                    window.history.back();
                 } else {
                     handleDrawerClick(event, area);
                 }
@@ -85,31 +87,20 @@ function addClickableAreas() {
         addRingArea();
     }
 }
-
 // 서랍열릴때
 function handleDrawerClick(event, area) {
     if (area.href) {
         window.location.href = area.href;
-    } else if (area.id === 'grandfather_drawer') {
-        const drawerUnlocked = localStorage.getItem('drawerUnlocked') === 'true';
-        if (!drawerUnlocked) {
-            alert('아직 문을 열 수 없습니다.');
-            return; // 이미지가 바뀌지 않도록 리턴
-        } else {
-            imageElement.src = area.image;
-            addCloseButton(); // 'Back' 버튼 추가
-            removeClickableAreas();
-            leftButton.style.display = 'none';
-            rightButton.style.display = 'none';
-            // 서랍이 열리면 반지 영역 추가
-            addRingArea();
-        }
     } else {
         imageElement.src = area.image;
         addCloseButton(); // 'Back' 버튼 추가
         removeClickableAreas();
         leftButton.style.display = 'none';
         rightButton.style.display = 'none';
+
+        if (area.id === 'grandfather_drawer') {
+            addRingArea(); // 서랍이 열리면 반지 영역 추가
+        }
     }
 }
 
@@ -280,14 +271,6 @@ function addEndingBoxArea() {
     });
 }
 
-// 클릭 가능한 영역을 제거하는 함수
-function removeClickableAreas() {
-    const overlays = document.querySelectorAll('.clickable-area');
-    overlays.forEach(overlay => {
-        overlay.remove();
-    });
-    document.body.style.cursor = 'default'; // 커서를 기본값으로 설정
-}
 
 // 초기 영역 추가
 addClickableAreas();
