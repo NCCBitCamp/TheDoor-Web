@@ -129,14 +129,14 @@
             });
 
             rankIcon.on('pointerdown', () => {
-                window.location.href = 'rank.html';
+                window.location.href = '#';
             });
 
             // 502Door 클릭 영역
             const zone502 = this.add.zone(586, 232, 117, 244).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
                 saveAudioProgress();
-                window.location.href = '502Door.html';
+                window.location.href = 'Main/502Door.html';
             });
             zone502.on('pointerover', () => {
                 document.body.style.cursor = 'pointer';
@@ -149,7 +149,7 @@
             const zoneHostel = this.add.zone(314, 256, 113, 271).setOrigin(0).setInteractive();
             zoneHostel.on('pointerdown', () => {
                 saveAudioProgress();
-                window.location.href = 'hostelDoor.html';
+                window.location.href = 'Main/hostelDoor.html';
             });
             zoneHostel.on('pointerover', () => {
                 document.body.style.cursor = 'pointer';
@@ -167,7 +167,7 @@
                     clickedRoger = true;
                 } else {
                     saveAudioProgress();
-                    window.location.href = 'rogerDoor.html';
+                    window.location.href = 'Main/rogerDoor.html';
                 }
             });
             zoneRoger.on('pointerover', () => {
