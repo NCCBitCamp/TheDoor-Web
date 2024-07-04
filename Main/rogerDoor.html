@@ -140,7 +140,7 @@
             const zoneRoger = this.add.zone(500, 180, 330, 430).setOrigin(0).setInteractive();
             zoneRoger.on('pointerdown', () => {
                 game.scene.scenes[0].sound.play('rozerDoorOpen');
-                game.scene.scenes[0].time.delayedCall(3000, () => { 
+                game.scene.scenes[0].time.delayedCall(1500, () => { 
                     window.location.href = '../Rozer_stone/floor1/Nar_1.html';
                 });
             });

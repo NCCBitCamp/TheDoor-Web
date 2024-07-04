@@ -137,8 +137,8 @@
             const zoneHostel = this.add.zone(530, 51, 270, 560).setOrigin(0).setInteractive();
             zoneHostel.on('pointerdown', () => {
                 game.scene.scenes[0].sound.play('hostelDoorOpen');
-                game.scene.scenes[0].time.delayedCall(3000, () => { 
-                    window.location.href = '../TheHostel/HTML/_01_the_hostel.html';
+                game.scene.scenes[0].time.delayedCall(1500, () => { 
+                    window.location.href = '../The_hostel/HTML/_01_the_hostel.html';
                 });
             });
             zoneHostel.on('pointerover', () => {

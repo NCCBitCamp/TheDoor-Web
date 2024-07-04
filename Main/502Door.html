@@ -137,7 +137,7 @@
             const zone502 = this.add.zone(530, 50, 270, 560).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
                 game.scene.scenes[0].sound.play('502DoorOpen');
-                game.scene.scenes[0].time.delayedCall(3000, () => { 
+                game.scene.scenes[0].time.delayedCall(1500, () => { 
                     window.location.href = '../BitCamp/502Room.html';
                 });
             });
