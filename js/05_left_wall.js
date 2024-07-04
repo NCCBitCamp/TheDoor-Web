@@ -177,7 +177,7 @@ function addRingToInventory() {
         inventory.push('../image/images/useritem/반지.png');
         localStorage.setItem('inventory', JSON.stringify(inventory));
         alert('반지를 획득하였습니다.');
-        window.location.href = '../HTML/_05_left_wall.html'; // 페이지 이동
+        window.location.href = '../HTML/05_left_wall.html'; // 페이지 이동
     }
 }
 
