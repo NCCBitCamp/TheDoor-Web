@@ -212,6 +212,8 @@
         };
 
         const toggleInventoryModal = (scene) => {
+            scene.sound.play('bagSound'); // 가방 소리 재생
+
             if (modal.alpha === 0) {
                 modal.setAlpha(1);
                 modalBackground.setAlpha(0.8);
@@ -500,6 +502,9 @@
             this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
             this.load.image('bag', 'images/bag.svg');
             this.load.image('key', 'images/key.png');
+            this.load.audio('doorstopSound', 'sounds/문 덜컹덜컹.mp3');
+            this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
+            this.load.audio('itemSound', 'sounds/아이템 획득 소리.mp3');
         }
 
         function create() {
