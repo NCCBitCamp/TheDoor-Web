@@ -81,12 +81,14 @@ minPlusBtn.addEventListener("click", function(e) {
   //---------------//
   // - 정답일 때 -- //
   //---------------//
+// clock.html에서 시간 설정 후 정답을 맞춘 경우
 clearBtn.addEventListener('click', (e) => {
-  if(hourVal === 10 && minuteVal === 25) {
+  if (hourVal === 10 && minuteVal === 25) {
     alert('닫혔던 서랍이 열렸다.');
-    localStorage.setItem('clockSolved', 'true'); // 정답을 맞추면 로컬 스토리지에 저장
-  } else {
-    alert('아직 문을 열 수 없습니다.');
+    localStorage.setItem('drawerUnlocked', 'true');
+    setTimeout(function() {
+      window.location.href = '../../HTML/_05_left_wall.html'; // left_wall.html로 이동
+    }, 500);
   }
 });
 

@@ -6,8 +6,10 @@ const leftButton = document.getElementById('left-button');
 const rightButton = document.getElementById('right-button');
 let interval; // <= 티비 화면 전환을 위한 변수
 
-// 클릭가능한 영역을 추가하는 함수
-/* 사진은 나중에 다시 하는거로 */
+// 서랍 열림 상태 확인
+const drawerUnlocked = localStorage.getItem('drawerUnlocked') === 'true';
+
+// 클릭 가능한 영역을 추가하는 함수
 function addClickableAreas() {
     const clickableAreas = [
         { id: 'menu', x: 203, y: 142, width: 120, height: 160, image: '../image/images/leftwall/메뉴판_수정.PNG' },
@@ -57,6 +59,8 @@ function addClickableAreas() {
                 addTVArea();
             });
         }
+<<<<<<< HEAD
+=======
         // ----------------------------- //
         // 'grandfather_drawer' 클릭 조건 //
         // ----------------------------- //
@@ -81,6 +85,7 @@ function addClickableAreas() {
         }
 
 
+>>>>>>> edc3e4367e3f5f52d12de3e6fa21e8ba4a2e08df
     });
 }
 
@@ -88,12 +93,67 @@ function addClickableAreas() {
 function handleFrameClick(event, area) {
     if (area.href) {
         window.location.href = area.href;
+    } else if (area.id === 'grandfather_drawer') {
+        const drawerUnlocked = localStorage.getItem('drawerUnlocked') === 'true';
+        if (!drawerUnlocked) {
+            alert('아직 문을 열 수 없습니다.');
+            return; // 이미지가 바뀌지 않도록 리턴
+        } else {
+            imageElement.src = area.image;
+            addCloseButton(); // 'Back' 버튼 추가
+            removeClickableAreas();
+            leftButton.style.display = 'none';
+            rightButton.style.display = 'none';
+            addRingArea(); // 서랍 열렸을 때 반지 영역 추가
+        }
     } else {
         imageElement.src = area.image;
         addCloseButton(); // 'Back' 버튼 추가
         removeClickableAreas();
         leftButton.style.display = 'none';
         rightButton.style.display = 'none';
+    }
+}
+
+// 반지 클릭 가능한 영역을 추가하는 함수
+function addRingArea() {
+    const ringArea = { x: 543, y: 389, width: 150, height: 100};
+
+    const overlay = document.createElement('div');
+    overlay.classList.add('clickable-area');
+    overlay.style.position = 'absolute';
+    overlay.style.left = ringArea.x + 'px';
+    overlay.style.top = ringArea.y + 'px';
+    overlay.style.width = ringArea.width + 'px';
+    overlay.style.height = ringArea.height + 'px';
+    overlay.style.backgroundColor = 'transparent';
+    overlay.style.pointerEvents = 'auto';
+    overlay.id = 'ring';
+
+    document.getElementById('game-container').appendChild(overlay);
+
+    overlay.addEventListener('mouseenter', function () {
+        document.body.style.cursor = 'pointer';
+    });
+    overlay.addEventListener('mouseleave', function () {
+        document.body.style.cursor = 'default';
+    });
+
+    overlay.addEventListener('click', function (event) {
+        event.stopPropagation();
+        addRingToInventory(); // 반지를 인벤토리에 추가하는 함수 호출
+    });
+}
+
+// 반지를 인벤토리에 추가하는 함수
+function addRingToInventory() {
+    let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    const itemExists = inventory.includes('../image/images/useritem/반지.png');
+    if (!itemExists) {
+        inventory.push('../image/images/useritem/반지.png');
+        localStorage.setItem('inventory', JSON.stringify(inventory));
+        alert('반지를 획득하였습니다.');
+        window.location.href = '../HTML/_05_left_wall.html'; // 페이지 이동
     }
 }
 
