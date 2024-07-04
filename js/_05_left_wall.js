@@ -45,22 +45,6 @@ function addClickableAreas() {
             document.body.style.cursor = 'default';
         });
 
-        // 클릭 이벤트 리스너 추가
-        overlay.addEventListener('click', function (event) {
-            event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-            if (area.id !== 'grandfather_drawer') {
-                handleDrawerClick(event, area);
-            }
-        });
-
-        // tv화면클릭조건문
-        if (area.id === 'television') {
-            overlay.addEventListener('click', function (event) {
-                event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-                addTVArea();
-            });
-        }
-
         // 'grandfather_drawer' 클릭 조건
         if (area.id === 'grandfather_drawer') {
             overlay.addEventListener('click', function (event) {
@@ -71,6 +55,14 @@ function addClickableAreas() {
                 } else {
                     handleDrawerClick(event, area);
                 }
+            });
+        }
+
+        // tv화면클릭조건문
+        if (area.id === 'television') {
+            overlay.addEventListener('click', function (event) {
+                event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
+                addTVArea();
             });
         }
 
@@ -88,6 +80,10 @@ function addClickableAreas() {
         addRingArea();
     }
 }
+
+        
+
+
 // 서랍열릴때
 function handleDrawerClick(event, area) {
     if (area.href) {
@@ -102,6 +98,19 @@ function handleDrawerClick(event, area) {
         if (area.id === 'grandfather_drawer' && drawerUnlocked) {
             addRingArea(); // 서랍이 열리면 반지 영역 추가
         }
+    }
+}
+
+// 액자클릭시
+function handleFrameClick(event, area) {
+    if (area.href) {
+        window.location.href = area.href;
+    } else {
+        imageElement.src = area.image;
+        addCloseButton(); // 'Back' 버튼 추가
+        removeClickableAreas();
+        leftButton.style.display = 'none';
+        rightButton.style.display = 'none';
     }
 }
 
