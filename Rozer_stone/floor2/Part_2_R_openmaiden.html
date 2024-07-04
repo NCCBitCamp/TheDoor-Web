@@ -175,8 +175,8 @@
         }
 
         function getMessaggeSkel() {
-            alert("짤랑.");
-            // 소리 추가하기
+            const audio = new Audio('music/쇠사슬소리.mp3');
+            audio.play();
         }
 
         function clkironmaiden() {
@@ -192,6 +192,9 @@
             const take = confirm("가시를 뽑아보겠습니까?")
             
             if(take){
+                const audio = new Audio('../integ/만능키소리.mp3');
+                audio.play();
+
                 const key = document.querySelector(".key");
                 key.style.display="none";
                 getItem("../integ/RozerCrystal.png");

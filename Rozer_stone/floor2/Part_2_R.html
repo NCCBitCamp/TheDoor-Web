@@ -60,9 +60,9 @@
         .seklHand5 {
             position: absolute;
             z-index: 1;
-            width: 1.5vw;
-            height: 7vh;
-            right: 45%;
+            width: 2vw;
+            height: 9vh;
+            right: 44.4%;
             top: 34%;
             rotate: 180deg;
         }
@@ -72,7 +72,7 @@
             width: 5vw;
             height: 11vh;
             right: 40%;
-            top: 31%;
+            top: 30%;
             rotate: 180deg;
         }
         .chess {
@@ -156,6 +156,8 @@
         // }
         
         function getItem(imageSrc) {
+            const audio = new Audio('../integ/아이템을획득.mp3');
+            audio.play();
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) { // 인벤토리에 아이템이 6개 이하인 경우만 추가
                 inventory.push(imageSrc);
@@ -167,15 +169,19 @@
         }
 
         function clickChess() {
+            const audio = new Audio('music/딸깍2.mp3');
+            audio.play();
             window.location.href = "chess.html";
         }
 
         function getMessaggeSkel() {
-            // 짤랑 소리 추가 하기!! 07/04
-            
+            const audio = new Audio('music/쇠사슬소리.mp3');
+            audio.play();
         }
 
         function clkironmaiden() {
+            const audio = new Audio('music/짧은성가대.mp3');
+            audio.play();
             alert('아이언메이든에서 왠지 시선이 느껴진다..');
             const redOverlay = document.getElementById("redOverlay");
             redOverlay.classList.add('fade-in-red');

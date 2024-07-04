@@ -47,6 +47,8 @@ function handleItemClick(item) {
         modalImg.src = item;
         modal.style.display = 'block';
     } else if (item === '../image/images/useritem/보라술.png') {
+        const modal = document.getElementById('purple-modal');
+        const modalImg = document.getElementById('purple-img');
         history.back();
         itemSelected = '보라술';
         localStorage.setItem("itemSelected", itemSelected);
@@ -79,5 +81,21 @@ function getBack(){
 }
 
 document.getElementById('recipe-modal').addEventListener('click', function () {
+    this.style.display = 'none';
+});
+
+document.getElementById('rose-modal').addEventListener('click', function () {
+    this.style.display = 'none';
+});
+
+document.getElementById('watch-modal').addEventListener('click', function () {
+    this.style.display = 'none';
+});
+
+document.getElementById('photo-modal').addEventListener('click', function () {
+    this.style.display = 'none';
+});
+
+document.getElementById('purple-modal').addEventListener('click', function () {
     this.style.display = 'none';
 });

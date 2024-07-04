@@ -517,6 +517,7 @@ window.onload = function() {
                 inventory.splice(itemIndex, 1);
                 localStorage.setItem('inventory', JSON.stringify(inventory));
             }
+            
 
             // 인벤토리에 심장 추가
             if (!inventory.includes('../image/images/useritem/심장.PNG')) {

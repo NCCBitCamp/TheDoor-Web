@@ -52,10 +52,10 @@
         .pic {
             position: absolute;
             z-index: 5;
-            width: 7vw;
-            height: 18vh;
-            right: 53.95%;
-            top: 29%;
+            width: 8vw;
+            height: 21vh;
+            right: 53.3%;
+            top: 27%;
         }
         .rib {
             position: absolute;
@@ -184,6 +184,8 @@
         // }
         
         function getItem(imageSrc) {
+            const audio = new Audio('../integ/아이템을획득.mp3');
+            audio.play();
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) { // 인벤토리에 아이템이 6개 이하인 경우만 추가
                 inventory.push(imageSrc);

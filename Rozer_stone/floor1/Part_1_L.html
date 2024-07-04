@@ -252,6 +252,8 @@
         }
     
         function getItem(imageSrc) {
+            const audio = new Audio('music/공통/아이템획득소리2.mp3');
+            audio.play();
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) {
                 inventory.push(imageSrc);
@@ -295,6 +297,8 @@
         }
     
         function bible1() {
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const currentMessage = "왜인지 모르겠지만 피가 묻어 있다. 어느 페이지는 찢겨져 있다.";
             text.innerHTML = currentMessage;
             i = 0;
@@ -302,7 +306,7 @@
     
         function holymaria() {
             if (!isHolyMariaPlayed) {
-                const audio = new Audio('1.mp3');
+                const audio = new Audio('music/짧은성가대.mp3');
                 audio.play();
                 isHolyMariaPlayed = true;
                 const currentMessage = ".......!!!!!!!";
@@ -312,6 +316,8 @@
         }
     
         function bible2() {
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/양피지3.png";
             parchment.classList.add('middle');
@@ -349,6 +355,8 @@
             if (choice === '들어올려본다') {
                 window.location.href = "Dead_In_bones.html";
             } else if (choice === '깨부숴본다') {
+                const audio = new Audio('music/떨어지는소리2.mp3');
+                audio.play();
                 const imageSrc = "보따리에서나온열쇠.png";
                 getItem(imageSrc);
                 document.getElementById('trickybones').style.display = 'none';

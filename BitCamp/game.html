@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>컴퓨터</title>
+    <link rel="icon" href="images/bitcamp_favicon.ico" type="image/x-icon">
     <style>
         html {
             height: 100%;
@@ -262,6 +263,9 @@
     }
 
     function showGameOver() {
+        // 타이머 값을 초기화
+        localStorage.setItem('remainingTime', 300);
+
         // 게임 오버 화면을 보여주는 HTML 요소를 생성
         let gameOverScreen = document.createElement('div');
         gameOverScreen.style.position = 'fixed';
@@ -289,6 +293,7 @@
             window.location.href = 'floor2.html';
         }, 3000);
     }
+
 });
 
         document.getElementById('btnCreate').disabled = true;

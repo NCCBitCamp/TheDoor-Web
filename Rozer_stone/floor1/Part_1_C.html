@@ -149,6 +149,8 @@
         }
         
         function getItem(imageSrc) {
+            const audio = new Audio('music/공통/아이템획득소리2.mp3');
+            audio.play();
             let inventory = JSON.parse(localStorage.getItem('inventory')) || [];
             if (inventory.length < 6) { // 인벤토리에 아이템이 6개 이하인 경우만 추가
                 inventory.push(imageSrc);
@@ -168,6 +170,8 @@
         }
 
         function showPaper1() {
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/양피지1.png";
             parchment.classList.add('middle');
@@ -184,6 +188,8 @@
         }
 
         function showPaper2() {
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/양피지2.png";
             parchment.classList.add('middle');
@@ -204,6 +210,8 @@
         }
 
         function getBook1(){
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/책1-1.png";
             parchment.classList.add('middle');
@@ -220,6 +228,8 @@
         }
 
         function getBook2(){
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/책2.png";
             parchment.classList.add('middle');
@@ -236,6 +246,8 @@
         }
 
         function getBook3(){
+            const audio = new Audio('music/종이상호작용.mp3');
+            audio.play();
             const parchment = document.createElement('img');
             parchment.src = "image/양피지4.png";
             parchment.classList.add('middle');
@@ -254,6 +266,8 @@
 
         function playmusic() {
             alert("음악을 재생합니다.");
+            const audio = new Audio('music/성냥1.mp3');
+            audio.play();
         }
 
         function goToInventory() {
