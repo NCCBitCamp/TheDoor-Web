@@ -1,7 +1,7 @@
 <h1>The Door</h1>
 <div align=center>
   
-![door](https://github.com/NCCBitCamp/TheDoor-Web/assets/75717432/e6b373f1-00aa-4f80-890c-fde31319050a)
+[![door](https://github.com/NCCBitCamp/TheDoor-Web/assets/75717432/e6b373f1-00aa-4f80-890c-fde31319050a)](https://nccbitcamp.github.io/TheDoor-Web/Main/)
 
 </div>
 <div>
@@ -10,7 +10,7 @@
   <h4>수행기간: 2024.06.25 - 2024.07.04</h4>
   </br>
   <h2>배포 주소</h2>
-  <h4>추후 추가 예정입니다.</h4>
+  <p>https://nccbitcamp.github.io/TheDoor-Web/Main/</p>
   </br>
   <h2>팀원</h2>
   <a href="https://github.com/Rurouni98" target="_blank">김병주</a> - 웹 프론트 </br>
@@ -34,6 +34,6 @@
   <p>중세시대 유적지를 탐험하다 비밀스러운 장소를 찾아 보물을 얻기 위해 떠나는 흥미진진한 방탈출 모험!</p>
   
   <h4>The Hostel</h4>
-  <p>형사 모티브가 실종된 여자의 사건을 해결하기 위해 바에서 조사를 시작한다. 단서를 얻고 사건의 진실을 밝혀보자.</p>
+  <p>형사 모티브가 실종된 여자의 사건을 해결하기 위해 바에서 조사를 시작한다! 단서를 얻고 사건의 진실을 밝혀보자.</p>
   
 </div>

@@ -24,51 +24,54 @@
     <audio id="audio"></audio>
     <script>
         const content = [
-            { text: "수많은 사람들이 이 미스터리를 풀기 위해 도전했다.", audio: "Nar_2_1.mp3" },
-            { text: "하지만 미스터리를 풀기는커녕 대다수의 사람들이 이 미스터리를 풀다가 실종되고만다.", audio: "Nar_2_2.mp3" },
-            { text: "저주인걸까?", audio: "Nar_2_3.mp3" },
-            { text: "며칠 휴가를 사용해 나는 그곳을 방문해보기로 했다.", audio: "Nar_2_4.mp3" },
-            { text: ".....별일 있겠어?                  ", audio: "Nar_2_5.mp3" }
+            { text: "그리고 현재"},
+            { text: "수많은 사람들이 이 미스터리를 풀기 위해 도전했다.", audio: "music/Nar_2_1.mp3" },
+            { text: "하지만 미스터리를 풀기는커녕 대다수의 사람들이 이 미스터리를 풀다가 실종되고만다.", audio: "music/Nar_2_2.mp3" },
+            { text: "저주인걸까?", audio: "music/Nar_2_3.mp3" },
+            { text: "며칠 휴가를 사용해 나는 그곳을 방문해보기로 했다.", audio: "music/Nar_2_4.mp3" },
+            { text: ".....별일 있겠어?                  ", audio: "music/Nar_2_5.mp3" }
         ];
         const textElement = document.querySelector(".text");
         const audioElement = document.getElementById("audio");
+
         let index = 0;
-        let charIndex = 0; //문장 길이
-        let isDeleting = false; //지울까요? 물어보기
+        let charIndex = 0;
+        let typingInterval;
 
         function typing() {
-            if (index < content.length) {
-                if (!isDeleting && charIndex < content[index].text.length) {
-                    textElement.innerHTML += content[index].text.charAt(charIndex); // 한 글자씩 출력
-                    charIndex++; //그 다음 글자 대령
-                } else if (isDeleting && charIndex > 0) {
-                    textElement.innerHTML = content[index].text.substring(0, charIndex - 1); // 한 글자씩 지워
-                    charIndex--; // 그 전 글자 대령
-                } else if (!isDeleting && charIndex === content[index].text.length) {
-                    playAudio(content[index].audio);
-                    isDeleting = true; // 지울까요?를 true 변환
-                    setTimeout(typing, 4000); // 잠시 멈춤 후 지우기 시작
-                    return;
-                } else if (isDeleting && charIndex === 0) {
-                    isDeleting = false; // 이제 그만지워라. 지울가요?를 false 변환
-                    index++; // 다음줄로~
-                    if (index < content.length) {
-                        textElement.innerHTML += '<br>'; // 줄 바꿈 추가
-                    }
-                }
+            if (charIndex < content[index].text.length) {
+                textElement.innerHTML += content[index].text.charAt(charIndex);
+                charIndex++;
+                setTimeout(typing, 100); // 타이핑 속도 설정
             } else {
-                // 모든 문자가 다 사라졌을 때 페이지 이동
-                window.location.href = 'Part_1_1_2.html';
+                document.body.addEventListener('click', handleClick);
             }
-            setTimeout(typing, isDeleting ? 10 : 100); // 타이핑 속도와 지우기 속도 설정
+        }
+
+        function handleClick() {
+            document.body.removeEventListener('click', handleClick);
+            if (index < content.length - 1) {
+                charIndex = 0;
+                textElement.innerHTML = "";
+                index++;
+                playAudio(content[index].audio); // 오디오 재생
+                typing(); // 다음 대사 타이핑 시작
+            } else {
+                location.href = 'Part_1_1_2.html'; // 마지막 대사 이후 페이지 이동
+            }
         }
 
         function playAudio(audioSrc) {
-            audioElement.src = audioSrc;
-            audioElement.play();
+            if (audioSrc) {
+                audioElement.src = audioSrc;
+                audioElement.load(); // 오디오 파일을 로드
+                audioElement.play(); // 오디오 재생
+            }
         }
 
-        typing(); // 글자 타이핑 시작
+        // 첫 번째 대사 및 오디오 재생 시작
+        playAudio(content[index].audio);
+        typing();
     </script>
 
 </body>
