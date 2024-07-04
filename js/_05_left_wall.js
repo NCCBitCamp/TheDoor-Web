@@ -48,7 +48,9 @@ function addClickableAreas() {
         // 클릭 이벤트 리스너 추가
         overlay.addEventListener('click', function (event) {
             event.stopPropagation(); // 이벤트 전파를 막아 오버레이 뒤의 요소가 클릭되지 않도록 함
-            handleDrawerClick(event, area);
+            if (area.id !== 'grandfather_drawer') {
+                handleDrawerClick(event, area);
+            }
         });
 
         // tv화면클릭조건문
@@ -66,7 +68,6 @@ function addClickableAreas() {
                 const clockSolved = localStorage.getItem('clockSolved') === 'true';
                 if (!clockSolved) {
                     alert('아직 문을 열 수 없습니다.');
-                    window.history.back();
                 } else {
                     handleDrawerClick(event, area);
                 }
@@ -98,7 +99,7 @@ function handleDrawerClick(event, area) {
         leftButton.style.display = 'none';
         rightButton.style.display = 'none';
 
-        if (area.id === 'grandfather_drawer') {
+        if (area.id === 'grandfather_drawer' && drawerUnlocked) {
             addRingArea(); // 서랍이 열리면 반지 영역 추가
         }
     }
