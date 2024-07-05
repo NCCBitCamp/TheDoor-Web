@@ -83,7 +83,7 @@ minPlusBtn.addEventListener("click", function(e) {
   //---------------//
 // clock.html에서 시간 설정 후 정답을 맞춘 경우
 clearBtn.addEventListener('click', (e) => {
-  if (hourVal === 10 && minuteVal === 25) {
+  if (hourVal === 7 && minuteVal === 15) {
     alert('닫혔던 서랍이 열렸다.');
     localStorage.setItem('drawerUnlocked', 'true');
     localStorage.setItem('clockSolved', 'true');
@@ -91,7 +91,7 @@ clearBtn.addEventListener('click', (e) => {
       window.location.href = '../../HTML/05_left_wall.html'; // left_wall.html로 이동
     }, 500);
   } else {
-    alert('이게 아닌 것 같다..');
+    alert('시간이 맞지 않습니다. 다시 시도하세요.');
   }
 });
 
