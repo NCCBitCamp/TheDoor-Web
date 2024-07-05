@@ -113,7 +113,7 @@ function handleFrameClick(event, area) {
 
 // 클릭 가능한 영역을 제거하는 함수
 function removeClickableAreas() {
-    const overlays = document.querySelectorAll('.clickable-area, .ring-area, .coin-area');
+    const overlays = document.querySelectorAll('.clickable-area, .ring-area, .coin-area, .tv-area');
     overlays.forEach(overlay => {
         overlay.remove();
     });
