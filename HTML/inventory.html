@@ -69,7 +69,20 @@
             height: 120px;
             background-color: rgba(255, 255, 255, 0.5); /* 박스를 구분하기 위한 반투명 배경 */
         }
-        #recipe-modal {
+        /* #recipe-modal {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(0, 0, 0, 0.8);
+            padding: 20px;
+            border-radius: 10px;
+            z-index: 1000;
+        } */
+
+        /* 모달창 뒷 배경(?) */
+        .modal {
             display: none;
             position: fixed;
             top: 50%;
@@ -119,10 +132,41 @@
         <img class="modal-content" id="modal-img">
     </div>
 
+    <!-- heart Modal -->
+    <div id="heart-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="heart-img">
+    </div>
+
+    <!-- photo Modal -->
+    <div id="photo-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="photo-img">
+    </div>
+
+    <!-- Rose Modal -->
+    <div id="rose-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="rose-img">
+    </div>
+
+    <!-- watch Modal -->
+    <div id="watch-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="watch-img">
+    </div>
+
+    <!-- ring Modal -->
+    <div id="ring-modal" class="modal">
+        <span class="close">&times;</span>
+        <img class="modal-content" id="ring-img">
+    </div>
+
     <!-- 인벤토리에서 돌아가는 버튼 -->
     <div>
         <button type="button" class="back-button" onclick="getBack()">Back</button>
     </div>
     <script src="../js/inventory.js"></script>
+    <!-- <script src="../js/_02_the_bar.js"></script> <<== 검토 후 삭제 결정 -->
 </body>
 </html>
