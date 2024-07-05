@@ -155,7 +155,7 @@ function handleOverlayClick(event, area) {
     }
     // 웨이터 영역 클릭 시 동작
     else if (area.id === 'waiter-area' && checkAreaClick(area) && !buttonDisplayed) {
-        imageElement.src = '../image/images/barpage/말하는웨이터_수정.PNG';
+        imageElement.src = '../image/images/barpage/말하는웨이터.PNG';
         otherAreaClicked = true;
         addCloseButton();
         removeClickableAreas(); // 영역 제거
