@@ -91,7 +91,7 @@ clearBtn.addEventListener('click', (e) => {
       window.location.href = '../../HTML/05_left_wall.html'; // left_wall.html로 이동
     }, 500);
   } else {
-    alert('시간이 맞지 않습니다. 다시 시도하세요.');
+    alert('이게 아닌 것 같다..');
   }
 });
 
