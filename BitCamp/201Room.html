@@ -448,10 +448,6 @@
 
 
         function showConfirmationDialog(scene, itemName) {
-            if (itemName === '비상구 열쇠') {
-                return;
-            }
-
             confirmBox.setAlpha(1);
             confirmText.setAlpha(1).setText(`${itemName}를 사용하시겠습니까?`);
             yesButton.setAlpha(1);
@@ -467,10 +463,12 @@
                 yesButton.on('pointerdown', () => {
                     useYuriRoomKey(scene);
                 });
+            } else if (itemName === '비상구 열쇠') {
+                yesButton.on('pointerdown', () => {
+                    useExitKey(scene);
+                });
             }
         }
-
-
 
 
         function hideConfirmationDialog() {
