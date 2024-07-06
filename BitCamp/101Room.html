@@ -144,29 +144,41 @@
         };
 
         const createInventory = (scene) => {
-            inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
-            inventoryBag.setScale(0.5).setScrollFactor(0);
-            inventoryBag.on('pointerdown', () => {
-                toggleInventoryModal(scene);
-            });
-            inventoryBag.on('pointerover', () => {
-                document.body.style.cursor = 'pointer';
-            });
-            inventoryBag.on('pointerout', () => {
-                document.body.style.cursor = 'default';
-            });
+    inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
+    inventoryBag.setScale(0.5).setScrollFactor(0);
+    inventoryBag.on('pointerdown', () => {
+        toggleInventoryModal(scene);
+    });
+    inventoryBag.on('pointerover', () => {
+        document.body.style.cursor = 'pointer';
+    });
+    inventoryBag.on('pointerout', () => {
+        document.body.style.cursor = 'default';
+    });
 
-            overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
-            overlay.setAlpha(0);
+    overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
+    overlay.setAlpha(0);
 
-            modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0); // 배경색 변경 예시
-            modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
-                fontFamily: 'KyoboHandwriting2023wsa',
-                fontSize: '24px',
-                fill: '#000000'
-            }).setAlpha(0).setOrigin(0.5).setScrollFactor(0);
-            modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
-        };
+    modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0);
+    modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '24px',
+        fill: '#000000'
+    }).setAlpha(0).setOrigin(0.5).setScrollFactor(0);
+    modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
+
+    // Load items from local storage
+    const storedInventory = JSON.parse(localStorage.getItem('inventory')) || [];
+    const storedInventoryImages = JSON.parse(localStorage.getItem('inventoryImages')) || [];
+
+    storedInventory.forEach((item, index) => {
+        inventory.push(item);
+        inventoryImages.push(storedInventoryImages[index]);
+    });
+
+    updateInventoryDisplay();
+};
+
 
         const addItemToInventory = (item, imageKey) => {
             if (!inventory.includes(item)) {
@@ -287,73 +299,76 @@
             this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
             this.load.image('background', 'images/cctvRoom.png');
             this.load.image('bag', 'images/bag.svg');
-            this.load.image('key', 'images/key.png');
-            this.load.image('exitkey', 'images/exitkey.png');
+            this.load.image('photo', 'images/photo.png');
+            this.load.image('photo_enlarge', 'images/photograph.png');
+            this.load.image('newspaper', 'images/newspaper.png');
+            this.load.image('newspaper_enlarge', 'images/newspaper_enlarge.png');
             this.load.image('confirmBox', 'images/dialogueBox.png');
             this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
             this.load.audio('itemSound', 'sounds/아이템 획득 소리.mp3');
         }
 
         function create() {
-            bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+    bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-            const scaleX = this.cameras.main.width / bgImage.width;
-            const scaleY = this.cameras.main.height / bgImage.height;
+    const scaleX = this.cameras.main.width / bgImage.width;
+    const scaleY = this.cameras.main.height / bgImage.height;
 
-            const scale = Math.max(scaleX, scaleY);
-            bgImage.setScale(scale).setScrollFactor(0);
+    const scale = Math.max(scaleX, scaleY);
+    bgImage.setScale(scale).setScrollFactor(0);
 
-            bgImage.x = this.cameras.main.width / 2 - (bgImage.displayWidth / 2);
-            bgImage.y = this.cameras.main.height / 2 - (bgImage.displayHeight / 2);
+    bgImage.x = this.cameras.main.width / 2 - (bgImage.displayWidth / 2);
+    bgImage.y = this.cameras.main.height / 2 - (bgImage.displayHeight / 2);
 
-            createInventory(this);
-            hideNavButtons();
+    createInventory(this);
+    hideNavButtons();
 
-            // 엘리베이터 관리 영역
-            createClickableZone(this, 570.5, 128, 347, 240, () => {
-                const choices = [
-                    { text: "예", nextAction: () => { window.location.href = 'cable_game.html'; } },
-                    { text: "아니오", nextAction: () => { showDialogue(["일단 다른 곳부터 조사해보자."]); } }
-                ];
-                showChoicesDialog(this, choices, "여기서 엘리베이터를 수리할 수 있는 듯하다. \n 엘리베이터 수리를 시도해볼까?", (choice) => {
-                    choice.nextAction();
-                });
-            });
+    // 엘리베이터 관리 영역
+    createClickableZone(this, 570.5, 128, 347, 240, () => {
+        const choices = [
+            { text: "예", nextAction: () => { window.location.href = 'cable_game.html'; } },
+            { text: "아니오", nextAction: () => { showDialogue(["일단 다른 곳부터 조사해보자."]); } }
+        ];
+        showChoicesDialog(this, choices, "여기서 엘리베이터를 수리할 수 있는 듯하다. \n 엘리베이터 수리를 시도해볼까?", (choice) => {
+            choice.nextAction();
+        });
+    });
 
-            // cctv 관리 영역
-            createClickableZone(this, 1032, 169.5, 276, 195, () => {
-                showDialogue(["CCTV 화면이 비춰지고 있다.", "...", "응?", "저건.. 강사님?", "노이즈가 껴서 잘 안보이지만 \n 누군가와 대화하고 있는 것처럼 보인다.", "이 건물에 누가 더 있었나?", "5층으로 가서 확인해봐야겠다.", "콰과과과광", "?", "이게 무슨 소리지?"]);
-                localStorage.setItem('cctvChecked', 'true');
-            });
+    // cctv 관리 영역
+    createClickableZone(this, 1032, 169.5, 276, 195, () => {
+        showDialogue(["CCTV 화면이 비춰지고 있다.", "...", "응?", "저건.. 강사님?", "노이즈가 껴서 잘 안보이지만 \n 누군가와 대화하고 있는 것처럼 보인다.", "이 건물에 누가 더 있었나?", "5층으로 가서 확인해봐야겠다.", "콰과과과광", "?", "이게 무슨 소리지?"]);
+        localStorage.setItem('cctvChecked', 'true');
+    });
 
-            // 비상벨 영역
-            createClickableZone(this, 1064, 608.5, 428, 219, () => {
-                if (localStorage.getItem('cctvChecked') === 'true') {
-                    showDialogue(["비상벨 같아 보인다.", "무슨 일인지 아까까지만 해도 아무 문제 없던 비상벨이 \n 큰소리를 내며 울리고 있다.", "바깥에서 난 소리와 관련이 있는 걸까?"]);
-                } else {
-                    showDialogue(["비상벨 같아 보인다.", "이런 비상 사태에서도 울리지 않다니\n 정말 쓸모없는 비상벨이다."]);
-                }   
-            });
-
-            dialogBox = this.add.image(this.cameras.main.width / 2, this.cameras.main.height - 100, 'dialogueBox').setOrigin(0.5, 1).setInteractive();
-            dialogText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height - 120, '', {
-                fontFamily: 'KyoboHandwriting2023wsa',
-                fontSize: '35px',
-                fill: '#000000',
-                wordWrap: { width: 600, useAdvancedWrap: true }
-            }).setOrigin(0.5);
-
-            dialogBox.setVisible(false);
-            dialogText.setVisible(false);
-
-            // 추가된 부분: 클릭 시 마우스 좌표를 콘솔에 출력
-            this.input.on('pointerdown', function (pointer) {
-                console.log(`Mouse X: ${pointer.x}, Mouse Y: ${pointer.y}`);
-            });
-
-            // back-button 설정
-            document.getElementById('back-button').style.display = 'block';
+    // 비상벨 영역
+    createClickableZone(this, 1064, 608.5, 428, 219, () => {
+        if (localStorage.getItem('cctvChecked') === 'true') {
+            showDialogue(["비상벨 같아 보인다.", "무슨 일인지 아까까지만 해도 아무 문제 없던 비상벨이 \n 큰소리를 내며 울리고 있다.", "바깥에서 난 소리와 관련이 있는 걸까?"]);
+        } else {
+            showDialogue(["비상벨 같아 보인다.", "이런 비상 사태에서도 울리지 않다니\n 정말 쓸모없는 비상벨이다."]);
         }
+    });
+
+    dialogBox = this.add.image(this.cameras.main.width / 2, this.cameras.main.height - 100, 'dialogueBox').setOrigin(0.5, 1).setInteractive();
+    dialogText = this.add.text(this.cameras.main.width / 2, this.cameras.main.height - 120, '', {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '35px',
+        fill: '#000000',
+        wordWrap: { width: 600, useAdvancedWrap: true }
+    }).setOrigin(0.5);
+
+    dialogBox.setVisible(false);
+    dialogText.setVisible(false);
+
+    // 추가된 부분: 클릭 시 마우스 좌표를 콘솔에 출력
+    this.input.on('pointerdown', function (pointer) {
+        console.log(`Mouse X: ${pointer.x}, Mouse Y: ${pointer.y}`);
+    });
+
+    // back-button 설정
+    document.getElementById('back-button').style.display = 'block';
+}
+
 
         function createClickableZone(scene, x, y, width, height, clickHandler) {
             const zone = scene.add.zone(x, y, width, height).setOrigin(0.5).setInteractive();
