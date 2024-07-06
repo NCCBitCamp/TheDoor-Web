@@ -130,7 +130,7 @@
         let inventory = [];
         let inventoryImages = [];
         let inventoryText, inventoryBag, modal, modalBackground, modalText;
-        let modalItems = []; 
+        let modalItems = [];
 
         const createInventory = (scene) => {
             inventoryBag = scene.add.image(1150, 40, 'bag').setInteractive();
@@ -313,10 +313,19 @@
 
             // 엘리베이터 클릭 영역
             createClickableZone(scene, 1309.5, 261, 321, 296, () => {
+                const hasNewspaper = inventory.includes("옛날 신문기사");
+                const hasPhoto = inventory.includes("누군가의 옛날 사진");
                 if (cctvChecked && elevatorRepairCompleted) {
                     showDialogue(["엘리베이터는 이제 작동한다.", "5층으로 이동할 수 있다."]);
                     localStorage.setItem('cctvChecked', 'false');
                     localStorage.setItem('elevatorRepairCompleted', 'false');
+                    setTimeout(() => {
+                        if (hasNewspaper && hasPhoto) {
+                            window.location.href = 'floor5_endT.html';
+                        } else {
+                            window.location.href = 'floor5_endN.html';
+                        }
+                    }, 3000); // 3초 후 페이지 이동
                 } else if (localStorage.getItem('cctvChecked') === 'true') {
                     showDialogue(["아직도 엘리베이터는 작동할 기미가 보이지 않는다.", "방재실에서 수리할 방법을 찾아봐야할 것 같다."]);
                 } else if (localStorage.getItem('cctvChecked') === 'true') {
@@ -507,48 +516,53 @@
             this.load.image('dialogueBox', 'images/wallpaper-torn-paper-ripped-white-paper.png');
             this.load.image('bag', 'images/bag.svg');
             this.load.image('key', 'images/key.png');
+            this.load.image('photo', 'images/photo.png');
+            this.load.image('photo_enlarge', 'images/photograph.png');
+            this.load.image('newspaper', 'images/newspaper.png');
+            this.load.image('newspaper_enlarge', 'images/newspaper_enlarge.png');
             this.load.audio('doorstopSound', 'sounds/문 덜컹덜컹.mp3');
             this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
             this.load.audio('itemSound', 'sounds/아이템 획득 소리.mp3');
         }
 
         function create() {
-            bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
+    bgImage = this.add.image(0, 0, 'background').setOrigin(0, 0);
 
-            let scaleX = config.width / bgImage.width;
-            let scaleY = config.height / bgImage.height;
-            let scale = Math.max(scaleX, scaleY);
+    let scaleX = config.width / bgImage.width;
+    let scaleY = config.height / bgImage.height;
+    let scale = Math.max(scaleX, scaleY);
 
-            bgImage.setScale(scale).setOrigin(0, 0);
+    bgImage.setScale(scale).setOrigin(0, 0);
 
-            camera = this.cameras.main;
-            camera.setViewport(0, 0, config.width, config.height);
+    camera = this.cameras.main;
+    camera.setViewport(0, 0, config.width, config.height);
 
-            sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
+    sectionWidth = (bgImage.displayWidth - config.width) / (totalSections - 1);
 
-            dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
-            dialogBox.setVisible(false);
+    dialogBox = this.add.image(config.width / 2, 530, 'dialogueBox').setOrigin(0.5, 0).setInteractive();
+    dialogBox.setVisible(false);
 
-            dialogText = this.add.text(config.width / 2, config.height - 70, '', {
-                fontFamily: 'KyoboHandwriting2023wsa',
-                fontSize: '35px',
-                fill: '#000000',
-                wordWrap: { width: 1000, useAdvancedWrap: true }
-            }).setOrigin(0.5).setAlign('center');
-            dialogText.setVisible(false);
+    dialogText = this.add.text(config.width / 2, config.height - 70, '', {
+        fontFamily: 'KyoboHandwriting2023wsa',
+        fontSize: '35px',
+        fill: '#000000',
+        wordWrap: { width: 1000, useAdvancedWrap: true }
+    }).setOrigin(0.5).setAlign('center');
+    dialogText.setVisible(false);
 
-            createInventory(this);
-            loadInventoryFromLocalStorage();
-            updateInventoryDisplay();
-            createClickableAreas(this);
+    createInventory(this);
+    loadInventoryFromLocalStorage();
+    updateInventoryDisplay();
+    createClickableAreas(this);
 
-            // 마우스 클릭 이벤트 리스너 수정
-            this.input.on('pointerdown', function (pointer) {
-                const x = pointer.x + camera.scrollX; // 현재 카메라의 스크롤 위치를 고려한 X 좌표
-                const y = pointer.y + camera.scrollY; // 현재 카메라의 스크롤 위치를 고려한 Y 좌표
-                console.log(`Mouse X: ${x}, Mouse Y: ${y}`);
-            });
-        }
+    // 마우스 클릭 이벤트 리스너 수정
+    this.input.on('pointerdown', function (pointer) {
+        const x = pointer.x + camera.scrollX; // 현재 카메라의 스크롤 위치를 고려한 X 좌표
+        const y = pointer.y + camera.scrollY; // 현재 카메라의 스크롤 위치를 고려한 Y 좌표
+        console.log(`Mouse X: ${x}, Mouse Y: ${y}`);
+    });
+}
+
 
         function update() {
             dialogBox.x = camera.scrollX + config.width / 2;
