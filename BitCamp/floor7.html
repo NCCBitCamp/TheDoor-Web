@@ -119,12 +119,19 @@
         // 아이템이 이미 소지품에 있는지 확인
         if (!inventory.includes(item)) {
             inventory.push(item);
-            inventoryImages.push({key: imageKey, name: item});// 소지품 이미지와 이름을 저장
+            inventoryImages.push({ key: imageKey, name: item }); // 소지품 이미지와 이름을 저장
             updateInventoryDisplay();
+            
+            // '수상한 쪽지'는 로컬 스토리지에 저장하지 않음
+            if (item !== "수상한 쪽지" && (item === "옛날 신문기사" || item === "누군가의 옛날 사진")) {
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                localStorage.setItem('inventoryImages', JSON.stringify(inventoryImages));
+            }
         } else {
             console.log('아이템이 이미 소지품에 있습니다.');
         }
     };
+
 
     // 소지품 칸의 내용을 업데이트하는 함수
     const updateInventoryDisplay = () => {
@@ -132,6 +139,33 @@
             inventoryText.setText(inventory.map(item => item.name).join('\n'));
         }
     };
+
+    const removeItemFromInventory = (item) => {
+        const itemIndex = inventory.findIndex(existingItem => existingItem === item);
+        if (itemIndex !== -1) {
+            inventory.splice(itemIndex, 1);
+            inventoryImages.splice(itemIndex, 1); // Remove from image array
+            updateInventoryDisplay();
+            
+            // 특정 아이템을 로컬스토리지에서 제거
+            if (item === "옛날 신문기사" || item === "누군가의 옛날 사진" || item === "2층 열쇠") {
+                localStorage.setItem('inventory', JSON.stringify(inventory));
+                localStorage.setItem('inventoryImages', JSON.stringify(inventoryImages));
+            }
+        }
+    };
+
+    const removeSpecificItemFromLocalStorage = (item) => {
+        let storedInventory = JSON.parse(localStorage.getItem('inventory')) || [];
+        let storedInventoryImages = JSON.parse(localStorage.getItem('inventoryImages')) || [];
+        storedInventory = storedInventory.filter(existingItem => existingItem !== item);
+        storedInventoryImages = storedInventoryImages.filter(imageObj => imageObj.name !== item);
+        localStorage.setItem('inventory', JSON.stringify(storedInventory));
+        localStorage.setItem('inventoryImages', JSON.stringify(storedInventoryImages));
+    };
+
+
+
 
     // 아이템 세부 정보를 표시하는 함수
     const showItemDetails = (scene, itemKey) => {
@@ -504,6 +538,7 @@
         }
     };
 
+
     // 대사 진행 함수
     function advanceDialogue() {
         currentTextIndex++;
@@ -747,29 +782,33 @@
         });
 
         // 비상계단문 클릭 영역
-         createClickableZone(scene, 1591, 282.5, 130, 255, () => {
+        createClickableZone(scene, 1591, 282.5, 130, 255, () => {
             if (inventory.includes("2층 열쇠")) {
-            showDialog(scene, textsExit);
+                showDialog(scene, textsExit);
 
-            // 대화가 끝난 후 floor2.html로 이동
-            dialogBox.off('pointerdown'); // 이전 이벤트 리스너 제거
-            dialogBox.on('pointerdown', function() {
-                currentTextIndex++;
-                if (currentTextIndex < currentTexts.length) {
-                    dialogText.setText(currentTexts[currentTextIndex]);
-                    handleItemAcquisition(currentTexts[currentTextIndex]);
-            } else {
-                dialogBox.setVisible(false);
-                dialogText.setVisible(false);
-                enableClickableZones();
-                window.location.href = "floor2.html"; // 페이지 리디렉션
-            }
-        });
+                // 대화가 끝난 후 floor2.html로 이동
+                dialogBox.off('pointerdown'); // 이전 이벤트 리스너 제거
+                dialogBox.on('pointerdown', function() {
+                    currentTextIndex++;
+                    if (currentTextIndex < currentTexts.length) {
+                        dialogText.setText(currentTexts[currentTextIndex]);
+                        handleItemAcquisition(currentTexts[currentTextIndex]);
+                    } else {
+                        dialogBox.setVisible(false);
+                        dialogText.setVisible(false);
+                        enableClickableZones();
+                        removeItemFromInventory("2층 열쇠"); // Remove the key from inventory and local storage
+                        removeSpecificItemFromLocalStorage("수상한 쪽지"); // Remove the suspicious note from local storage
+                        window.location.href = "floor2.html"; // 페이지 리디렉션
+                    }
+                });
 
             } else {
                 showDialog(scene, texts4);
             }
         });
+
+
 
         // 엘리베이터 클릭 영역
         createClickableZone(scene, 1944, 271.5, 346, 277, () => {

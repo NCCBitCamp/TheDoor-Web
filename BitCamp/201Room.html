@@ -162,14 +162,20 @@
             overlay = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY, bgImage.width, bgImage.height, 0x000000, 0.5);
             overlay.setAlpha(0);
 
-            modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0); // 배경색 변경 예시
+            modalBackground = scene.add.rectangle(scene.cameras.main.centerX, scene.cameras.main.centerY - 180, 800, 300, 0xFFFAFA).setAlpha(0).setInteractive().setScrollFactor(0);
             modalText = scene.add.text(scene.cameras.main.centerX, 60, '소지품', {
                 fontFamily: 'KyoboHandwriting2023wsa',
                 fontSize: '24px',
                 fill: '#000000'
             }).setAlpha(0).setOrigin(0.5).setScrollFactor(0);
             modal = scene.add.container(0, 0, [modalBackground, modalText]).setAlpha(0);
+
+            // Load items from local storage
+            inventory = JSON.parse(localStorage.getItem('inventory')) || [];
+            inventoryImages = JSON.parse(localStorage.getItem('inventoryImages')) || [];
+            updateInventoryDisplay();
         };
+
 
         const addItemToInventory = (item, imageKey) => {
             if (!inventory.includes(item)) {
@@ -342,6 +348,10 @@
             this.load.image('key', 'images/key.png');
             this.load.image('exitkey', 'images/exitkey.png');
             this.load.image('confirmBox', 'images/dialogueBox.png');
+            this.load.image('photo', 'images/photo.png');
+            this.load.image('photo_enlarge', 'images/photograph.png');
+            this.load.image('newspaper', 'images/newspaper.png');
+            this.load.image('newspaper_enlarge', 'images/newspaper_enlarge.png');
             this.load.audio('drawerSound', 'sounds/서랍 여는 소리.mp3');
             this.load.audio('doorstopSound', 'sounds/문 덜컹덜컹.mp3');
             this.load.audio('bagSound', 'sounds/가방 여는 소리.wav');
