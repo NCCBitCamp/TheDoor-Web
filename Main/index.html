@@ -21,9 +21,49 @@
         #game-container {
             width: 1280px;
             height: 720px;
+            display: none;
         }
 
-        /* Modal Styles */
+        #login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            color: white;
+            border-radius: 15px;
+            padding: 30px;
+            background-color: black;
+        }
+
+        #login-container input {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        #login-container button {
+            margin: 5px 0;
+            padding: 10px;
+            width: 100%;
+            cursor: pointer;
+            border: none;
+            background-color: #FBC70E;
+            color: black;
+        }
+
+        #login-container button:hover {
+            background-color: rgb(255, 187, 0);
+        }
+
+        #login-error {
+            color: red;
+            display: none;
+        }
+
         .modal {
             display: none;
             position: fixed;
@@ -62,10 +102,11 @@
             text-decoration: none;
             cursor: pointer;
         }
+
         p {
             font-family: GmarketSansMedium;
         }
-        
+
         @font-face {
             font-family: 'GmarketSansMedium';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -76,9 +117,16 @@
 </head>
 
 <body>
+    <div id="login-container">
+        <h2>LOGIN</h2>
+        <input type="text" id="username" placeholder="username">
+        <input type="password" id="password" placeholder="password">
+        <button onclick="login()">로그인</button>
+        <p id="login-error">아이디 혹은 비밀번호가 잘못되었습니다.</p>
+    </div>
+
     <div id="game-container"></div>
 
-    <!-- Modal -->
     <div id="volumeModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -88,6 +136,18 @@
     </div>
 
     <script>
+        function login() {
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            if (username === 'user' && password === 'pass') {
+                document.getElementById('login-container').style.display = 'none';
+                document.getElementById('game-container').style.display = 'block';
+            } else {
+                document.getElementById('login-error').style.display = 'block';
+            }
+        }
+
         const config = {
             type: Phaser.AUTO,
             width: 1280,
@@ -133,7 +193,6 @@
                 window.location.href = '#';
             });
 
-            // 502Door 클릭 영역
             const zone502 = this.add.zone(586, 232, 117, 244).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
                 saveAudioProgress();
@@ -146,7 +205,6 @@
                 document.body.style.cursor = 'default';
             });
 
-            // hostelDoor 클릭 영역
             const zoneHostel = this.add.zone(314, 256, 113, 271).setOrigin(0).setInteractive();
             zoneHostel.on('pointerdown', () => {
                 saveAudioProgress();
@@ -159,7 +217,6 @@
                 document.body.style.cursor = 'default';
             });
 
-            // roger 클릭 영역
             let clickedRoger = false;
             const zoneRoger = this.add.zone(869, 292, 179, 248).setOrigin(0).setInteractive();
             zoneRoger.on('pointerdown', () => {
@@ -178,7 +235,6 @@
                 document.body.style.cursor = 'default';
             });
 
-            // Modal functionality
             const modal = document.getElementById('volumeModal');
             const span = document.getElementsByClassName('close')[0];
             const volumeControl = document.getElementById('volumeControl');
@@ -200,12 +256,12 @@
             function showModal() {
                 modal.style.display = 'flex';
                 volumeControl.value = bgm.volume;
-                scene.input.enabled = false; // Disable input when the modal is shown
+                scene.input.enabled = false;
             }
 
             function closeModal() {
                 modal.style.display = 'none';
-                scene.input.enabled = true; // Enable input when the modal is closed
+                scene.input.enabled = true;
             }
         }
 
