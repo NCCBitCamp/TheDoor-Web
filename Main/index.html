@@ -21,9 +21,9 @@
         #game-container {
             width: 1280px;
             height: 720px;
-            display: none;
         }
 
+        /* Modal Styles */
         .modal {
             display: none;
             position: fixed;
@@ -62,11 +62,10 @@
             text-decoration: none;
             cursor: pointer;
         }
-
         p {
             font-family: GmarketSansMedium;
         }
-
+        
         @font-face {
             font-family: 'GmarketSansMedium';
             src: url('https://fastly.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -77,9 +76,9 @@
 </head>
 
 <body>
-
     <div id="game-container"></div>
 
+    <!-- Modal -->
     <div id="volumeModal" class="modal">
         <div class="modal-content">
             <span class="close">&times;</span>
@@ -89,7 +88,6 @@
     </div>
 
     <script>
-
         const config = {
             type: Phaser.AUTO,
             width: 1280,
@@ -135,6 +133,7 @@
                 window.location.href = '#';
             });
 
+            // 502Door 클릭 영역
             const zone502 = this.add.zone(586, 232, 117, 244).setOrigin(0).setInteractive();
             zone502.on('pointerdown', () => {
                 saveAudioProgress();
@@ -147,6 +146,7 @@
                 document.body.style.cursor = 'default';
             });
 
+            // hostelDoor 클릭 영역
             const zoneHostel = this.add.zone(314, 256, 113, 271).setOrigin(0).setInteractive();
             zoneHostel.on('pointerdown', () => {
                 saveAudioProgress();
@@ -159,6 +159,7 @@
                 document.body.style.cursor = 'default';
             });
 
+            // roger 클릭 영역
             let clickedRoger = false;
             const zoneRoger = this.add.zone(869, 292, 179, 248).setOrigin(0).setInteractive();
             zoneRoger.on('pointerdown', () => {
@@ -177,6 +178,7 @@
                 document.body.style.cursor = 'default';
             });
 
+            // Modal functionality
             const modal = document.getElementById('volumeModal');
             const span = document.getElementsByClassName('close')[0];
             const volumeControl = document.getElementById('volumeControl');
@@ -198,12 +200,12 @@
             function showModal() {
                 modal.style.display = 'flex';
                 volumeControl.value = bgm.volume;
-                scene.input.enabled = false;
+                scene.input.enabled = false; // Disable input when the modal is shown
             }
 
             function closeModal() {
                 modal.style.display = 'none';
-                scene.input.enabled = true;
+                scene.input.enabled = true; // Enable input when the modal is closed
             }
         }
 
